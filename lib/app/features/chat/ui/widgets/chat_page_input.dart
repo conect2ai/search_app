@@ -1,5 +1,6 @@
 import 'package:app_search/app/features/chat/interactor/chat_page_events.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../interactor/chat_page_bloc.dart';
 
@@ -14,7 +15,6 @@ class ChatPageInput extends StatefulWidget {
 class _ChatPageInputState extends State<ChatPageInput> {
   final _textInputController = TextEditingController();
   final FocusNode _textFocusNode = FocusNode();
-
   @override
   void initState() {
     _textInputController.text = '';
@@ -39,15 +39,26 @@ class _ChatPageInputState extends State<ChatPageInput> {
               maxLines: null,
               controller: _textInputController,
               focusNode: _textFocusNode,
+              inputFormatters: [
+                TextInputFormatter.withFunction((oldValue, newValue) {
+                  int newLines = newValue.text.split('\n').length;
+                  if (newLines > 4) {
+                    return oldValue;
+                  } else {
+                    return newValue;
+                  }
+                }),
+              ],
               decoration: InputDecoration(
-                  isDense: true,
-                  fillColor: Colors.blueGrey.shade100,
-                  filled: true,
-                  hintText: 'Text here...',
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none)),
+                isDense: true,
+                fillColor: Colors.blueGrey.shade100,
+                filled: true,
+                hintText: 'Text here...',
+                hintStyle: const TextStyle(color: Colors.grey),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none),
+              ),
             ),
             Positioned(
                 right: 0,
@@ -71,6 +82,7 @@ class _ChatPageInputState extends State<ChatPageInput> {
                       if (_textInputController.text.isNotEmpty) {
                         widget._bloc.add(
                             SendTextEvent(question: _textInputController.text));
+                        _textInputController.text = '';
                       }
                     },
                     icon: const Icon(
