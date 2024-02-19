@@ -5,7 +5,8 @@ class LoadChatPageEvent extends ChatPageEvent {}
 class PickImageEvent extends ChatPageEvent {}
 
 class SendTextEvent extends ChatPageEvent {
-  String response = "Sua resposta";
+  String question;
+  SendTextEvent({required this.question});
 }
 
 class SendAudioEvent extends ChatPageEvent {}

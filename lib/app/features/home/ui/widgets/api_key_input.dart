@@ -51,7 +51,10 @@ class _ApiKeyInputState extends State<ApiKeyInput> {
                   Modular.to.navigate('/chat/');
                 }
               },
-              icon: const Icon(Icons.login)),
+              icon: const Icon(
+                Icons.login,
+                color: Colors.grey,
+              )),
         )
       ],
     );
