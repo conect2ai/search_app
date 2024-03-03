@@ -41,6 +41,7 @@ dependencies:
   record: ^5.0.4
   audioplayers: ^5.2.1
   audio_waveforms: ^1.0.4
+  path_provider: ^2.1.2
 
 dev_dependencies:
   flutter_test:

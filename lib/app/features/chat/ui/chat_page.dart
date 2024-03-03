@@ -1,4 +1,6 @@
 import 'package:app_search/app/features/chat/ui/widgets/message_bubble.dart';
+import 'package:app_search/app/features/chat/ui/widgets/wave_bubble.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -53,9 +55,15 @@ class _ChatPageState extends State<ChatPage> {
                       controller: _scrollController,
                       itemCount: state.results.length,
                       itemBuilder: (context, index) {
-                        return MessageBubble(
-                            message: state.results[index].message,
-                            isQuestion: state.results[index].isQuestion);
+                        return state.results[index].isAudio
+                            ? Align(
+                                alignment: Alignment.centerRight,
+                                child: WaveBubble(
+                                    path: state.results[index].audioPath!))
+                            : MessageBubble(
+                                message: state.results[index].message!,
+                                isQuestion: state.results[index].isQuestion,
+                              );
                       },
                     );
                   } else {
@@ -74,7 +82,7 @@ class _ChatPageState extends State<ChatPage> {
                   blurRadius: 5)
             ]),
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-            child: ChatPageInput(bloc: _bloc),
+            child: const ChatPageInput(),
           )
         ],
       ),

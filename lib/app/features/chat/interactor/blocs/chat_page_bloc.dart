@@ -13,13 +13,21 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
       : super(InitialChatPageState(message: "Envie sua pergunta")) {
     on<SendTextEvent>(
       (event, emit) {
-        _results.add(ChatMessage(message: event.question, isQuestion: true));
+        _results.add(ChatMessage(
+            message: event.question, isQuestion: true, isAudio: false));
         _results.add(ChatMessage(
             message: searchRepository.getResponse(event.question),
-            isQuestion: false));
-        emit(
-          ReceiveResponseState(results: _results),
-        );
+            isQuestion: false,
+            isAudio: false));
+
+        emit(ReceiveResponseState(results: _results));
+      },
+    );
+    on<SendAudioEvent>(
+      (event, emit) {
+        _results.add(ChatMessage(
+            audioPath: event.path, isQuestion: true, isAudio: true));
+        emit(ReceiveResponseState(results: _results));
       },
     );
   }

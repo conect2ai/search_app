@@ -1,4 +1,3 @@
-import 'package:app_search/app/core/themes/app_text_styles.dart';
 import 'package:app_search/app/features/chat/interactor/blocs/chat_page_input_state.dart';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +11,7 @@ import '../../interactor/blocs/chat_page_input_bloc.dart';
 import '../../interactor/blocs/chat_page_input_events.dart';
 
 class ChatPageInput extends StatefulWidget {
-  final ChatPageBloc _chatPageBloc;
-
-  const ChatPageInput({required bloc, super.key}) : _chatPageBloc = bloc;
+  const ChatPageInput({super.key});
 
   @override
   State<ChatPageInput> createState() => _ChatPageInputState();
@@ -22,13 +19,26 @@ class ChatPageInput extends StatefulWidget {
 
 class _ChatPageInputState extends State<ChatPageInput> {
   final ChatPageInputBloc _chatPageInputBloc = Modular.get<ChatPageInputBloc>();
+  final ChatPageBloc _chatPageBloc = Modular.get<ChatPageBloc>();
 
   final _textInputController = TextEditingController();
   final FocusNode _textFocusNode = FocusNode();
+
+  Widget? _chatInputBtn;
+
   @override
   void initState() {
     _textInputController.text = '';
+    _chatPageInputBloc.getDir();
+    _chatPageInputBloc.checkPermission();
+    _textFocusNode.addListener(_onFocusChanged);
+    _buildChatInputBtn(_textFocusNode.hasFocus);
+
     super.initState();
+  }
+
+  void _onFocusChanged() {
+    _buildChatInputBtn(_textFocusNode.hasFocus);
   }
 
   @override
@@ -94,17 +104,22 @@ class _ChatPageInputState extends State<ChatPageInput> {
                       color: Colors.blueGrey.shade100,
                     ),
                     child: AudioWaveforms(
-                        size: Size(MediaQuery.of(context).size.width * 0.6, 47),
-                        recorderController:
-                            _chatPageInputBloc.recorderController)
-                    // const Text('
-                    //   "Gravando...",
-                    //   textAlign: TextAlign.start,
-                    //   style: TextStyle(
-                    //     color: Colors.grey,
-                    //   ),
-                    // ),
-                    );
+                      size: Size(MediaQuery.of(context).size.width * 0.6, 30),
+                      recorderController: _chatPageInputBloc.recorderController,
+                      waveStyle: const WaveStyle(
+                        backgroundColor: Colors.white,
+                        showBottom: false,
+                        extendWaveform: true,
+                        showMiddleLine: false,
+                      ),
+                    ));
+                // const Text('
+                //   "Gravando...",
+                //   textAlign: TextAlign.start,
+                //   style: TextStyle(
+                //     color: Colors.grey,
+                //   ),
+                // ),
               }
             },
           ),
@@ -115,33 +130,47 @@ class _ChatPageInputState extends State<ChatPageInput> {
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.blueGrey.shade200),
             padding: const EdgeInsets.symmetric(vertical: 1),
-            child: _textFocusNode.hasFocus
-                ? IconButton(
-                    onPressed: () {
-                      if (_textInputController.text.isNotEmpty) {
-                        widget._chatPageBloc.add(
-                            SendTextEvent(question: _textInputController.text));
-                        _textInputController.text = '';
-                      }
-                    },
-                    icon: const Icon(
-                      Icons.send_outlined,
-                      color: Colors.grey,
-                    ))
-                : GestureDetector(
-                    onLongPress: () =>
-                        _chatPageInputBloc.add(FocusAudioEvent()),
-                    onLongPressUp: () =>
-                        _chatPageInputBloc.add(FocusTextEvent()),
-                    child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 11, vertical: 12),
-                      child: Icon(
-                        Icons.mic_none,
-                        color: Colors.grey,
-                      ),
-                    )))
+            child: _chatInputBtn),
       ],
     );
+  }
+
+  void _buildChatInputBtn(bool isTextMode) {
+    if (isTextMode) {
+      setState(() {
+        _chatInputBtn = IconButton(
+            onPressed: () {
+              if (_textInputController.text.isNotEmpty) {
+                _chatPageBloc
+                    .add(SendTextEvent(question: _textInputController.text));
+                _textInputController.text = '';
+              }
+            },
+            icon: const Icon(
+              Icons.send_outlined,
+              color: Colors.grey,
+            ));
+      });
+    } else {
+      setState(() {
+        _chatInputBtn = GestureDetector(
+            onLongPress: () {
+              _chatPageInputBloc.startRecording();
+              _chatPageInputBloc.add(FocusAudioEvent());
+            },
+            onLongPressUp: () {
+              _chatPageInputBloc.stopRecording();
+              _chatPageBloc.add(SendAudioEvent(path: _chatPageInputBloc.path));
+              _chatPageInputBloc.add(FocusTextEvent());
+            },
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 11, vertical: 12),
+              child: Icon(
+                Icons.mic_none,
+                color: Colors.grey,
+              ),
+            ));
+      });
+    }
   }
 }
