@@ -1,4 +1,4 @@
-import '../../../../core/entities/chat_message.dart';
+import '../../../../../core/entities/chat_message.dart';
 
 abstract class ChatPageState {}
 

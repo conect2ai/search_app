@@ -1,14 +1,14 @@
-import 'package:app_search/app/features/chat/interactor/blocs/chat_page_input_state.dart';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../interactor/blocs/chat_page_bloc.dart';
-import '../../interactor/blocs/chat_page_event.dart';
-import '../../interactor/blocs/chat_page_input_bloc.dart';
-import '../../interactor/blocs/chat_page_input_events.dart';
+import '../../interactor/blocs/chatpage/chat_page_bloc.dart';
+import '../../interactor/blocs/chatpage/chat_page_event.dart';
+import '../../interactor/blocs/chatpage_inputs/chat_page_input_bloc.dart';
+import '../../interactor/blocs/chatpage_inputs/chat_page_input_events.dart';
+import '../../interactor/blocs/chatpage_inputs/chat_page_input_state.dart';
 
 class ChatPageInput extends StatefulWidget {
   const ChatPageInput({super.key});
@@ -113,13 +113,6 @@ class _ChatPageInputState extends State<ChatPageInput> {
                         showMiddleLine: false,
                       ),
                     ));
-                // const Text('
-                //   "Gravando...",
-                //   textAlign: TextAlign.start,
-                //   style: TextStyle(
-                //     color: Colors.grey,
-                //   ),
-                // ),
               }
             },
           ),

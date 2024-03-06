@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:app_search/app/features/chat/interactor/blocs/chat_page_event.dart';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
@@ -9,7 +8,7 @@ import 'chat_page_input_events.dart';
 import 'chat_page_input_state.dart';
 
 class ChatPageInputBloc extends Bloc<ChatPageInputEvent, ChatPageInputState> {
-  RecorderController _recorderController = RecorderController();
+  final RecorderController _recorderController = RecorderController();
   String? _path;
   late Directory _appDirectory;
 

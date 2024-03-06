@@ -1,8 +1,14 @@
+import 'package:http/http.dart';
+
 import 'search_repository.dart';
 
 class SearchRepositoryImpl implements SearchRepository {
+  final Client client;
+
+  SearchRepositoryImpl({required this.client});
+
   @override
-  String getResponse(String question) {
+  Future<String> getResponse(String question) async {
     switch (question) {
       case 'Oi':
         return 'Oi, tudo bem?';

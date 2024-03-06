@@ -9,6 +9,7 @@ class MessageBubble extends StatelessWidget {
   late final Color bubbleColor;
 
   MessageBubble({
+    super.key,
     required this.message,
     required this.isQuestion,
   }) {
@@ -28,7 +29,7 @@ class MessageBubble extends StatelessWidget {
                 color: isQuestion ? bubbleColor : Colors.yellow,
                 borderRadius: BorderRadius.circular(15)),
             child: Text(
-              message ?? 'Sem pergunta',
+              message,
               style: AppTextStyles.chatMessageTextStyle,
             ),
           ),
