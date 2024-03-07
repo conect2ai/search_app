@@ -9,4 +9,7 @@ class SendTextEvent extends ChatPageEvent {
   SendTextEvent({required this.question});
 }
 
-class SendAudioEvent extends ChatPageEvent {}
+class SendAudioEvent extends ChatPageEvent {
+  String path;
+  SendAudioEvent({required this.path});
+}

@@ -6,12 +6,15 @@ import '../../../../core/themes/app_text_styles.dart';
 class MessageBubble extends StatelessWidget {
   final String message;
   final bool isQuestion;
-  Color bubbleColor;
+  late final Color bubbleColor;
 
-  MessageBubble(
-      {required this.message,
-      required this.isQuestion,
-      this.bubbleColor = AppColors.mainColor});
+  MessageBubble({
+    super.key,
+    required this.message,
+    required this.isQuestion,
+  }) {
+    bubbleColor = isQuestion ? AppColors.mainColor : Colors.orange;
+  }
 
   @override
   Widget build(BuildContext context) {
