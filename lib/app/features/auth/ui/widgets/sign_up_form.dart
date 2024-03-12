@@ -4,10 +4,9 @@ import 'package:flutter_modular/flutter_modular.dart';
 import '../../interactor/bloc/auth_bloc.dart';
 import '../../interactor/events/auth_event.dart';
 
-enum roles {
-  funcionario,
+enum Roles {
   admin,
-  chefe,
+  motorista,
 }
 
 class SignUpForm extends StatefulWidget {
@@ -22,7 +21,7 @@ class _SignUpFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
   final Map<String, String> _formData = {};
   bool _isObscureText = true;
-  roles _selectedRole = roles.funcionario;
+  Roles _selectedRole = Roles.motorista;
 
   final _passwordTextController = TextEditingController();
   final _emailTextController = TextEditingController();
@@ -33,7 +32,7 @@ class _SignUpFormState extends State<SignUpForm> {
     _passwordTextController.text = '';
     _emailTextController.text = '';
     _usernameTextController.text = '';
-    _selectedRole = roles.funcionario;
+    _selectedRole = Roles.motorista;
     _formData['email'] = _emailTextController.text;
     _formData['password'] = _passwordTextController.text;
     _formData['username'] = _usernameTextController.text;
@@ -45,7 +44,7 @@ class _SignUpFormState extends State<SignUpForm> {
     _formData['email'] = _emailTextController.text;
     _formData['password'] = _passwordTextController.text;
     _formData['username'] = _usernameTextController.text;
-    _formData['role'] = _selectedRole.name;
+    _formData['role'] = _selectedRole.name.toUpperCase();
   }
 
   @override
@@ -147,17 +146,12 @@ class _SignUpFormState extends State<SignUpForm> {
                       floatingLabelAlignment: FloatingLabelAlignment.start),
                   dropdownMenuEntries: [
                     DropdownMenuEntry(
-                        value: roles.funcionario,
-                        label: 'Funcionário',
+                        value: Roles.motorista,
+                        label: 'Motorista',
                         style: TextButton.styleFrom(
                             foregroundColor: Colors.black54)),
                     DropdownMenuEntry(
-                        value: roles.chefe,
-                        label: 'Chefe',
-                        style: TextButton.styleFrom(
-                            foregroundColor: Colors.black54)),
-                    DropdownMenuEntry(
-                        value: roles.admin,
+                        value: Roles.admin,
                         label: 'Admin',
                         style: TextButton.styleFrom(
                             foregroundColor: Colors.black54)),
@@ -165,7 +159,7 @@ class _SignUpFormState extends State<SignUpForm> {
                   initialSelection: _selectedRole,
                   onSelected: (value) {
                     setState(() {
-                      _selectedRole = value ?? roles.funcionario;
+                      _selectedRole = value ?? Roles.motorista;
                     });
                   },
                 ),

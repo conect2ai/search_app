@@ -14,8 +14,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<bool> Login(Map<String, String> formData) async {
-    print('Email = ${formData['email']}');
-    print('Password = ${formData['password']}');
     final String? token = await authRepository.Login(formData);
     if (token != null) {
       userAuth.UpdateToken(token);
@@ -25,14 +23,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<bool> SignUp(Map<String, String> formData) async {
-    print('Email = ${formData['email']}');
-    print('Password = ${formData['password']}');
-    print('Username = ${formData['username']}');
-    final String? token = await authRepository.SignUp(formData);
-    if (token != null) {
-      userAuth.UpdateToken(token);
-      return true;
-    }
-    return false;
+    await authRepository.SignUp(formData);
+    return true;
   }
 }
