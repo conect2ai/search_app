@@ -14,15 +14,13 @@
             "name": "app_search (profile mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile",
-            "program": "lib\\app\\main.dart"
+            "flutterMode": "profile"
         },
         {
             "name": "app_search (release mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release",
-            "program": "lib\\app\\main.dart"
+            "flutterMode": "release"
         }
     ]
 }
