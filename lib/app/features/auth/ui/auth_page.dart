@@ -21,9 +21,11 @@ class AuthPage extends StatelessWidget {
         bloc: _authBloc,
         builder: (context, state) {
           if (state is LoginState) {
-            return const LoginForm();
+            return LoginForm(
+                username: state.username, password: state.password);
           } else if (state is SignUpState) {
-            return const SignUpForm();
+            return SignUpForm(
+                username: state.username, password: state.password);
           } else {
             return const CircularProgressIndicator();
           }

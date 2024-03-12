@@ -9,21 +9,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthUser userAuth = AuthUser();
   AuthRepository authRepository;
   AuthBloc({required this.authRepository}) : super(LoginState()) {
-    on<SwitchToLoginEvent>((event, emit) => emit(LoginState()));
-    on<SwitchToSignUpEvent>((event, emit) => emit(SignUpState()));
+    on<SwitchToLoginEvent>((event, emit) =>
+        emit(LoginState(username: event.username, password: event.password)));
+    on<SwitchToSignUpEvent>((event, emit) =>
+        emit(SignUpState(username: event.username, password: event.password)));
   }
 
-  Future<bool> Login(Map<String, String> formData) async {
-    final String? token = await authRepository.Login(formData);
-    if (token != null) {
-      userAuth.UpdateToken(token);
-      return true;
-    }
-    return false;
+  Future<bool> login(Map<String, String> formData) async {
+    final result = await authRepository.login(formData);
+    return result; //mudar quando implementar os status code
   }
 
-  Future<bool> SignUp(Map<String, String> formData) async {
-    await authRepository.SignUp(formData);
-    return true;
+  Future<bool> signUp(Map<String, String> formData) async {
+    final result = await authRepository.signUp(formData);
+    return result; //mudar quando implementar os status code
   }
 }
