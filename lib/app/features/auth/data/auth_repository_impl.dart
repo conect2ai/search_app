@@ -68,4 +68,10 @@ class AuthRepositoryImpl implements AuthRepository {
       return false;
     }
   }
+
+  @override
+  void logout() async {
+    _user.updateToken({'access_token': null, 'token_type': null});
+    print('Logout');
+  }
 }

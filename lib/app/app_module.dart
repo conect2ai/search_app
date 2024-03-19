@@ -1,5 +1,9 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
+import 'features/auth/data/auth_repository.dart';
+import 'features/auth/data/auth_repository_impl.dart';
 import 'features/auth/interactor/module/auth_module.dart';
 import 'features/chat/module/chat_page_module.dart';
 import 'features/home/interactor/bloc/homepage_bloc.dart';
@@ -9,6 +13,8 @@ class AppModule extends Module {
   @override
   void binds(i) {
     i.add<HomePageBloc>(HomePageBloc.new);
+    i.addSingleton<AuthRepository>(AuthRepositoryImpl.new);
+    i.add<Client>(http.Client.new);
   }
 
   @override

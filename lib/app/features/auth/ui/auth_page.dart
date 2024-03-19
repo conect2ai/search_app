@@ -16,7 +16,9 @@ class AuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: LogoAppBar.generateLogoAppBar(context),
+      appBar: LogoAppBar.generateLogoAppBar(
+        context,
+      ),
       body: BlocBuilder<AuthBloc, AuthState>(
         bloc: _authBloc,
         builder: (context, state) {

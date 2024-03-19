@@ -24,4 +24,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final result = await authRepository.signUp(formData);
     return result; //mudar quando implementar os status code
   }
+
+  void logout() async {
+    authRepository.logout();
+  }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../core/themes/app_colors.dart';
 import '../../../widgets/logo_appbar.dart';
+import '../../auth/data/auth_repository.dart';
 import '../interactor/bloc/homepage_bloc.dart';
 import '../interactor/states/homepage_states.dart';
 import 'widgets/api_key_input.dart';
@@ -17,6 +18,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _homePageBloc = Modular.get<HomePageBloc>();
+  final _authRepo = Modular.get<AuthRepository>();
 
   @override
   void initState() {
@@ -26,7 +28,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: LogoAppBar.generateLogoAppBar(context),
+      appBar: LogoAppBar.generateLogoAppBar(context, _authRepo.logout),
       body: Stack(
         children: [
           Align(

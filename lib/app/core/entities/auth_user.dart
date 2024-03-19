@@ -11,6 +11,8 @@ class AuthUser {
   AuthUser._internal();
 
   String? get token => _token;
+  String? get tokenType => _tokenType;
+
   void updateToken(Map<String, dynamic> tokenInfo) {
     _token = tokenInfo['access_token'];
     _tokenType = tokenInfo['token_type'];
