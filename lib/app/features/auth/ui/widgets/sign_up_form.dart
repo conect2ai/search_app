@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../../../core/themes/app_colors.dart';
 import '../../interactor/bloc/auth_bloc.dart';
 import '../../interactor/events/auth_event.dart';
 
@@ -190,6 +191,8 @@ class _SignUpFormState extends State<SignUpForm> {
                 Column(
                   children: [
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.mainColor),
                       onPressed: () async {
                         _unfocusAllTextFields();
                         if (_formKey.currentState!.validate()) {
