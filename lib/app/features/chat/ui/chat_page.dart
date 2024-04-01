@@ -25,7 +25,6 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final _bloc = Modular.get<ChatPageBloc>();
   final _authRepo = Modular.get<AuthRepository>();
-  File? _selectedFile;
   int lastIndex = 0;
 
   @override
@@ -41,7 +40,6 @@ class _ChatPageState extends State<ChatPage> {
                 bloc: _bloc,
                 builder: (context, state) {
                   if (state is InitialChatPageState) {
-                    _selectedFile = null;
                     return InkWell(
                         onTap: () => _bloc.pickImage(ImageSource.camera),
                         child: const PictureContainer());
@@ -50,7 +48,6 @@ class _ChatPageState extends State<ChatPage> {
                       state: state,
                     );
                   } else if (state is ImageSelectedState) {
-                    _selectedFile = File(state.file.path);
                     return InkWell(
                         onTap: () => _bloc.pickImage(ImageSource.camera),
                         onLongPress: () => _bloc.add(RemoveImageEvent()),

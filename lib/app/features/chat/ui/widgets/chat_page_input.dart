@@ -86,6 +86,16 @@ class _ChatPageInputState extends State<ChatPageInput> {
                     ),
                   ),
                   Positioned(
+                      right: 30,
+                      child: IconButton(
+                          onPressed: () {
+                            _chatPageBloc.pickImage(ImageSource.camera);
+                          },
+                          icon: const Icon(
+                            Icons.camera,
+                            color: Colors.grey,
+                          ))),
+                  Positioned(
                       right: 0,
                       child: IconButton(
                           onPressed: () {

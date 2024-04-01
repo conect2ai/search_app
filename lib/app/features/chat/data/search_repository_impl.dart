@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:http/http.dart';
 
 import 'search_repository.dart';
@@ -8,7 +10,7 @@ class SearchRepositoryImpl implements SearchRepository {
   SearchRepositoryImpl({required this.client});
 
   @override
-  Future<String> getResponse(String question) async {
+  Future<String> getResponse(String question, File? imageFile) async {
     switch (question) {
       case 'Oi':
         return 'Oi, tudo bem?';
