@@ -34,7 +34,7 @@ class AuthRepositoryImpl implements AuthRepository {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         user.updateToken(data);
-
+        user.updatedUsernameAndPassword(loginInfo);
         secureStorage.writeSecureData('username', loginData['username']);
         secureStorage.writeSecureData('password', loginData['password']);
         secureStorage.writeSecureData('access_token', user.token);

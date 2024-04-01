@@ -1,5 +1,4 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../../core/entities/auth_user.dart';
 import '../../../../services/secure_storage_service.dart';
@@ -20,7 +19,7 @@ class SplashPageBloc {
     user.updateToken(userInfo);
     user.updatedUsernameAndPassword(userInfo);
 
-    Future.delayed(const Duration(seconds: 3), () => selectInitialRoute());
+    Future.delayed(const Duration(seconds: 1), () => selectInitialRoute());
   }
 
   void selectInitialRoute() {
