@@ -15,6 +15,16 @@ class _ApiKeyInputState extends State<ApiKeyInput> {
   final _apiKeyInputController = TextEditingController();
   var _isValidApiKey = false;
   var _errorText = '';
+  @override
+  void initState() {
+    _checkApiKeySavedData();
+    super.initState();
+  }
+
+  void _checkApiKeySavedData() async {
+    _apiKeyInputController.text =
+        await widget._homebloc.readSavedApiKey() ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +58,7 @@ class _ApiKeyInputState extends State<ApiKeyInput> {
                     _errorText = 'Please insert a valid api key';
                   });
                 } else {
+                  widget._homebloc.saveApiKey(_apiKeyInputController.text);
                   Modular.to.navigate('/chat/');
                 }
               },

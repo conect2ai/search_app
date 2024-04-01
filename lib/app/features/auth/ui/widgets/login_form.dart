@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../../../core/themes/app_colors.dart';
 import '../../interactor/bloc/auth_bloc.dart';
 import '../../interactor/events/auth_event.dart';
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+  final String? username;
+  final String? password;
+  const LoginForm({this.username, this.password, super.key});
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -16,22 +19,33 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final Map<String, String> _formData = {};
   bool _isObscureText = true;
+  final _passwordFocusNode = FocusNode();
+  final _usernameFocusNode = FocusNode();
 
   final _passwordTextController = TextEditingController();
-  final _emailTextController = TextEditingController();
+  final _usernameTextController = TextEditingController();
 
   @override
   void initState() {
-    _passwordTextController.text = '';
-    _emailTextController.text = '';
-    _formData['email'] = _emailTextController.text;
+    _passwordTextController.text = widget.password ?? '';
+    _usernameTextController.text = widget.username ?? '';
+    _formData['username'] = _usernameTextController.text;
     _formData['password'] = _passwordTextController.text;
     super.initState();
   }
 
   void _saveFormData() {
-    _formData['email'] = _emailTextController.text;
+    _formData['username'] = _usernameTextController.text;
     _formData['password'] = _passwordTextController.text;
+  }
+
+  void _unfocusAllTextFields() {
+    if (_passwordFocusNode.hasFocus) {
+      _passwordFocusNode.unfocus();
+    }
+    if (_usernameFocusNode.hasFocus) {
+      _usernameFocusNode.unfocus();
+    }
   }
 
   @override
@@ -46,16 +60,17 @@ class _LoginFormState extends State<LoginForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextFormField(
-                  controller: _emailTextController,
+                  focusNode: _usernameFocusNode,
+                  controller: _usernameTextController,
                   decoration: InputDecoration(
-                    hintText: 'Email',
+                    hintText: 'Username',
                     isDense: true,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15)),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please insert your email';
+                      return 'Please insert your username';
                     } else {
                       return null;
                     }
@@ -67,6 +82,7 @@ class _LoginFormState extends State<LoginForm> {
                 Stack(
                   children: [
                     TextFormField(
+                      focusNode: _passwordFocusNode,
                       obscureText: _isObscureText,
                       controller: _passwordTextController,
                       decoration: InputDecoration(
@@ -106,12 +122,24 @@ class _LoginFormState extends State<LoginForm> {
                 Column(
                   children: [
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.mainColor),
                       onPressed: () async {
+                        _unfocusAllTextFields();
                         if (_formKey.currentState!.validate()) {
                           _saveFormData();
-                          final isLogged = await _authBloc.Login(_formData);
+                          final isLogged = await _authBloc.login(_formData);
                           if (isLogged) {
                             Modular.to.navigate('/home/');
+                          } else {
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Credenciais inválidas!'),
+                                  duration: Duration(milliseconds: 600),
+                                ),
+                              );
+                            }
                           }
                         }
                       },
@@ -121,7 +149,12 @@ class _LoginFormState extends State<LoginForm> {
                       height: 15,
                     ),
                     TextButton(
-                        onPressed: () => _authBloc.add(SwitchToSignUpEvent()),
+                        onPressed: () {
+                          _unfocusAllTextFields();
+                          _authBloc.add(SwitchToSignUpEvent(
+                              username: _usernameTextController.text,
+                              password: _passwordTextController.text));
+                        },
                         child: const Text('Sign up'))
                   ],
                 ),

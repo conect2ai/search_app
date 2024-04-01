@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../../../core/themes/app_colors.dart';
 import '../../interactor/bloc/auth_bloc.dart';
 import '../../interactor/events/auth_event.dart';
 
@@ -10,7 +11,10 @@ enum Roles {
 }
 
 class SignUpForm extends StatefulWidget {
-  const SignUpForm({super.key});
+  final String? username;
+  final String? password;
+
+  const SignUpForm({this.username, this.password, super.key});
 
   @override
   State<SignUpForm> createState() => _SignUpFormState();
@@ -22,6 +26,9 @@ class _SignUpFormState extends State<SignUpForm> {
   final Map<String, String> _formData = {};
   bool _isObscureText = true;
   Roles _selectedRole = Roles.motorista;
+  final _passwordFocusNode = FocusNode();
+  final _usernameFocusNode = FocusNode();
+  final _emailFocusNode = FocusNode();
 
   final _passwordTextController = TextEditingController();
   final _emailTextController = TextEditingController();
@@ -29,9 +36,9 @@ class _SignUpFormState extends State<SignUpForm> {
 
   @override
   void initState() {
-    _passwordTextController.text = '';
+    _passwordTextController.text = widget.password ?? '';
     _emailTextController.text = '';
-    _usernameTextController.text = '';
+    _usernameTextController.text = widget.username ?? '';
     _selectedRole = Roles.motorista;
     _formData['email'] = _emailTextController.text;
     _formData['password'] = _passwordTextController.text;
@@ -47,6 +54,18 @@ class _SignUpFormState extends State<SignUpForm> {
     _formData['role'] = _selectedRole.name.toUpperCase();
   }
 
+  void _unfocusAllTextFields() {
+    if (_passwordFocusNode.hasFocus) {
+      _passwordFocusNode.unfocus();
+    }
+    if (_usernameFocusNode.hasFocus) {
+      _usernameFocusNode.unfocus();
+    }
+    if (_emailFocusNode.hasFocus) {
+      _emailFocusNode.unfocus();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -59,6 +78,7 @@ class _SignUpFormState extends State<SignUpForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextFormField(
+                  focusNode: _usernameFocusNode,
                   controller: _usernameTextController,
                   decoration: InputDecoration(
                     hintText: 'Username',
@@ -78,6 +98,7 @@ class _SignUpFormState extends State<SignUpForm> {
                   height: 15,
                 ),
                 TextFormField(
+                  focusNode: _emailFocusNode,
                   controller: _emailTextController,
                   decoration: InputDecoration(
                     hintText: 'Email',
@@ -99,6 +120,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 Stack(
                   children: [
                     TextFormField(
+                      focusNode: _passwordFocusNode,
                       obscureText: _isObscureText,
                       controller: _passwordTextController,
                       decoration: InputDecoration(
@@ -169,12 +191,30 @@ class _SignUpFormState extends State<SignUpForm> {
                 Column(
                   children: [
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.mainColor),
                       onPressed: () async {
+                        _unfocusAllTextFields();
                         if (_formKey.currentState!.validate()) {
                           _saveFormData();
-                          final isLogged = await _authBloc.SignUp(_formData);
-                          if (isLogged) {
-                            Modular.to.navigate('/home/');
+                          final isSignedUp = await _authBloc.signUp(_formData);
+                          if (mounted) {
+                            if (isSignedUp) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content:
+                                    Text('Registro concluído com sucesso!'),
+                                duration: Duration(milliseconds: 600),
+                              ));
+                              _authBloc.add(SwitchToLoginEvent());
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content:
+                                    Text('Falha no registro, tente novamente!'),
+                                duration: Duration(milliseconds: 600),
+                              ));
+                            }
                           }
                         }
                       },
@@ -184,7 +224,12 @@ class _SignUpFormState extends State<SignUpForm> {
                       height: 15,
                     ),
                     TextButton(
-                      onPressed: () => _authBloc.add(SwitchToLoginEvent()),
+                      onPressed: () {
+                        _unfocusAllTextFields();
+                        _authBloc.add(SwitchToLoginEvent(
+                            username: _usernameTextController.text,
+                            password: _passwordTextController.text));
+                      },
                       child: const Text('Login'),
                     )
                   ],

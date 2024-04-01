@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../../core/entities/auth_user.dart';
 import '../../data/auth_repository.dart';
@@ -8,22 +9,26 @@ import '../states/auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthUser userAuth = AuthUser();
   AuthRepository authRepository;
+
   AuthBloc({required this.authRepository}) : super(LoginState()) {
-    on<SwitchToLoginEvent>((event, emit) => emit(LoginState()));
-    on<SwitchToSignUpEvent>((event, emit) => emit(SignUpState()));
+    on<SwitchToLoginEvent>((event, emit) =>
+        emit(LoginState(username: event.username, password: event.password)));
+    on<SwitchToSignUpEvent>((event, emit) =>
+        emit(SignUpState(username: event.username, password: event.password)));
   }
 
-  Future<bool> Login(Map<String, String> formData) async {
-    final String? token = await authRepository.Login(formData);
-    if (token != null) {
-      userAuth.UpdateToken(token);
-      return true;
-    }
-    return false;
+  Future<bool> login(Map<String, String> formData) async {
+    final isLogged = await authRepository.login(formData);
+    if (isLogged) {}
+    return isLogged; //mudar quando implementar os status code
   }
 
-  Future<bool> SignUp(Map<String, String> formData) async {
-    await authRepository.SignUp(formData);
-    return true;
+  Future<bool> signUp(Map<String, String> formData) async {
+    final isRegistered = await authRepository.signUp(formData);
+    return isRegistered; //mudar quando implementar os status code
+  }
+
+  void logout() async {
+    authRepository.logout();
   }
 }
