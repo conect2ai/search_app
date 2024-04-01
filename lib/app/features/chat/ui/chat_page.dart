@@ -1,16 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../core/themes/app_colors.dart';
-import '../../../core/themes/app_text_styles.dart';
 import '../../../widgets/logo_appbar.dart';
 import '../../auth/data/auth_repository.dart';
-import '../../auth/interactor/bloc/auth_bloc.dart';
 import '../interactor/blocs/chatpage/chat_page_bloc.dart';
+import '../interactor/blocs/chatpage/chat_page_event.dart';
 import '../interactor/blocs/chatpage/chat_page_states.dart';
 import 'widgets/chat_page_input.dart';
 import 'widgets/messages_list.dart';
+import 'widgets/picture_container.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -22,6 +25,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final _bloc = Modular.get<ChatPageBloc>();
   final _authRepo = Modular.get<AuthRepository>();
+  File? _selectedFile;
   int lastIndex = 0;
 
   @override
@@ -37,14 +41,20 @@ class _ChatPageState extends State<ChatPage> {
                 bloc: _bloc,
                 builder: (context, state) {
                   if (state is InitialChatPageState) {
-                    return Text(
-                      state.message,
-                      style: AppTextStyles.mainTextStyle,
-                    );
+                    _selectedFile = null;
+                    return InkWell(
+                        onTap: () => _bloc.pickImage(ImageSource.camera),
+                        child: const PictureContainer());
                   } else if (state is ReceiveResponseState) {
                     return MessagesList(
                       state: state,
                     );
+                  } else if (state is ImageSelectedState) {
+                    _selectedFile = File(state.file.path);
+                    return InkWell(
+                        onTap: () => _bloc.pickImage(ImageSource.camera),
+                        onLongPress: () => _bloc.add(RemoveImageEvent()),
+                        child: PictureContainer(file: state.file));
                   } else {
                     return const CircularProgressIndicator();
                   }

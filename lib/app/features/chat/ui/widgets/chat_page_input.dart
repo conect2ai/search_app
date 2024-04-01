@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../interactor/blocs/chatpage/chat_page_bloc.dart';
 import '../../interactor/blocs/chatpage/chat_page_event.dart';
@@ -87,7 +88,9 @@ class _ChatPageInputState extends State<ChatPageInput> {
                   Positioned(
                       right: 0,
                       child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _chatPageBloc.pickImage(ImageSource.gallery);
+                          },
                           icon: const Icon(
                             Icons.image_outlined,
                             color: Colors.grey,

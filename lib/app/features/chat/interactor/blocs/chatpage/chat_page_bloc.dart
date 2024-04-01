@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../../core/entities/chat_message.dart';
 import '../../../data/search_repository.dart';
@@ -8,9 +9,11 @@ import 'chat_page_states.dart';
 class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
   final SearchRepository searchRepository;
   final List<ChatMessage> _results = [];
+  final ImagePicker _imagePicker = ImagePicker();
 
   ChatPageBloc({required this.searchRepository})
-      : super(InitialChatPageState(message: "Envie sua pergunta")) {
+      : super(InitialChatPageState()) {
+    on<RemoveImageEvent>((event, emit) => emit(InitialChatPageState()));
     on<SendTextEvent>(
       (event, emit) async {
         _results.add(ChatMessage(
@@ -30,5 +33,14 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
         emit(ReceiveResponseState(results: _results));
       },
     );
+    on<SelectImageEvent>(
+        (event, emit) => emit(ImageSelectedState(file: event.file)));
+  }
+
+  void pickImage(ImageSource source) async {
+    final file = await _imagePicker.pickImage(source: source);
+    if (file != null) {
+      add(SelectImageEvent(file: file));
+    }
   }
 }
