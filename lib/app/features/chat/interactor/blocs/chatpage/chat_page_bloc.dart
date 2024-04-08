@@ -26,8 +26,8 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
           _results.add(ChatMessage(
               message: event.question, isQuestion: true, isAudio: false));
           _results.add(ChatMessage(
-              message: await searchRepository.getResponse(
-                  event.question, _selectedImage),
+              message: await searchRepository.sendQuestionByText(
+                  event.question, _selectedImage?.path ?? ''),
               isQuestion: false,
               isAudio: false));
 
@@ -40,6 +40,8 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
         if (_selectedImage != null) {
           _results.add(ChatMessage(
               audioPath: event.path, isQuestion: true, isAudio: true));
+          searchRepository.sendQuestionByAudio(
+              event.path, _selectedImage?.path ?? '');
           emit(ReceiveResponseState(results: _results));
         }
       },

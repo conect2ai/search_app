@@ -52,82 +52,95 @@ class _ChatPageInputState extends State<ChatPageInput> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          child: BlocBuilder(
-            bloc: _chatPageInputBloc,
-            builder: (context, state) {
-              if (state is TextModeState) {
-                return Stack(children: [
-                  TextField(
-                    maxLines: null,
-                    controller: _textInputController,
-                    focusNode: _textFocusNode,
-                    inputFormatters: [
-                      TextInputFormatter.withFunction((oldValue, newValue) {
-                        int newLines = newValue.text.split('\n').length;
-                        if (newLines > 4) {
-                          return oldValue;
-                        } else {
-                          return newValue;
-                        }
-                      }),
-                    ],
-                    decoration: InputDecoration(
-                      isDense: true,
-                      fillColor: Colors.blueGrey.shade100,
-                      filled: true,
-                      hintText: 'Text here...',
-                      hintStyle: const TextStyle(color: Colors.grey),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none),
-                    ),
-                  ),
-                  Positioned(
-                      right: 30,
-                      child: IconButton(
-                          onPressed: () {
-                            _chatPageBloc.pickImage(ImageSource.camera);
-                          },
-                          icon: const Icon(
-                            Icons.camera,
-                            color: Colors.grey,
-                          ))),
-                  Positioned(
-                      right: 0,
-                      child: IconButton(
-                          onPressed: () {
-                            _chatPageBloc.pickImage(ImageSource.gallery);
-                          },
-                          icon: const Icon(
-                            Icons.image_outlined,
-                            color: Colors.grey,
-                          ))),
-                ]);
-              } else {
-                return Container(
-                    alignment: Alignment.centerLeft,
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    height: 49,
-                    padding: const EdgeInsets.only(left: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.blueGrey.shade100,
-                    ),
-                    child: AudioWaveforms(
-                      size: Size(MediaQuery.of(context).size.width * 0.6, 30),
-                      recorderController: _chatPageInputBloc.recorderController,
-                      waveStyle: const WaveStyle(
-                        backgroundColor: Colors.white,
-                        showBottom: false,
-                        extendWaveform: true,
-                        showMiddleLine: false,
-                      ),
-                    ));
-              }
-            },
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.blueGrey.shade100,
+                borderRadius: BorderRadius.circular(10)),
+            child: Stack(
+              children: [
+                BlocBuilder(
+                  bloc: _chatPageInputBloc,
+                  builder: (context, state) {
+                    if (state is TextModeState) {
+                      return Stack(children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.58,
+                          child: TextField(
+                            controller: _textInputController,
+                            focusNode: _textFocusNode,
+                            inputFormatters: [
+                              TextInputFormatter.withFunction(
+                                  (oldValue, newValue) {
+                                int newLines = newValue.text.split('\n').length;
+                                if (newLines > 4) {
+                                  return oldValue;
+                                } else {
+                                  return newValue;
+                                }
+                              }),
+                            ],
+                            decoration: InputDecoration(
+                              isDense: true,
+                              fillColor: Colors.blueGrey.shade100,
+                              filled: true,
+                              hintText: 'Text here...',
+                              hintStyle: const TextStyle(color: Colors.grey),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide.none),
+                            ),
+                          ),
+                        ),
+                      ]);
+                    } else {
+                      return Container(
+                          alignment: Alignment.centerLeft,
+                          width: MediaQuery.of(context).size.width * 0.58,
+                          height: 49,
+                          padding: const EdgeInsets.only(left: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.blueGrey.shade100,
+                          ),
+                          child: AudioWaveforms(
+                            size: Size(
+                                MediaQuery.of(context).size.width * 0.6, 30),
+                            recorderController:
+                                _chatPageInputBloc.recorderController,
+                            waveStyle: const WaveStyle(
+                              backgroundColor: Colors.white,
+                              showBottom: false,
+                              extendWaveform: true,
+                              showMiddleLine: false,
+                            ),
+                          ));
+                    }
+                  },
+                ),
+                Positioned(
+                    right: 0,
+                    child: IconButton(
+                        onPressed: () {
+                          _chatPageBloc.pickImage(ImageSource.camera);
+                        },
+                        icon: const Icon(
+                          Icons.camera,
+                          color: Colors.grey,
+                        ))),
+                Positioned(
+                    right: 35,
+                    child: IconButton(
+                        onPressed: () {
+                          _chatPageBloc.pickImage(ImageSource.gallery);
+                        },
+                        icon: const Icon(
+                          Icons.image_outlined,
+                          color: Colors.grey,
+                        ))),
+              ],
+            ),
           ),
         ),
         Container(

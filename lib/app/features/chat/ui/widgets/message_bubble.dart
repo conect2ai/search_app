@@ -23,14 +23,18 @@ class MessageBubble extends StatelessWidget {
             isQuestion ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           Container(
-            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.symmetric(vertical: 18, horizontal: 15),
+            padding: const EdgeInsets.all(15),
+            width: 200,
             decoration: BoxDecoration(
                 color: isQuestion ? bubbleColor : Colors.yellow,
                 borderRadius: BorderRadius.circular(15)),
-            child: Text(
-              message,
-              style: AppTextStyles.chatMessageTextStyle,
+            child: Expanded(
+              child: Text(
+                message,
+                style: AppTextStyles.chatMessageTextStyle,
+                softWrap: true,
+              ),
             ),
           ),
         ]);

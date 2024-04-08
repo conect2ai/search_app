@@ -28,28 +28,41 @@ class _ApiKeyInputState extends State<ApiKeyInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        TextField(
-          controller: _apiKeyInputController,
-          onChanged: (value) {
-            _errorText = '';
-          },
-          decoration: InputDecoration(
-            isDense: true,
-            fillColor: Colors.blueGrey.shade100,
-            hintStyle: const TextStyle(color: Colors.grey),
-            filled: true,
-            hintText: 'Insert Your Api Key',
-            errorText: _errorText,
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: BorderSide.none),
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.7,
+      height: 50,
+      decoration: BoxDecoration(
+          color: Colors.blueGrey.shade100,
+          borderRadius: BorderRadius.circular(15)),
+      child: Stack(children: [
+        Positioned(
+          top: 0,
+          child: SizedBox(
+            width: 200,
+            child: TextField(
+              controller: _apiKeyInputController,
+              onChanged: (value) {
+                _errorText = '';
+              },
+              decoration: InputDecoration(
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                fillColor: Colors.blueGrey.shade100,
+                hintStyle: const TextStyle(color: Colors.grey),
+                filled: true,
+                hintText: 'Insert Your Api Key',
+                errorText: _errorText,
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: BorderSide.none),
+              ),
+            ),
           ),
         ),
         Positioned(
-          right: 5,
+          right: 0,
           child: IconButton(
+              iconSize: 20,
               onPressed: () {
                 _isValidApiKey = widget._homebloc
                     .validateApiKey(_apiKeyInputController.text);
@@ -66,8 +79,8 @@ class _ApiKeyInputState extends State<ApiKeyInput> {
                 Icons.login,
                 color: Colors.grey,
               )),
-        )
-      ],
+        ),
+      ]),
     );
   }
 }

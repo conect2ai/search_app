@@ -60,6 +60,7 @@ class _ChatPageState extends State<ChatPage> {
             ),
           ),
           Container(
+            width: double.infinity,
             decoration: const BoxDecoration(color: Colors.grey, boxShadow: [
               BoxShadow(
                   color: AppColors.mainColor,
@@ -67,7 +68,7 @@ class _ChatPageState extends State<ChatPage> {
                   blurStyle: BlurStyle.solid,
                   blurRadius: 5)
             ]),
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: const ChatPageInput(),
           )
         ],
