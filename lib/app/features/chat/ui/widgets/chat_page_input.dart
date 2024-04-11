@@ -81,6 +81,13 @@ class _ChatPageInputState extends State<ChatPageInput> {
                                 }
                               }),
                             ],
+                            onEditingComplete: () {
+                              if (_textInputController.text.isNotEmpty) {
+                                _chatPageBloc.add(SendTextEvent(
+                                    question: _textInputController.text));
+                                _textInputController.text = '';
+                              }
+                            },
                             decoration: InputDecoration(
                               isDense: true,
                               fillColor: Colors.blueGrey.shade100,

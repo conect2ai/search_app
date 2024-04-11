@@ -22,17 +22,22 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     });
     on<SendTextEvent>(
       (event, emit) async {
+        _results.add(ChatMessage(
+            message: event.question, isQuestion: true, isAudio: false));
         if (_selectedImage != null) {
           _results.add(ChatMessage(
-              message: event.question, isQuestion: true, isAudio: false));
-          _results.add(ChatMessage(
-              message: await searchRepository.sendQuestionByText(
+              message: await searchRepository.sendQuestionByTextWithImage(
                   event.question, _selectedImage?.path ?? ''),
               isQuestion: false,
               isAudio: false));
-
-          emit(ReceiveResponseState(results: _results));
+        } else {
+          _results.add(ChatMessage(
+              message:
+                  await searchRepository.sendQuestionByText(event.question),
+              isQuestion: false,
+              isAudio: false));
         }
+        emit(ReceiveResponseState(results: _results));
       },
     );
     on<SendAudioEvent>(

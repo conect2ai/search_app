@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -29,49 +27,51 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: LogoAppBar.generateLogoAppBar(context, _authRepo.logout),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Center(
-              child: BlocBuilder<ChatPageBloc, ChatPageState>(
-                bloc: _bloc,
-                builder: (context, state) {
-                  if (state is InitialChatPageState) {
-                    return InkWell(
-                        onTap: () => _bloc.pickImage(ImageSource.camera),
-                        child: const PictureContainer());
-                  } else if (state is ReceiveResponseState) {
-                    return MessagesList(
-                      state: state,
-                    );
-                  } else if (state is ImageSelectedState) {
-                    return InkWell(
-                        onTap: () => _bloc.pickImage(ImageSource.camera),
-                        onLongPress: () => _bloc.add(RemoveImageEvent()),
-                        child: PictureContainer(file: state.file));
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                },
+    return SafeArea(
+      child: Scaffold(
+        appBar: LogoAppBar.generateLogoAppBar(context, _authRepo.logout),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Center(
+                child: BlocBuilder<ChatPageBloc, ChatPageState>(
+                  bloc: _bloc,
+                  builder: (context, state) {
+                    if (state is InitialChatPageState) {
+                      return InkWell(
+                          onTap: () => _bloc.pickImage(ImageSource.camera),
+                          child: const PictureContainer());
+                    } else if (state is ReceiveResponseState) {
+                      return MessagesList(
+                        state: state,
+                      );
+                    } else if (state is ImageSelectedState) {
+                      return InkWell(
+                          onTap: () => _bloc.pickImage(ImageSource.camera),
+                          onLongPress: () => _bloc.add(RemoveImageEvent()),
+                          child: PictureContainer(file: state.file));
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  },
+                ),
               ),
             ),
-          ),
-          Container(
-            width: double.infinity,
-            decoration: const BoxDecoration(color: Colors.grey, boxShadow: [
-              BoxShadow(
-                  color: AppColors.mainColor,
-                  offset: Offset(0, 0),
-                  blurStyle: BlurStyle.solid,
-                  blurRadius: 5)
-            ]),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: const ChatPageInput(),
-          )
-        ],
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(color: Colors.grey, boxShadow: [
+                BoxShadow(
+                    color: AppColors.mainColor,
+                    offset: Offset(0, 0),
+                    blurStyle: BlurStyle.solid,
+                    blurRadius: 5)
+              ]),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: const ChatPageInput(),
+            )
+          ],
+        ),
       ),
     );
   }

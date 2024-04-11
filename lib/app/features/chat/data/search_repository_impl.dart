@@ -15,7 +15,11 @@ class SearchRepositoryImpl implements SearchRepository {
   SearchRepositoryImpl(this._secureStorageService, this._authUser);
 
   final apiBaseUrl = dotenv.get('API_SEARCH_URL');
-  final apiEndPoints = dotenv.get('API_SEARCH_ENDPOINTS');
+  final apiConvertAudioToTextEndpoint =
+      dotenv.get('API_SEARCH_ENDPOINT_CONVERT_AUDIO_TO_TEXT');
+  final apiQuestionEndpoint = dotenv.get('API_SEARCH_ENDPOINT_QUESTION');
+  final apiQuestionWithImageEndpoint =
+      dotenv.get('API_SEARCH_ENDPOINT_QUESTION_IMAGE');
 
   Future<String?> getApiKey() {
     return _secureStorageService.readSecureData(_authUser.username ?? '');
@@ -27,7 +31,7 @@ class SearchRepositoryImpl implements SearchRepository {
     final imageFile = await http.MultipartFile.fromPath('image', imageFilePath);
     final audioFile = await http.MultipartFile.fromPath('audio', audioFilePath);
 
-    final apiUri = Uri.https(apiBaseUrl, '/chat/chat');
+    final apiUri = Uri.http(apiBaseUrl, '/chat/chat');
 
     final apiKey = await getApiKey();
 
@@ -49,26 +53,76 @@ class SearchRepositoryImpl implements SearchRepository {
   }
 
   @override
-  Future<String> sendQuestionByText(
+  Future<String> sendQuestionByText(String question) async {
+    final apiKey = await getApiKey();
+    final apiUri = Uri.http(apiBaseUrl, apiQuestionEndpoint);
+
+    final Map<String, String> headers = {
+      'accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $apiKey',
+    };
+
+    final fields = {
+      'question': question,
+      'brand': 'Volkswagen',
+      'model': 'Polo',
+      'year': '2023',
+    };
+
+    final response =
+        await http.post(apiUri, body: jsonEncode(fields), headers: headers);
+
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      print(responseData);
+      return responseData;
+    } else {
+      // final responseError = await response.stream.bytesToString();
+      final responseErrorJson = jsonDecode(response.body);
+      throw HttpException(responseErrorJson['detail']['msg']);
+    }
+  }
+
+  @override
+  Future<String> sendQuestionByTextWithImage(
       String question, String imageFilePath) async {
-    final imageFile = await http.MultipartFile.fromPath('image', imageFilePath);
+    final imageFile =
+        await http.MultipartFile.fromPath('image_file', imageFilePath);
 
     final apiKey = await getApiKey();
-    final apiUri = Uri.https(
-        apiBaseUrl, apiEndPoints, {'api_key': apiKey, 'question': question});
+    final apiUri = Uri.http(apiBaseUrl, apiQuestionWithImageEndpoint);
 
-    final request = http.MultipartRequest('POST', apiUri)..files.add(imageFile);
+    final Map<String, String> headers = {
+      'accept': 'multipart/form-data',
+      'Content-Type': 'multipart/form-data',
+      'Authorization': 'Bearer $apiKey',
+    };
+
+    final fields = {
+      'question': question,
+      'brand': 'Volkswagen',
+      'model': 'Polo',
+      'year': '2023',
+    };
+
+    final request = http.MultipartRequest('POST', apiUri)
+      ..files.add(imageFile)
+      ..fields.addAll(fields)
+      ..headers.addAll(headers);
 
     final response = await request.send();
 
     if (response.statusCode == 200) {
-      final responseData = await response.stream.bytesToString();
+      final data = await response.stream.bytesToString();
+      final responseData = jsonDecode(data);
       print(responseData);
       return responseData;
     } else {
-      final responseError = await response.stream.bytesToString();
-      final responseErrorJson = jsonDecode(responseError);
-      throw HttpException(responseErrorJson['detail']['msg']);
+      final error = await response.stream.bytesToString();
+      final responseError = jsonDecode(error);
+      print('error = $responseError');
+      throw HttpException(responseError['detail']['msg']);
     }
   }
 }
