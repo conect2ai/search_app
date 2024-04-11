@@ -29,12 +29,10 @@ class MessageBubble extends StatelessWidget {
             decoration: BoxDecoration(
                 color: isQuestion ? bubbleColor : Colors.yellow,
                 borderRadius: BorderRadius.circular(15)),
-            child: Expanded(
-              child: Text(
-                message,
-                style: AppTextStyles.chatMessageTextStyle,
-                softWrap: true,
-              ),
+            child: Text(
+              message,
+              style: AppTextStyles.chatMessageTextStyle,
+              softWrap: true,
             ),
           ),
         ]);

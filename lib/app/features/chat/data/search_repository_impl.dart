@@ -28,28 +28,26 @@ class SearchRepositoryImpl implements SearchRepository {
   @override
   Future<String> sendQuestionByAudio(
       String audioFilePath, String imageFilePath) async {
-    final imageFile = await http.MultipartFile.fromPath('image', imageFilePath);
-    final audioFile = await http.MultipartFile.fromPath('audio', audioFilePath);
+    final audioFile =
+        await http.MultipartFile.fromPath('audio_file', audioFilePath);
 
-    final apiUri = Uri.http(apiBaseUrl, '/chat/chat');
+    final apiUri = Uri.http(apiBaseUrl, apiConvertAudioToTextEndpoint);
 
     final apiKey = await getApiKey();
 
-    final request = http.MultipartRequest('POST', apiUri)
-      ..fields['api_key'] = apiKey ?? ''
-      ..files.add(imageFile)
+    final Map<String, String> headers = {
+      'accept': 'multipart/form-data',
+      'Authorization': 'Bearer $apiKey',
+    };
+
+    final requestConversion = http.MultipartRequest('POST', apiUri)
+      ..headers.addAll(headers)
       ..files.add(audioFile);
 
-    final response = await request.send();
+    final question = await requestConversion.send();
 
-    print(response);
-
-    if (response.statusCode == 201) {
-      print(response.stream.first);
-      return '';
-    } else {
-      throw HttpException('No response');
-    }
+    return sendQuestionByTextWithImage(
+        await question.stream.bytesToString(), imageFilePath);
   }
 
   @override
@@ -75,10 +73,8 @@ class SearchRepositoryImpl implements SearchRepository {
 
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
-      print(responseData);
       return responseData;
     } else {
-      // final responseError = await response.stream.bytesToString();
       final responseErrorJson = jsonDecode(response.body);
       throw HttpException(responseErrorJson['detail']['msg']);
     }
@@ -95,7 +91,6 @@ class SearchRepositoryImpl implements SearchRepository {
 
     final Map<String, String> headers = {
       'accept': 'multipart/form-data',
-      'Content-Type': 'multipart/form-data',
       'Authorization': 'Bearer $apiKey',
     };
 
@@ -116,12 +111,10 @@ class SearchRepositoryImpl implements SearchRepository {
     if (response.statusCode == 200) {
       final data = await response.stream.bytesToString();
       final responseData = jsonDecode(data);
-      print(responseData);
-      return responseData;
+      return responseData['response_content'];
     } else {
       final error = await response.stream.bytesToString();
       final responseError = jsonDecode(error);
-      print('error = $responseError');
       throw HttpException(responseError['detail']['msg']);
     }
   }
