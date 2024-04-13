@@ -28,6 +28,10 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      top: false,
+      left: false,
+      right: false,
+      bottom: true,
       child: Scaffold(
         appBar: LogoAppBar.generateLogoAppBar(context, _authRepo.logout),
         body: Column(

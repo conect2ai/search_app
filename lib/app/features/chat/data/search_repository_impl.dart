@@ -44,10 +44,14 @@ class SearchRepositoryImpl implements SearchRepository {
       ..headers.addAll(headers)
       ..files.add(audioFile);
 
-    final question = await requestConversion.send();
+    final questionStreamedResponse = await requestConversion.send();
+    final questionString =
+        await questionStreamedResponse.stream.bytesToString();
 
-    return sendQuestionByTextWithImage(
-        await question.stream.bytesToString(), imageFilePath);
+    final questionJson = jsonDecode(questionString) as Map<String, dynamic>;
+    final question = questionJson['text'] as String;
+
+    return question;
   }
 
   @override

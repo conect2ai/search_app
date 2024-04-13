@@ -184,9 +184,9 @@ class _ChatPageInputState extends State<ChatPageInput> {
               _chatPageInputBloc.startRecording();
               _chatPageInputBloc.add(FocusAudioEvent());
             },
-            onLongPressUp: () {
-              _chatPageInputBloc.stopRecording();
-              _chatPageBloc.add(SendAudioEvent(path: _chatPageInputBloc.path));
+            onLongPressUp: () async {
+              final audioFilePath = await _chatPageInputBloc.stopRecording();
+              _chatPageBloc.add(SendAudioEvent(path: audioFilePath ?? ''));
               _chatPageInputBloc.add(FocusTextEvent());
             },
             child: const Padding(

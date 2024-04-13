@@ -23,13 +23,17 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     on<SendTextEvent>(
       (event, emit) async {
         _results.add(ChatMessage(
-            message: event.question, isQuestion: true, isAudio: false));
+            message: event.question,
+            isQuestion: true,
+            isAudio: false,
+            imagePath: _selectedImage?.path));
         if (_selectedImage != null) {
           _results.add(ChatMessage(
-              message: await searchRepository.sendQuestionByTextWithImage(
-                  event.question, _selectedImage?.path ?? ''),
-              isQuestion: false,
-              isAudio: false));
+            message: await searchRepository.sendQuestionByTextWithImage(
+                event.question, _selectedImage!.path),
+            isQuestion: false,
+            isAudio: false,
+          ));
         } else {
           _results.add(ChatMessage(
               message:
@@ -42,11 +46,22 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     );
     on<SendAudioEvent>(
       (event, emit) async {
-        if (_selectedImage != null) {
+        if (_selectedImage != null && event.path.isNotEmpty) {
           _results.add(ChatMessage(
-              audioPath: event.path, isQuestion: true, isAudio: true));
-          searchRepository.sendQuestionByAudio(
+              audioPath: event.path,
+              isQuestion: true,
+              isAudio: true,
+              imagePath: _selectedImage!.path));
+          final convertedAudio = await searchRepository.sendQuestionByAudio(
               event.path, _selectedImage?.path ?? '');
+          final answer = await searchRepository.sendQuestionByTextWithImage(
+              convertedAudio, _selectedImage!.path);
+
+          _results.add(ChatMessage(
+            isQuestion: false,
+            isAudio: false,
+            message: answer,
+          ));
           emit(ReceiveResponseState(results: _results));
         }
       },

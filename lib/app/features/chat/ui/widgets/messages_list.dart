@@ -34,13 +34,18 @@ class _MessagesListState extends State<MessagesList> {
       controller: _scrollController,
       itemCount: widget.state.results.length,
       itemBuilder: (context, index) {
-        return widget.state.results[index].isAudio
+        final message = widget.state.results[index];
+        return message.isAudio
             ? Align(
                 alignment: Alignment.centerRight,
-                child: WaveBubble(path: widget.state.results[index].audioPath!))
+                child: WaveBubble(
+                  path: message.audioPath!,
+                  imagePath: message.imagePath,
+                ))
             : MessageBubble(
-                message: widget.state.results[index].message!,
-                isQuestion: widget.state.results[index].isQuestion,
+                message: message.message!,
+                isQuestion: message.isQuestion,
+                imagePath: message.imagePath,
               );
       },
     );
