@@ -35,15 +35,16 @@ class ChatPageInputBloc extends Bloc<ChatPageInputEvent, ChatPageInputState> {
     final hasPermission = await _recorderController.checkPermission();
     if (hasPermission) {
       _path =
-          '${_appDirectory.path}/${DateTime.now().millisecondsSinceEpoch}.m4a';
+          '${_appDirectory.path}/${DateTime.now().millisecondsSinceEpoch}.mp4';
       await _recorderController.record(path: _path);
     }
   }
 
-  void stopRecording() async {
+  Future<String?> stopRecording() async {
     if (_recorderController.isRecording) {
-      await _recorderController.stop();
+      return await _recorderController.stop();
     }
+    return null;
   }
 
   RecorderController get recorderController => _recorderController;

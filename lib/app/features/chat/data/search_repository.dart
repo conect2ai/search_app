@@ -1,5 +1,9 @@
-import 'dart:io';
-
 abstract interface class SearchRepository {
-  Future<String> getResponse(String question, File? imageFile);
+  Future<String> sendQuestionByText(
+    String question,
+  );
+  Future<String> sendQuestionByTextWithImage(
+      String question, String imageFilePath);
+  Future<String> sendQuestionByAudio(
+      String audioFilePath, String imageFilePath);
 }
