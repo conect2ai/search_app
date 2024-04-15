@@ -1,23 +1,23 @@
 import 'dart:io';
 
-import 'package:app_search/app/features/chat/interactor/blocs/chatpage_inputs/chat_page_input_events.dart';
 import 'package:bloc/bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../../../blocs/loading_overlay_bloc.dart';
+import '../../../../../blocs/loading_overlay_event.dart';
 import '../../../../../core/entities/chat_message.dart';
 import '../../../data/search_repository.dart';
-import '../chatpage_inputs/chat_page_input_bloc.dart';
 import 'chat_page_event.dart';
 import 'chat_page_states.dart';
 
 class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
   final SearchRepository _searchRepository;
-  final ChatPageInputBloc _chatPageInputBloc;
+  final LoadingOverlayBloc _loadingOverlayBloc;
   final List<ChatMessage> _results = [];
   final ImagePicker _imagePicker = ImagePicker();
   File? _selectedImage;
 
-  ChatPageBloc(this._searchRepository, this._chatPageInputBloc)
+  ChatPageBloc(this._searchRepository, this._loadingOverlayBloc)
       : super(InitialChatPageState()) {
     on<RemoveImageEvent>((event, emit) {
       _selectedImage = null;
@@ -32,7 +32,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
             imagePath: _selectedImage?.path));
         emit(ReceiveResponseState(results: _results));
 
-        _chatPageInputBloc.add(StartLoadingEvent());
+        _loadingOverlayBloc.add(ShowLoadingOverlayEvent());
         if (_selectedImage != null) {
           _results.add(ChatMessage(
             message: await _searchRepository.sendQuestionByTextWithImage(
@@ -47,7 +47,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
               isQuestion: false,
               isAudio: false));
         }
-        _chatPageInputBloc.add(FinishLoadingEvent());
+        _loadingOverlayBloc.add(HideLoadingOverlayEvent());
         emit(ReceiveResponseState(results: _results));
       },
     );

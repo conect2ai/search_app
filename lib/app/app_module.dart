@@ -2,6 +2,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
+import 'blocs/loading_overlay_bloc.dart';
 import 'core/entities/auth_user.dart';
 import 'features/auth/data/auth_repository.dart';
 import 'features/auth/data/auth_repository_impl.dart';
@@ -19,6 +20,7 @@ class AppModule extends Module {
     i.add<HomePageBloc>(HomePageBloc.new);
     i.add<SplashPageBloc>(SplashPageBloc.new);
     i.addSingleton<AuthUser>(AuthUser.new);
+    // i.addSingleton<LoadingOverlayBloc>(LoadingOverlayBloc.new);
     i.addSingleton<SecureStorageService>(SecureStorageService.new);
     i.addSingleton<AuthRepository>(AuthRepositoryImpl.new);
     i.add<Client>(http.Client.new);
