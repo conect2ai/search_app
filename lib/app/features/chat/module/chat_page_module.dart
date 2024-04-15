@@ -12,7 +12,7 @@ class ChatPageModule extends Module {
   @override
   void binds(i) {
     i.addLazySingleton<ChatPageBloc>(ChatPageBloc.new);
-    i.add<ChatPageInputBloc>(ChatPageInputBloc.new);
+    i.addLazySingleton<ChatPageInputBloc>(ChatPageInputBloc.new);
     i.add<SearchRepository>(SearchRepositoryImpl.new);
     i.add<http.Client>(http.Client.new);
   }

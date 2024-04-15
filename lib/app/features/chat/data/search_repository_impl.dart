@@ -77,7 +77,7 @@ class SearchRepositoryImpl implements SearchRepository {
 
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
-      return responseData;
+      return responseData['response_content'];
     } else {
       final responseErrorJson = jsonDecode(response.body);
       throw HttpException(responseErrorJson['detail']['msg']);

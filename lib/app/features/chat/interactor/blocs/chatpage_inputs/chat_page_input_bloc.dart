@@ -19,6 +19,12 @@ class ChatPageInputBloc extends Bloc<ChatPageInputEvent, ChatPageInputState> {
     on<FocusAudioEvent>((event, emit) {
       emit(AudioModeState());
     });
+    on<StartLoadingEvent>((event, emit) {
+      emit(AwatingForResponstState());
+    });
+    on<FinishLoadingEvent>((event, emit) {
+      emit(ResponseReceveidSuccessState());
+    });
   }
 
   void checkPermission() async {

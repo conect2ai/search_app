@@ -1,20 +1,23 @@
 import 'dart:io';
 
+import 'package:app_search/app/features/chat/interactor/blocs/chatpage_inputs/chat_page_input_events.dart';
 import 'package:bloc/bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../core/entities/chat_message.dart';
 import '../../../data/search_repository.dart';
+import '../chatpage_inputs/chat_page_input_bloc.dart';
 import 'chat_page_event.dart';
 import 'chat_page_states.dart';
 
 class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
-  final SearchRepository searchRepository;
+  final SearchRepository _searchRepository;
+  final ChatPageInputBloc _chatPageInputBloc;
   final List<ChatMessage> _results = [];
   final ImagePicker _imagePicker = ImagePicker();
   File? _selectedImage;
 
-  ChatPageBloc({required this.searchRepository})
+  ChatPageBloc(this._searchRepository, this._chatPageInputBloc)
       : super(InitialChatPageState()) {
     on<RemoveImageEvent>((event, emit) {
       _selectedImage = null;
@@ -27,9 +30,12 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
             isQuestion: true,
             isAudio: false,
             imagePath: _selectedImage?.path));
+        emit(ReceiveResponseState(results: _results));
+
+        _chatPageInputBloc.add(StartLoadingEvent());
         if (_selectedImage != null) {
           _results.add(ChatMessage(
-            message: await searchRepository.sendQuestionByTextWithImage(
+            message: await _searchRepository.sendQuestionByTextWithImage(
                 event.question, _selectedImage!.path),
             isQuestion: false,
             isAudio: false,
@@ -37,10 +43,11 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
         } else {
           _results.add(ChatMessage(
               message:
-                  await searchRepository.sendQuestionByText(event.question),
+                  await _searchRepository.sendQuestionByText(event.question),
               isQuestion: false,
               isAudio: false));
         }
+        _chatPageInputBloc.add(FinishLoadingEvent());
         emit(ReceiveResponseState(results: _results));
       },
     );
@@ -52,9 +59,10 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
               isQuestion: true,
               isAudio: true,
               imagePath: _selectedImage!.path));
-          final convertedAudio = await searchRepository.sendQuestionByAudio(
+          emit(ReceiveResponseState(results: _results));
+          final convertedAudio = await _searchRepository.sendQuestionByAudio(
               event.path, _selectedImage?.path ?? '');
-          final answer = await searchRepository.sendQuestionByTextWithImage(
+          final answer = await _searchRepository.sendQuestionByTextWithImage(
               convertedAudio, _selectedImage!.path);
 
           _results.add(ChatMessage(
@@ -66,8 +74,6 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
         }
       },
     );
-    on<SelectImageEvent>(
-        (event, emit) => emit(ImageSelectedState(file: event.file)));
   }
 
   void pickImage(ImageSource source) async {
