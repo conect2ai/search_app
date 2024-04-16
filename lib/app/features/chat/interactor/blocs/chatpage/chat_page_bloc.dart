@@ -34,18 +34,26 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
 
         _loadingOverlayBloc.add(ShowLoadingOverlayEvent());
         if (_selectedImage != null) {
-          _results.add(ChatMessage(
-            message: await _searchRepository.sendQuestionByTextWithImage(
-                event.question, _selectedImage!.path),
-            isQuestion: false,
-            isAudio: false,
-          ));
-        } else {
-          _results.add(ChatMessage(
-              message:
-                  await _searchRepository.sendQuestionByText(event.question),
+          try {
+            final message = await _searchRepository.sendQuestionByTextWithImage(
+                event.question, _selectedImage!.path);
+            _results.add(ChatMessage(
+              message: message,
               isQuestion: false,
-              isAudio: false));
+              isAudio: false,
+            ));
+          } catch (error) {
+            _loadingOverlayBloc.add(ShowErrorEvent(message: error.toString()));
+          }
+        } else {
+          try {
+            final message =
+                await _searchRepository.sendQuestionByText(event.question);
+            _results.add(ChatMessage(
+                message: message, isQuestion: false, isAudio: false));
+          } catch (error) {
+            _loadingOverlayBloc.add(ShowErrorEvent(message: error.toString()));
+          }
         }
         _loadingOverlayBloc.add(HideLoadingOverlayEvent());
         emit(ReceiveResponseState(results: _results));

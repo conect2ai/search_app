@@ -72,8 +72,14 @@ class SearchRepositoryImpl implements SearchRepository {
       'year': '2023',
     };
 
-    final response =
-        await http.post(apiUri, body: jsonEncode(fields), headers: headers);
+    final response = await http
+        .post(apiUri, body: jsonEncode(fields), headers: headers)
+        .timeout(
+      const Duration(seconds: 120),
+      onTimeout: () {
+        throw Exception("Failed to communicate with server");
+      },
+    );
 
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
@@ -110,7 +116,12 @@ class SearchRepositoryImpl implements SearchRepository {
       ..fields.addAll(fields)
       ..headers.addAll(headers);
 
-    final response = await request.send();
+    final response = await request.send().timeout(
+      const Duration(seconds: 120),
+      onTimeout: () {
+        throw Exception("Failed to communicate with server");
+      },
+    );
 
     if (response.statusCode == 200) {
       final data = await response.stream.bytesToString();

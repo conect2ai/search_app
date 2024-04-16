@@ -20,6 +20,7 @@ class LoadingOverlay {
                 valueColor: AlwaysStoppedAnimation(
                   AppColors.mainColor,
                 ),
+                strokeWidth: 5,
               ),
             ),
           ),

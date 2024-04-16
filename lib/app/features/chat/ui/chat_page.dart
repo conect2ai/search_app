@@ -1,3 +1,4 @@
+import 'package:app_search/app/core/themes/app_text_styles.dart';
 import 'package:app_search/app/features/chat/interactor/blocs/chatpage_inputs/chat_page_input_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import '../../../blocs/loading_overlay_bloc.dart';
 import '../../../blocs/loading_overlay_state.dart';
 import '../../../core/themes/app_colors.dart';
+import '../../../widgets/custom_dialog.dart';
 import '../../../widgets/loading_overlay.dart';
 import '../../../widgets/logo_appbar.dart';
 import '../../auth/data/auth_repository.dart';
@@ -48,6 +50,15 @@ class _ChatPageState extends State<ChatPage> {
             } else if (state is HidingLoadingOverlayState) {
               _loadingOverlay.hideOverlay();
               _chatInputBloc.add(FocusTextEvent());
+            } else if (state is OnErrorState) {
+              _loadingOverlay.hideOverlay();
+              await showDialog(
+                context: context,
+                builder: (context) => CustomDialog(
+                  message: state.message,
+                  buttonMessage: 'Close',
+                ),
+              );
             }
           },
           child: Column(

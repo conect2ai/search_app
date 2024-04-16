@@ -10,5 +10,7 @@ class LoadingOverlayBloc
         (event, emit) => emit(ShowingLoadingOverlayState()));
     on<HideLoadingOverlayEvent>(
         (event, emit) => emit(HidingLoadingOverlayState()));
+    on<ShowErrorEvent>(
+        (event, emit) => emit(OnErrorState(message: event.message)));
   }
 }
