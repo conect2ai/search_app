@@ -25,33 +25,38 @@ class MessageBubble extends StatelessWidget {
         mainAxisAlignment:
             isQuestion ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 18, horizontal: 15),
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            width: 200,
-            decoration: BoxDecoration(
-                color: isQuestion ? bubbleColor : Colors.yellow,
-                borderRadius: BorderRadius.circular(15)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                imagePath != null
-                    ? Image.file(
-                        File(imagePath!),
-                        height: 150,
-                        width: 220,
-                        fit: BoxFit.fill,
-                      )
-                    : const SizedBox(),
-                const SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  message,
-                  style: AppTextStyles.chatMessageTextStyle,
-                  softWrap: true,
-                ),
-              ],
+          Card(
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            elevation: 5,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              width: 200,
+              decoration: BoxDecoration(
+                  color: isQuestion ? bubbleColor : Colors.yellow,
+                  borderRadius: BorderRadius.circular(15)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  imagePath != null
+                      ? Image.file(
+                          File(imagePath!),
+                          height: 150,
+                          width: 220,
+                          fit: BoxFit.fill,
+                        )
+                      : const SizedBox(),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    message,
+                    style: AppTextStyles.chatMessageTextStyle,
+                    softWrap: true,
+                  ),
+                ],
+              ),
             ),
           ),
         ]);

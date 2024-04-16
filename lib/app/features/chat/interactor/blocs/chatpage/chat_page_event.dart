@@ -16,10 +16,10 @@ class SendAudioEvent extends ChatPageEvent {
   SendAudioEvent({required this.path});
 }
 
-class SelectImageEvent extends ChatPageEvent {
-  XFile file;
+// class SelectImageEvent extends ChatPageEvent {
+//   XFile file;
 
-  SelectImageEvent({required this.file});
-}
+//   SelectImageEvent({required this.file});
+// }
 
-class RemoveImageEvent extends ChatPageEvent {}
+// class RemoveImageEvent extends ChatPageEvent {}

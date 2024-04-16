@@ -19,10 +19,10 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
 
   ChatPageBloc(this._searchRepository, this._loadingOverlayBloc)
       : super(InitialChatPageState()) {
-    on<RemoveImageEvent>((event, emit) {
-      _selectedImage = null;
-      emit(InitialChatPageState());
-    });
+    // on<RemoveImageEvent>((event, emit) {
+    //   _selectedImage = null;
+    //   emit(InitialChatPageState());
+    // });
     on<SendTextEvent>(
       (event, emit) async {
         _results.add(ChatMessage(
@@ -42,6 +42,8 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
               isQuestion: false,
               isAudio: false,
             ));
+          } on HttpException catch (error) {
+            _loadingOverlayBloc.add(ShowErrorEvent(message: error.message));
           } catch (error) {
             _loadingOverlayBloc.add(ShowErrorEvent(message: error.toString()));
           }
@@ -68,16 +70,24 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
               isAudio: true,
               imagePath: _selectedImage!.path));
           emit(ReceiveResponseState(results: _results));
-          final convertedAudio = await _searchRepository.sendQuestionByAudio(
-              event.path, _selectedImage?.path ?? '');
-          final answer = await _searchRepository.sendQuestionByTextWithImage(
-              convertedAudio, _selectedImage!.path);
+          _loadingOverlayBloc.add(ShowLoadingOverlayEvent());
+          try {
+            final convertedAudio = await _searchRepository.sendQuestionByAudio(
+                event.path, _selectedImage?.path ?? '');
+            final answer = await _searchRepository.sendQuestionByTextWithImage(
+                convertedAudio, _selectedImage!.path);
+            _results.add(ChatMessage(
+              isQuestion: false,
+              isAudio: false,
+              message: answer,
+            ));
+          } on HttpException catch (error) {
+            _loadingOverlayBloc.add(ShowErrorEvent(message: error.message));
+          } catch (error) {
+            _loadingOverlayBloc.add(ShowErrorEvent(message: error.toString()));
+          }
 
-          _results.add(ChatMessage(
-            isQuestion: false,
-            isAudio: false,
-            message: answer,
-          ));
+          _loadingOverlayBloc.add(HideLoadingOverlayEvent());
           emit(ReceiveResponseState(results: _results));
         }
       },
@@ -88,7 +98,6 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     final file = await _imagePicker.pickImage(source: source);
     if (file != null) {
       _selectedImage = File(file.path);
-      add(SelectImageEvent(file: file));
     }
   }
 }

@@ -44,7 +44,12 @@ class SearchRepositoryImpl implements SearchRepository {
       ..headers.addAll(headers)
       ..files.add(audioFile);
 
-    final questionStreamedResponse = await requestConversion.send();
+    final questionStreamedResponse = await requestConversion.send().timeout(
+      const Duration(seconds: 120),
+      onTimeout: () {
+        throw const HttpException("Failed to communicate with server");
+      },
+    );
     final questionString =
         await questionStreamedResponse.stream.bytesToString();
 
@@ -119,7 +124,7 @@ class SearchRepositoryImpl implements SearchRepository {
     final response = await request.send().timeout(
       const Duration(seconds: 120),
       onTimeout: () {
-        throw Exception("Failed to communicate with server");
+        throw const HttpException("Failed to communicate with server");
       },
     );
 
