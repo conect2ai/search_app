@@ -1,4 +1,3 @@
-import 'package:app_search/app/core/themes/app_text_styles.dart';
 import 'package:app_search/app/features/chat/interactor/blocs/chatpage_inputs/chat_page_input_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +13,6 @@ import '../../auth/data/auth_repository.dart';
 import '../interactor/blocs/chatpage/chat_page_bloc.dart';
 import '../interactor/blocs/chatpage/chat_page_states.dart';
 import '../interactor/blocs/chatpage_inputs/chat_page_input_bloc.dart';
-import '../interactor/blocs/chatpage_inputs/chat_page_input_state.dart';
 import 'widgets/chat_page_input.dart';
 import 'widgets/messages_list.dart';
 
