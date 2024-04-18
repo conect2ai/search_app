@@ -2,6 +2,7 @@ import 'package:app_search/app/features/chat/interactor/blocs/chatpage_inputs/ch
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../../blocs/loading_overlay_bloc.dart';
 import '../../../blocs/loading_overlay_state.dart';
@@ -74,7 +75,11 @@ class _ChatPageState extends State<ChatPage> {
                           state: state,
                         );
                       } else {
-                        return const CircularProgressIndicator();
+                        return const SpinKitSpinningLines(
+                          size: 100,
+                          color: AppColors.mainColor,
+                        );
+                        ;
                       }
                     },
                   ),

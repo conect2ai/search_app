@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../core/themes/app_colors.dart';
 
@@ -13,15 +14,9 @@ class LoadingOverlay {
         builder: (context) => const ColoredBox(
           color: Color(0x80000000),
           child: Center(
-            child: SizedBox(
-              width: 100,
-              height: 100,
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(
-                  AppColors.mainColor,
-                ),
-                strokeWidth: 5,
-              ),
+            child: SpinKitSpinningLines(
+              size: 100,
+              color: AppColors.mainColor,
             ),
           ),
         ),

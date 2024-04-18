@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../../core/themes/app_colors.dart';
 import '../../../widgets/logo_appbar.dart';
@@ -36,7 +37,10 @@ class _AuthPageState extends State<AuthPage> {
             return SignUpForm(
                 username: state.username, password: state.password);
           } else {
-            return const CircularProgressIndicator();
+            return const SpinKitSpinningLines(
+              size: 100,
+              color: AppColors.mainColor,
+            );
           }
         },
       ),

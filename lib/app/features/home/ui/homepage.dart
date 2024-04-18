@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../../core/themes/app_colors.dart';
 import '../../../widgets/logo_appbar.dart';
@@ -57,7 +58,10 @@ class _HomePageState extends State<HomePage> {
                       homebloc: _homePageBloc,
                     );
                   } else {
-                    return const CircularProgressIndicator();
+                    return const SpinKitSpinningLines(
+                      size: 100,
+                      color: AppColors.mainColor,
+                    );
                   }
                 },
               ),
