@@ -18,13 +18,13 @@ class AuthPage extends StatefulWidget {
   State<AuthPage> createState() => _AuthPageState();
 }
 
-class _AuthPageState extends State<AuthPage> {
+class _AuthPageState extends State<AuthPage> with LogoAppBar {
   final _authBloc = Modular.get<AuthBloc>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: LogoAppBar.generateLogoAppBar(
+      appBar: generateLogoAppBar(
         context,
       ),
       body: BlocBuilder<AuthBloc, AuthState>(

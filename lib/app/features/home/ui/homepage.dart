@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with LogoAppBar {
   final _homePageBloc = Modular.get<HomePageBloc>();
   final _authRepo = Modular.get<AuthRepository>();
 
@@ -29,7 +29,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: LogoAppBar.generateLogoAppBar(context, _authRepo.logout),
+      appBar: generateLogoAppBar(context, [
+        IconButton(
+            onPressed: () => Modular.to.navigate('/'), icon: Icon(Icons.logout))
+      ]),
       body: Stack(
         children: [
           Align(

@@ -3,10 +3,10 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../core/themes/app_colors.dart';
 
-class LoadingOverlay {
+mixin LoadingOverlay {
   OverlayEntry? _overlay;
 
-  LoadingOverlay();
+  // LoadingOverlay();
 
   void showOverlay(BuildContext context) {
     if (_overlay == null) {

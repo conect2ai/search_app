@@ -24,13 +24,12 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatPageState extends State<ChatPage> with LoadingOverlay, LogoAppBar {
   final _bloc = Modular.get<ChatPageBloc>();
   final _chatInputBloc = Modular.get<ChatPageInputBloc>();
   final _loadingOverlayBloc = Modular.get<LoadingOverlayBloc>();
   final _authRepo = Modular.get<AuthRepository>();
   int lastIndex = 0;
-  final LoadingOverlay _loadingOverlay = LoadingOverlay();
 
   @override
   Widget build(BuildContext context) {
@@ -40,17 +39,21 @@ class _ChatPageState extends State<ChatPage> {
       right: false,
       bottom: true,
       child: Scaffold(
-        appBar: LogoAppBar.generateLogoAppBar(context, _authRepo.logout),
+        appBar: generateLogoAppBar(context, [
+          IconButton(
+              onPressed: () => Modular.to.navigate('/'),
+              icon: Icon(Icons.logout))
+        ]),
         body: BlocListener<LoadingOverlayBloc, LoadingOverlayState>(
           bloc: _loadingOverlayBloc,
           listener: (context, state) async {
             if (state is ShowingLoadingOverlayState) {
-              _loadingOverlay.showOverlay(context);
+              showOverlay(context);
             } else if (state is HidingLoadingOverlayState) {
-              _loadingOverlay.hideOverlay();
+              hideOverlay();
               _chatInputBloc.add(FocusTextEvent());
             } else if (state is OnErrorState) {
-              _loadingOverlay.hideOverlay();
+              hideOverlay();
               await showDialog(
                 context: context,
                 builder: (context) => CustomDialog(
@@ -79,7 +82,6 @@ class _ChatPageState extends State<ChatPage> {
                           size: 100,
                           color: AppColors.mainColor,
                         );
-                        ;
                       }
                     },
                   ),
