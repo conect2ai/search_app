@@ -3,23 +3,26 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../../../blocs/loading_overlay_bloc.dart';
+import '../../../../../blocs/loading_overlay_event.dart';
 import '../../../../../core/entities/chat_message.dart';
 import '../../../data/search_repository.dart';
 import 'chat_page_event.dart';
 import 'chat_page_states.dart';
 
 class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
-  final SearchRepository searchRepository;
+  final SearchRepository _searchRepository;
+  final LoadingOverlayBloc _loadingOverlayBloc;
   final List<ChatMessage> _results = [];
   final ImagePicker _imagePicker = ImagePicker();
   File? _selectedImage;
 
-  ChatPageBloc({required this.searchRepository})
+  ChatPageBloc(this._searchRepository, this._loadingOverlayBloc)
       : super(InitialChatPageState()) {
-    on<RemoveImageEvent>((event, emit) {
-      _selectedImage = null;
-      emit(InitialChatPageState());
-    });
+    // on<RemoveImageEvent>((event, emit) {
+    //   _selectedImage = null;
+    //   emit(InitialChatPageState());
+    // });
     on<SendTextEvent>(
       (event, emit) async {
         _results.add(ChatMessage(
@@ -27,20 +30,34 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
             isQuestion: true,
             isAudio: false,
             imagePath: _selectedImage?.path));
+        emit(ReceiveResponseState(results: _results));
+
+        _loadingOverlayBloc.add(ShowLoadingOverlayEvent());
         if (_selectedImage != null) {
-          _results.add(ChatMessage(
-            message: await searchRepository.sendQuestionByTextWithImage(
-                event.question, _selectedImage!.path),
-            isQuestion: false,
-            isAudio: false,
-          ));
-        } else {
-          _results.add(ChatMessage(
-              message:
-                  await searchRepository.sendQuestionByText(event.question),
+          try {
+            final message = await _searchRepository.sendQuestionByTextWithImage(
+                event.question, _selectedImage!.path);
+            _results.add(ChatMessage(
+              message: message,
               isQuestion: false,
-              isAudio: false));
+              isAudio: false,
+            ));
+          } on HttpException catch (error) {
+            _loadingOverlayBloc.add(ShowErrorEvent(message: error.message));
+          } catch (error) {
+            _loadingOverlayBloc.add(ShowErrorEvent(message: error.toString()));
+          }
+        } else {
+          try {
+            final message =
+                await _searchRepository.sendQuestionByText(event.question);
+            _results.add(ChatMessage(
+                message: message, isQuestion: false, isAudio: false));
+          } catch (error) {
+            _loadingOverlayBloc.add(ShowErrorEvent(message: error.toString()));
+          }
         }
+        _loadingOverlayBloc.add(HideLoadingOverlayEvent());
         emit(ReceiveResponseState(results: _results));
       },
     );
@@ -52,29 +69,35 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
               isQuestion: true,
               isAudio: true,
               imagePath: _selectedImage!.path));
-          final convertedAudio = await searchRepository.sendQuestionByAudio(
-              event.path, _selectedImage?.path ?? '');
-          final answer = await searchRepository.sendQuestionByTextWithImage(
-              convertedAudio, _selectedImage!.path);
+          emit(ReceiveResponseState(results: _results));
+          _loadingOverlayBloc.add(ShowLoadingOverlayEvent());
+          try {
+            final convertedAudio = await _searchRepository.sendQuestionByAudio(
+                event.path, _selectedImage?.path ?? '');
+            final answer = await _searchRepository.sendQuestionByTextWithImage(
+                convertedAudio, _selectedImage!.path);
+            _results.add(ChatMessage(
+              isQuestion: false,
+              isAudio: false,
+              message: answer,
+            ));
+          } on HttpException catch (error) {
+            _loadingOverlayBloc.add(ShowErrorEvent(message: error.message));
+          } catch (error) {
+            _loadingOverlayBloc.add(ShowErrorEvent(message: error.toString()));
+          }
 
-          _results.add(ChatMessage(
-            isQuestion: false,
-            isAudio: false,
-            message: answer,
-          ));
+          _loadingOverlayBloc.add(HideLoadingOverlayEvent());
           emit(ReceiveResponseState(results: _results));
         }
       },
     );
-    on<SelectImageEvent>(
-        (event, emit) => emit(ImageSelectedState(file: event.file)));
   }
 
   void pickImage(ImageSource source) async {
     final file = await _imagePicker.pickImage(source: source);
     if (file != null) {
       _selectedImage = File(file.path);
-      add(SelectImageEvent(file: file));
     }
   }
 }

@@ -19,7 +19,7 @@ class SplashPageBloc {
     user.updateToken(userInfo);
     user.updatedUsernameAndPassword(userInfo);
 
-    Future.delayed(const Duration(seconds: 1), () => selectInitialRoute());
+    Future.delayed(const Duration(seconds: 3), () => selectInitialRoute());
   }
 
   void selectInitialRoute() {

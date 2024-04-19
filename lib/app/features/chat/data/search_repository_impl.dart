@@ -44,7 +44,12 @@ class SearchRepositoryImpl implements SearchRepository {
       ..headers.addAll(headers)
       ..files.add(audioFile);
 
-    final questionStreamedResponse = await requestConversion.send();
+    final questionStreamedResponse = await requestConversion.send().timeout(
+      const Duration(seconds: 120),
+      onTimeout: () {
+        throw const HttpException("Failed to communicate with server");
+      },
+    );
     final questionString =
         await questionStreamedResponse.stream.bytesToString();
 
@@ -72,12 +77,18 @@ class SearchRepositoryImpl implements SearchRepository {
       'year': '2023',
     };
 
-    final response =
-        await http.post(apiUri, body: jsonEncode(fields), headers: headers);
+    final response = await http
+        .post(apiUri, body: jsonEncode(fields), headers: headers)
+        .timeout(
+      const Duration(seconds: 120),
+      onTimeout: () {
+        throw Exception("Failed to communicate with server");
+      },
+    );
 
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
-      return responseData;
+      return responseData['response_content'];
     } else {
       final responseErrorJson = jsonDecode(response.body);
       throw HttpException(responseErrorJson['detail']['msg']);
@@ -110,7 +121,12 @@ class SearchRepositoryImpl implements SearchRepository {
       ..fields.addAll(fields)
       ..headers.addAll(headers);
 
-    final response = await request.send();
+    final response = await request.send().timeout(
+      const Duration(seconds: 120),
+      onTimeout: () {
+        throw const HttpException("Failed to communicate with server");
+      },
+    );
 
     if (response.statusCode == 200) {
       final data = await response.stream.bytesToString();

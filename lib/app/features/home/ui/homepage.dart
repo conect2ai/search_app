@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../../core/themes/app_colors.dart';
 import '../../../widgets/logo_appbar.dart';
@@ -16,7 +17,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with LogoAppBar {
   final _homePageBloc = Modular.get<HomePageBloc>();
   final _authRepo = Modular.get<AuthRepository>();
 
@@ -28,7 +29,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: LogoAppBar.generateLogoAppBar(context, _authRepo.logout),
+      appBar: generateLogoAppBar(context, [
+        IconButton(
+            onPressed: () => Modular.to.navigate('/'), icon: Icon(Icons.logout))
+      ]),
       body: Stack(
         children: [
           Align(
@@ -57,7 +61,10 @@ class _HomePageState extends State<HomePage> {
                       homebloc: _homePageBloc,
                     );
                   } else {
-                    return const CircularProgressIndicator();
+                    return const SpinKitSpinningLines(
+                      size: 100,
+                      color: AppColors.mainColor,
+                    );
                   }
                 },
               ),

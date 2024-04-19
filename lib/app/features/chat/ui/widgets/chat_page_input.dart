@@ -86,6 +86,7 @@ class _ChatPageInputState extends State<ChatPageInput> {
                                 _chatPageBloc.add(SendTextEvent(
                                     question: _textInputController.text));
                                 _textInputController.text = '';
+                                FocusManager.instance.primaryFocus?.unfocus();
                               }
                             },
                             decoration: InputDecoration(
@@ -170,6 +171,7 @@ class _ChatPageInputState extends State<ChatPageInput> {
                 _chatPageBloc
                     .add(SendTextEvent(question: _textInputController.text));
                 _textInputController.text = '';
+                FocusManager.instance.primaryFocus?.unfocus();
               }
             },
             icon: const Icon(
