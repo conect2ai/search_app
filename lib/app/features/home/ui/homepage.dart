@@ -4,7 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../../core/themes/app_colors.dart';
-import '../../../widgets/logo_appbar.dart';
+import '../../../mixins/logo_appbar.dart';
 import '../../auth/data/auth_repository.dart';
 import '../interactor/bloc/homepage_bloc.dart';
 import '../interactor/states/homepage_states.dart';
@@ -19,7 +19,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with LogoAppBar {
   final _homePageBloc = Modular.get<HomePageBloc>();
-  final _authRepo = Modular.get<AuthRepository>();
 
   @override
   void initState() {
@@ -31,7 +30,12 @@ class _HomePageState extends State<HomePage> with LogoAppBar {
     return Scaffold(
       appBar: generateLogoAppBar(context, [
         IconButton(
-            onPressed: () => Modular.to.navigate('/'), icon: Icon(Icons.logout))
+            onPressed: () => Modular.to.navigate('/'),
+            icon: const Icon(
+              Icons.logout,
+              size: 30,
+              color: Colors.black,
+            ))
       ]),
       body: Stack(
         children: [

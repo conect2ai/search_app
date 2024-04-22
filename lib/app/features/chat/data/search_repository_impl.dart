@@ -5,14 +5,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../core/entities/auth_user.dart';
-import '../../../services/secure_storage_service.dart';
+import '../../../mixins/secure_storage.dart';
 import 'search_repository.dart';
 
-class SearchRepositoryImpl implements SearchRepository {
-  final SecureStorageService _secureStorageService;
+class SearchRepositoryImpl with SecureStorage implements SearchRepository {
   final AuthUser _authUser;
 
-  SearchRepositoryImpl(this._secureStorageService, this._authUser);
+  SearchRepositoryImpl(this._authUser);
 
   final apiBaseUrl = dotenv.get('API_SEARCH_URL');
   final apiConvertAudioToTextEndpoint =
@@ -22,7 +21,7 @@ class SearchRepositoryImpl implements SearchRepository {
       dotenv.get('API_SEARCH_ENDPOINT_QUESTION_IMAGE');
 
   Future<String?> getApiKey() {
-    return _secureStorageService.readSecureData(_authUser.username ?? '');
+    return readSecureData(_authUser.username ?? '');
   }
 
   @override

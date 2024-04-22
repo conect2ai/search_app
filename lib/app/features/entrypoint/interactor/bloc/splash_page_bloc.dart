@@ -1,21 +1,19 @@
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../../core/entities/auth_user.dart';
-import '../../../../services/secure_storage_service.dart';
+import '../../../../mixins/secure_storage.dart';
 
-class SplashPageBloc {
+class SplashPageBloc with SecureStorage {
   AuthUser user;
-  SecureStorageService secureStorage;
 
-  SplashPageBloc({required this.user, required this.secureStorage});
+  SplashPageBloc({required this.user});
 
   void loadUserInfo() async {
     final Map<String, String?> userInfo = {};
-    userInfo['username'] = await secureStorage.readSecureData('username');
-    userInfo['password'] = await secureStorage.readSecureData('password');
-    userInfo['access_token'] =
-        await secureStorage.readSecureData('access_token');
-    userInfo['token_type'] = await secureStorage.readSecureData('token_type');
+    userInfo['username'] = await readSecureData('username');
+    userInfo['password'] = await readSecureData('password');
+    userInfo['access_token'] = await readSecureData('access_token');
+    userInfo['token_type'] = await readSecureData('token_type');
     user.updateToken(userInfo);
     user.updatedUsernameAndPassword(userInfo);
 

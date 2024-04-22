@@ -7,15 +7,17 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../../blocs/loading_overlay_bloc.dart';
 import '../../../blocs/loading_overlay_state.dart';
 import '../../../core/themes/app_colors.dart';
+import '../../../mixins/custom_dialogs.dart';
 import '../../../widgets/custom_dialog.dart';
-import '../../../widgets/loading_overlay.dart';
-import '../../../widgets/logo_appbar.dart';
+import '../../../mixins/loading_overlay.dart';
+import '../../../mixins/logo_appbar.dart';
 import '../../auth/data/auth_repository.dart';
 import '../interactor/blocs/chatpage/chat_page_bloc.dart';
 import '../interactor/blocs/chatpage/chat_page_states.dart';
 import '../interactor/blocs/chatpage_inputs/chat_page_input_bloc.dart';
 import 'widgets/chat_page_input.dart';
 import 'widgets/messages_list.dart';
+import 'widgets/vehicle_form_dialog.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -24,7 +26,8 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> with LoadingOverlay, LogoAppBar {
+class _ChatPageState extends State<ChatPage>
+    with LoadingOverlay, LogoAppBar, CustomDialogs {
   final _bloc = Modular.get<ChatPageBloc>();
   final _chatInputBloc = Modular.get<ChatPageInputBloc>();
   final _loadingOverlayBloc = Modular.get<LoadingOverlayBloc>();
@@ -40,9 +43,37 @@ class _ChatPageState extends State<ChatPage> with LoadingOverlay, LogoAppBar {
       bottom: true,
       child: Scaffold(
         appBar: generateLogoAppBar(context, [
-          IconButton(
-              onPressed: () => Modular.to.navigate('/'),
-              icon: Icon(Icons.logout))
+          PopupMenuButton(
+            icon: const Icon(
+              Icons.more_vert,
+              color: Colors.black,
+            ),
+            iconSize: 40,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            onSelected: (option) async {
+              if (option == 'Logout') {
+                _authRepo.logout();
+                Modular.to.navigate('/');
+              } else if (option == 'Api Key') {
+                Modular.to.navigate('/home');
+              } else {
+                dialog(context, const VehicleFormDialog());
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return {
+                'Vehicle Settings',
+                'Api Key',
+                'Logout',
+              }.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          )
         ]),
         body: BlocListener<LoadingOverlayBloc, LoadingOverlayState>(
           bloc: _loadingOverlayBloc,

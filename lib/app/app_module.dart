@@ -11,7 +11,6 @@ import 'features/entrypoint/interactor/bloc/splash_page_bloc.dart';
 import 'features/entrypoint/ui/splash_page.dart';
 import 'features/home/interactor/bloc/homepage_bloc.dart';
 import 'features/home/interactor/module/homepage_module.dart';
-import 'services/secure_storage_service.dart';
 
 class AppModule extends Module {
   @override
@@ -19,7 +18,6 @@ class AppModule extends Module {
     i.add<HomePageBloc>(HomePageBloc.new);
     i.add<SplashPageBloc>(SplashPageBloc.new);
     i.addSingleton<AuthUser>(AuthUser.new);
-    i.addSingleton<SecureStorageService>(SecureStorageService.new);
     i.addSingleton<AuthRepository>(AuthRepositoryImpl.new);
     i.add<Client>(http.Client.new);
   }
