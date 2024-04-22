@@ -15,6 +15,7 @@ import '../../auth/data/auth_repository.dart';
 import '../interactor/blocs/chatpage/chat_page_bloc.dart';
 import '../interactor/blocs/chatpage/chat_page_states.dart';
 import '../interactor/blocs/chatpage_inputs/chat_page_input_bloc.dart';
+import '../interactor/blocs/vehicle_form/vehicle_form_bloc.dart';
 import 'widgets/chat_page_input.dart';
 import 'widgets/messages_list.dart';
 import 'widgets/vehicle_form_dialog.dart';
@@ -29,10 +30,17 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage>
     with LoadingOverlay, LogoAppBar, CustomDialogs {
   final _bloc = Modular.get<ChatPageBloc>();
+  final _vehicleInfoBloc = Modular.get<VehicleFormBloc>();
   final _chatInputBloc = Modular.get<ChatPageInputBloc>();
   final _loadingOverlayBloc = Modular.get<LoadingOverlayBloc>();
   final _authRepo = Modular.get<AuthRepository>();
   int lastIndex = 0;
+
+  @override
+  void initState() {
+    _vehicleInfoBloc.getAvailableVehicles();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

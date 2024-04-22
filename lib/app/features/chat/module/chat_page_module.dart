@@ -5,8 +5,11 @@ import '../../../app_module.dart';
 import '../../../blocs/loading_overlay_bloc.dart';
 import '../data/search_repository.dart';
 import '../data/search_repository_impl.dart';
+import '../data/vehicle_info_repository.dart';
+import '../data/vehicle_info_repository_impl.dart';
 import '../interactor/blocs/chatpage/chat_page_bloc.dart';
 import '../interactor/blocs/chatpage_inputs/chat_page_input_bloc.dart';
+import '../interactor/blocs/vehicle_form/vehicle_form_bloc.dart';
 import '../ui/chat_page.dart';
 
 class ChatPageModule extends Module {
@@ -15,6 +18,8 @@ class ChatPageModule extends Module {
     i.addLazySingleton<ChatPageBloc>(ChatPageBloc.new);
     i.addLazySingleton<ChatPageInputBloc>(ChatPageInputBloc.new);
     i.addLazySingleton<LoadingOverlayBloc>(LoadingOverlayBloc.new);
+    i.addLazySingleton<VehicleFormBloc>(VehicleFormBloc.new);
+    i.add<VehicleInfoRepository>(VehicleInfoRepositoryImpl.new);
     i.add<SearchRepository>(SearchRepositoryImpl.new);
     i.add<http.Client>(http.Client.new);
   }

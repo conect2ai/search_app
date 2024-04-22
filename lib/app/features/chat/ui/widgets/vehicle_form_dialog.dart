@@ -1,8 +1,8 @@
-import 'package:app_search/app/core/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../../mixins/custom_dialogs.dart';
+import '../../interactor/blocs/vehicle_form/vehicle_form_bloc.dart';
 import 'custom_dropdown_menu.dart';
 
 class VehicleFormDialog extends StatefulWidget {
@@ -19,10 +19,11 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
   List<String> _yearItems = [];
   final _vehicleFormKey = GlobalKey<FormState>();
   final Map<String, String?> _vehicleData = {};
+  final _vehicleFormBloc = Modular.get<VehicleFormBloc>();
 
   @override
   initState() {
-    _brandItems = brands;
+    _vehicleFormBloc.updateBrandsList();
     super.initState();
   }
 
@@ -62,14 +63,14 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
   void _updateModelItems(String? value) {
     setState(() {
       _vehicleData['brand'] = value;
-      _modelItems = models[value] ?? [];
+      _vehicleFormBloc.updateModelsList(value!);
     });
   }
 
   void _updateYearItems(String? value) {
     setState(() {
       _vehicleData['model'] = value;
-      _yearItems = years[value] ?? [];
+      // _yearItems = years[value] ?? [];
     });
   }
 
@@ -88,20 +89,40 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
           runSpacing: 20,
           direction: Axis.vertical,
           children: [
-            CustomDropdownMenu<String>(
-              items: _brandItems
-                  .map((brand) => DropdownMenuEntry(value: brand, label: brand))
-                  .toList(),
-              onChanged: _updateModelItems,
-              label: 'Brand',
-            ),
-            CustomDropdownMenu<String>(
-              items: _modelItems
-                  .map((model) => DropdownMenuEntry(value: model, label: model))
-                  .toList(),
-              onChanged: _updateYearItems,
-              label: 'Model',
-            ),
+            StreamBuilder<List<String>>(
+                stream: _vehicleFormBloc.brandsStream,
+                builder: (context, snapshot) {
+                  if (snapshot.data != null) {
+                    if (snapshot.data!.isNotEmpty) {
+                      _brandItems = snapshot.data!;
+                    }
+                  }
+                  return CustomDropdownMenu<String>(
+                    items: _brandItems
+                        .map((brand) =>
+                            DropdownMenuEntry(value: brand, label: brand))
+                        .toList(),
+                    onChanged: _updateModelItems,
+                    label: 'Brand',
+                  );
+                }),
+            StreamBuilder<List<String>>(
+                stream: _vehicleFormBloc.modelsStream,
+                builder: (context, snapshot) {
+                  if (snapshot.data != null) {
+                    if (snapshot.data!.isNotEmpty) {
+                      _modelItems = snapshot.data!;
+                    }
+                  }
+                  return CustomDropdownMenu<String>(
+                    items: _modelItems
+                        .map((model) =>
+                            DropdownMenuEntry(value: model, label: model))
+                        .toList(),
+                    onChanged: _updateYearItems,
+                    label: 'Model',
+                  );
+                }),
             CustomDropdownMenu<String>(
               items: _yearItems
                   .map((year) => DropdownMenuEntry(value: year, label: year))
@@ -120,6 +141,7 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
         break;
       case 1:
         print('validate form: $_vehicleData');
+
         Modular.to.pop();
         break;
       default:
