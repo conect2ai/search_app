@@ -51,15 +51,6 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
     'Focus': ['2022', '2023', '2024'],
   };
 
-  @override
-  Widget build(BuildContext context) {
-    return dialogWithButtons(
-        title: 'Select Vehicle',
-        content: _buildForm(),
-        actions: ['Cancel', 'Done'],
-        callBack: onTapActions);
-  }
-
   void _updateModelItems(String? value) {
     setState(() {
       _vehicleData['brand'] = value;
@@ -70,7 +61,7 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
   void _updateYearItems(String? value) {
     setState(() {
       _vehicleData['model'] = value;
-      // _yearItems = years[value] ?? [];
+      _vehicleFormBloc.updateYearsList(_vehicleData['brand']!, value!);
     });
   }
 
@@ -80,13 +71,22 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
     });
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return dialogWithButtons(
+        title: 'Select Vehicle',
+        content: _buildForm(),
+        actions: ['Cancel', 'Done'],
+        callBack: onTapActions);
+  }
+
   Widget _buildForm() {
     return Form(
       key: _vehicleFormKey,
       child: Wrap(
-          alignment: WrapAlignment.center,
+          alignment: WrapAlignment.start,
           spacing: 20,
-          runSpacing: 20,
+          runSpacing: 30,
           direction: Axis.vertical,
           children: [
             StreamBuilder<List<String>>(
@@ -99,11 +99,14 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
                   }
                   return CustomDropdownMenu<String>(
                     items: _brandItems
-                        .map((brand) =>
-                            DropdownMenuEntry(value: brand, label: brand))
+                        .map((brand) => DropdownMenuEntry(
+                              value: brand,
+                              label: brand,
+                            ))
                         .toList(),
                     onChanged: _updateModelItems,
-                    label: 'Brand',
+                    label: 'Select car brand',
+                    hintText: 'Select car brand',
                   );
                 }),
             StreamBuilder<List<String>>(
@@ -120,16 +123,28 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
                             DropdownMenuEntry(value: model, label: model))
                         .toList(),
                     onChanged: _updateYearItems,
-                    label: 'Model',
+                    label: 'Select car model',
+                    hintText: 'Select car model',
                   );
                 }),
-            CustomDropdownMenu<String>(
-              items: _yearItems
-                  .map((year) => DropdownMenuEntry(value: year, label: year))
-                  .toList(),
-              onChanged: _updateYearInfo,
-              label: 'Year',
-            ),
+            StreamBuilder<List<String>>(
+                stream: _vehicleFormBloc.yearsStream,
+                builder: (context, snapshot) {
+                  if (snapshot.data != null) {
+                    if (snapshot.data!.isNotEmpty) {
+                      _yearItems = snapshot.data!;
+                    }
+                  }
+                  return CustomDropdownMenu<String>(
+                    items: _yearItems
+                        .map((year) =>
+                            DropdownMenuEntry(value: year, label: year))
+                        .toList(),
+                    onChanged: _updateYearInfo,
+                    label: 'Select car year',
+                    hintText: 'Select car year',
+                  );
+                }),
           ]),
     );
   }
