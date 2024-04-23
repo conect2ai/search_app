@@ -6,6 +6,7 @@ mixin CustomDialogs {
   void dialog(BuildContext context, Widget content) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return Dialog(
           child: content,
@@ -35,7 +36,13 @@ mixin CustomDialogs {
             height: 20,
             thickness: 2,
           ),
+          const SizedBox(
+            height: 10,
+          ),
           content,
+          const SizedBox(
+            height: 10,
+          ),
           const Divider(
             height: 20,
             thickness: 2,
@@ -46,7 +53,10 @@ mixin CustomDialogs {
     );
   }
 
-  Widget _buildActionButtons(List<String> actions, ValueChanged<int> callBack) {
+  Widget _buildActionButtons(
+    List<String> actions,
+    ValueChanged<int> callBack,
+  ) {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Wrap(

@@ -5,13 +5,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../core/entities/auth_user.dart';
+import '../../../core/entities/car_info.dart';
 import '../../../mixins/secure_storage.dart';
 import 'search_repository.dart';
 
 class SearchRepositoryImpl with SecureStorage implements SearchRepository {
   final AuthUser _authUser;
+  final CarInfo _carInfo;
 
-  SearchRepositoryImpl(this._authUser);
+  SearchRepositoryImpl(this._authUser, this._carInfo);
 
   final apiBaseUrl = dotenv.get('API_SEARCH_URL');
   final apiConvertAudioToTextEndpoint =
@@ -71,9 +73,9 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
 
     final fields = {
       'question': question,
-      'brand': 'Volkswagen',
-      'model': 'Polo',
-      'year': '2023',
+      'brand': _carInfo.brand,
+      'model': _carInfo.model,
+      'year': _carInfo.year,
     };
 
     final response = await http
@@ -110,9 +112,9 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
 
     final fields = {
       'question': question,
-      'brand': 'Volkswagen',
-      'model': 'Polo',
-      'year': '2023',
+      'brand': _carInfo.brand,
+      'model': _carInfo.model,
+      'year': _carInfo.year,
     };
 
     final request = http.MultipartRequest('POST', apiUri)

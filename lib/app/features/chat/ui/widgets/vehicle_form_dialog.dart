@@ -17,8 +17,11 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
   List<String> _brandItems = [];
   List<String> _modelItems = [];
   List<String> _yearItems = [];
+  String? _selectedBrand;
+  String? _selectedModel;
+  String? _selectedYear;
   final _vehicleFormKey = GlobalKey<FormState>();
-  final Map<String, String?> _vehicleData = {};
+  final Map<String, String> _vehicleData = {};
   final _vehicleFormBloc = Modular.get<VehicleFormBloc>();
 
   @override
@@ -52,22 +55,34 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
   };
 
   void _updateModelItems(String? value) {
+    _vehicleFormBloc.modelsSink.add([]);
+    _vehicleFormBloc.yearsSink.add([]);
     setState(() {
-      _vehicleData['brand'] = value;
+      _vehicleData['brand'] = value ?? '';
+      _vehicleData['model'] = '';
+      _vehicleData['year'] = '';
+      _selectedBrand = value;
+      _selectedModel = null;
+      _selectedYear = null;
       _vehicleFormBloc.updateModelsList(value!);
     });
   }
 
   void _updateYearItems(String? value) {
+    _vehicleFormBloc.yearsSink.add([]);
     setState(() {
-      _vehicleData['model'] = value;
+      _vehicleData['model'] = value ?? '';
+      _vehicleData['year'] = '';
+      _selectedModel = value;
+      _selectedYear = null;
       _vehicleFormBloc.updateYearsList(_vehicleData['brand']!, value!);
     });
   }
 
   void _updateYearInfo(String? value) {
     setState(() {
-      _vehicleData['year'] = value;
+      _vehicleData['year'] = value ?? '';
+      _selectedYear = value ?? '';
     });
   }
 
@@ -93,56 +108,55 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
                 stream: _vehicleFormBloc.brandsStream,
                 builder: (context, snapshot) {
                   if (snapshot.data != null) {
-                    if (snapshot.data!.isNotEmpty) {
-                      _brandItems = snapshot.data!;
-                    }
+                    _brandItems = snapshot.data!;
                   }
                   return CustomDropdownMenu<String>(
                     items: _brandItems
-                        .map((brand) => DropdownMenuEntry(
+                        .map((brand) => DropdownMenuItem(
                               value: brand,
-                              label: brand,
+                              child: Text(brand),
                             ))
                         .toList(),
                     onChanged: _updateModelItems,
                     label: 'Select car brand',
                     hintText: 'Select car brand',
+                    value: _selectedBrand,
                   );
                 }),
             StreamBuilder<List<String>>(
                 stream: _vehicleFormBloc.modelsStream,
                 builder: (context, snapshot) {
                   if (snapshot.data != null) {
-                    if (snapshot.data!.isNotEmpty) {
-                      _modelItems = snapshot.data!;
-                    }
+                    _modelItems = snapshot.data!;
                   }
                   return CustomDropdownMenu<String>(
                     items: _modelItems
-                        .map((model) =>
-                            DropdownMenuEntry(value: model, label: model))
+                        .map((model) => DropdownMenuItem(
+                              value: model,
+                              child: Text(model),
+                            ))
                         .toList(),
                     onChanged: _updateYearItems,
                     label: 'Select car model',
                     hintText: 'Select car model',
+                    value: _selectedModel,
                   );
                 }),
             StreamBuilder<List<String>>(
                 stream: _vehicleFormBloc.yearsStream,
                 builder: (context, snapshot) {
                   if (snapshot.data != null) {
-                    if (snapshot.data!.isNotEmpty) {
-                      _yearItems = snapshot.data!;
-                    }
+                    _yearItems = snapshot.data!;
                   }
                   return CustomDropdownMenu<String>(
                     items: _yearItems
                         .map((year) =>
-                            DropdownMenuEntry(value: year, label: year))
+                            DropdownMenuItem(value: year, child: Text(year)))
                         .toList(),
                     onChanged: _updateYearInfo,
                     label: 'Select car year',
                     hintText: 'Select car year',
+                    value: _selectedYear,
                   );
                 }),
           ]),
@@ -155,8 +169,7 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
         Modular.to.pop();
         break;
       case 1:
-        print('validate form: $_vehicleData');
-
+        _vehicleFormBloc.saveVehicleData(_vehicleData);
         Modular.to.pop();
         break;
       default:

@@ -2,13 +2,15 @@ import 'dart:async';
 
 import 'package:rxdart/subjects.dart';
 
+import '../../../../../core/entities/car_info.dart';
 import '../../../../../mixins/secure_storage.dart';
 import '../../../data/vehicle_info_repository.dart';
 
 class VehicleFormBloc with SecureStorage {
   final VehicleInfoRepository _vehicleInfoRepository;
+  final CarInfo _carInfo;
 
-  VehicleFormBloc(this._vehicleInfoRepository);
+  VehicleFormBloc(this._vehicleInfoRepository, this._carInfo);
 
   final StreamController<List<String>> _brandsController =
       BehaviorSubject.seeded([]);
@@ -39,6 +41,8 @@ class VehicleFormBloc with SecureStorage {
 
   void updateBrandsList() {
     _brands = [];
+    modelsSink.add(_models);
+    yearsSink.add(_years);
     vehicles.forEach((key, value) {
       final brand = key;
       _brands.add(brand);
@@ -48,8 +52,8 @@ class VehicleFormBloc with SecureStorage {
 
   void updateModelsList(String brand) {
     _models = [];
+    yearsSink.add(_years);
     final valueMap = vehicles[brand];
-    print(valueMap);
     final modelList = valueMap.keys;
     for (var model in modelList) {
       _models.add(model);
@@ -60,7 +64,6 @@ class VehicleFormBloc with SecureStorage {
   void updateYearsList(String brand, String model) {
     _years = [];
     final modelsMap = vehicles[brand];
-    print(modelsMap.runtimeType);
     final yearsList = modelsMap[model] as List<dynamic>;
     for (var year in yearsList) {
       _years.add(year.toString());
@@ -72,5 +75,6 @@ class VehicleFormBloc with SecureStorage {
     writeSecureData('brand', vehicleInfo['brand']);
     writeSecureData('model', vehicleInfo['model']);
     writeSecureData('year', vehicleInfo['year']);
+    _carInfo.updateCarInfo(vehicleInfo);
   }
 }

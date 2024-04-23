@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CustomDropdownMenu<T> extends StatelessWidget {
-  List<DropdownMenuEntry<T>> items;
+  List<DropdownMenuItem<T>> items;
   String label;
   String hintText;
-  T? initialValue;
+  T? value;
   ValueChanged<T?> onChanged;
   CustomDropdownMenu(
       {required this.items,
-      this.initialValue,
+      this.value,
       required this.label,
       required this.hintText,
       required this.onChanged,
@@ -16,14 +16,15 @@ class CustomDropdownMenu<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownMenu<T>(
-        width: MediaQuery.of(context).size.width * 0.5,
-        onSelected: (value) {
+    return DropdownButton<T>(
+        dropdownColor: Colors.grey.shade200,
+        elevation: 3,
+        borderRadius: BorderRadius.circular(10),
+        onChanged: (value) {
           onChanged(value);
         },
-        initialSelection: initialValue,
-        label: Text(label),
-        hintText: hintText,
-        dropdownMenuEntries: items);
+        value: value,
+        hint: Text(hintText),
+        items: items);
   }
 }
