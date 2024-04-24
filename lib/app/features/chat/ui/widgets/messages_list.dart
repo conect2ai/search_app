@@ -40,7 +40,6 @@ class _MessagesListState extends State<MessagesList> {
                 alignment: Alignment.centerRight,
                 child: WaveBubble(
                   path: message.audioPath!,
-                  imagePath: message.imagePath,
                 ))
             : MessageBubble(
                 message: message.message!,

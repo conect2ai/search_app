@@ -41,6 +41,8 @@ class VehicleFormBloc with SecureStorage {
 
   void updateBrandsList() {
     _brands = [];
+    _models = [];
+    _years = [];
     modelsSink.add(_models);
     yearsSink.add(_years);
     vehicles.forEach((key, value) {
@@ -52,6 +54,7 @@ class VehicleFormBloc with SecureStorage {
 
   void updateModelsList(String brand) {
     _models = [];
+    _years = [];
     yearsSink.add(_years);
     final valueMap = vehicles[brand];
     final modelList = valueMap.keys;
