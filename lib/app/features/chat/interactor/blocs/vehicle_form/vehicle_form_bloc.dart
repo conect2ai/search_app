@@ -1,16 +1,21 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:rxdart/subjects.dart';
 
+import '../../../../../blocs/loading_overlay_bloc.dart';
+import '../../../../../blocs/loading_overlay_event.dart';
 import '../../../../../core/entities/car_info.dart';
 import '../../../../../mixins/secure_storage.dart';
 import '../../../data/vehicle_info_repository.dart';
 
 class VehicleFormBloc with SecureStorage {
   final VehicleInfoRepository _vehicleInfoRepository;
+  final LoadingOverlayBloc _loadingOverlayBloc;
   final CarInfo _carInfo;
 
-  VehicleFormBloc(this._vehicleInfoRepository, this._carInfo);
+  VehicleFormBloc(
+      this._vehicleInfoRepository, this._loadingOverlayBloc, this._carInfo);
 
   final StreamController<List<String>> _brandsController =
       BehaviorSubject.seeded([]);
@@ -36,7 +41,18 @@ class VehicleFormBloc with SecureStorage {
     _brands = [];
     _models = [];
     _years = [];
-    vehicles = await _vehicleInfoRepository.getVehicleInfo();
+    _loadingOverlayBloc.add(ShowLoadingOverlayEvent());
+    Future.delayed(const Duration(seconds: 2));
+    try {
+      vehicles = await _vehicleInfoRepository.getVehicleInfo();
+    } on HttpException catch (_) {
+      _loadingOverlayBloc
+          .add(ShowErrorEvent(message: 'Could not retrieve vehicles data'));
+    } catch (error) {
+      _loadingOverlayBloc.add(ShowErrorEvent(message: error.toString()));
+    }
+
+    _loadingOverlayBloc.add(HideLoadingOverlayEvent());
   }
 
   void updateBrandsList() {
