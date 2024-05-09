@@ -60,7 +60,7 @@ class _ChatPageInputState extends State<ChatPageInput> {
                 borderRadius: BorderRadius.circular(10)),
             child: Stack(
               children: [
-                BlocBuilder(
+                BlocBuilder<ChatPageInputBloc, ChatPageInputState>(
                   bloc: _chatPageInputBloc,
                   builder: (context, state) {
                     if (state is TextModeState) {

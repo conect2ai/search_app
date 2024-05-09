@@ -1,7 +1,11 @@
+import 'package:app_search/app/features/chat/interactor/blocs/manual_upload/manual_upload_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../../mixins/custom_dialogs.dart';
+import '../../interactor/blocs/manual_upload/manual_upload_bloc.dart';
+import '../../interactor/blocs/manual_upload/manual_upload_state.dart';
 
 class ManualUploadDialog extends StatefulWidget {
   const ManualUploadDialog({super.key});
@@ -12,12 +16,9 @@ class ManualUploadDialog extends StatefulWidget {
 
 class _ManualUploadDialogState extends State<ManualUploadDialog>
     with CustomDialogs {
-  bool _isManualSelected = false;
-  late String _selectedManual;
-
+  final _manualUploadBloc = Modular.get<ManualUploadBloc>();
   @override
   void initState() {
-    _selectedManual = 'Selecione o manual';
     super.initState();
   }
 
@@ -38,37 +39,40 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black)),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            child: TextButton(
-                onPressed: () {
-                  setState(() {
-                    _isManualSelected = true;
-                    _selectedManual = 'Meu manual';
-                  });
-                },
-                child: Text(
-                  _selectedManual,
+      child: BlocBuilder<ManualUploadBloc, ManualUploadState>(
+        bloc: _manualUploadBloc,
+        builder: (context, state) {
+          if (state is PdfSelectedState) {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                    child: Text(
+                  state.pdfName,
                   overflow: TextOverflow.ellipsis,
                 )),
-          ),
-          Visibility(
-              visible: _isManualSelected,
-              child: IconButton(
-                onPressed: () {
-                  setState(() {
-                    _isManualSelected = false;
-                    _selectedManual = 'Selecione o manual';
-                  });
-                },
-                icon: const Icon(
-                  Icons.cancel,
+                IconButton(
+                  onPressed: () {
+                    _manualUploadBloc.add(RemovePdfEvent());
+                  },
+                  icon: const Icon(
+                    Icons.cancel,
+                  ),
+                  iconSize: 20,
                 ),
-                iconSize: 20,
-              ))
-        ],
+              ],
+            );
+          } else {
+            return TextButton(
+                onPressed: () {
+                  _manualUploadBloc.add(SelectPdfEvent());
+                },
+                child: const Text(
+                  'Selecione o manual',
+                  overflow: TextOverflow.ellipsis,
+                ));
+          }
+        },
       ),
     );
   }
@@ -79,8 +83,7 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
         Modular.to.pop();
         break;
       case 1:
-        _isManualSelected ? print('Upload realizado com sucesso!') : null;
-        // Modular.to.pop();
+        Modular.to.pop();
         break;
       default:
     }
