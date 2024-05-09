@@ -17,6 +17,7 @@ import '../interactor/blocs/chatpage/chat_page_states.dart';
 import '../interactor/blocs/chatpage_inputs/chat_page_input_bloc.dart';
 import '../interactor/blocs/vehicle_form/vehicle_form_bloc.dart';
 import 'widgets/chat_page_input.dart';
+import 'widgets/manual_upload_dialog.dart';
 import 'widgets/messages_list.dart';
 import 'widgets/vehicle_form_dialog.dart';
 
@@ -65,6 +66,8 @@ class _ChatPageState extends State<ChatPage>
                 Modular.to.navigate('/');
               } else if (option == 'Api Key') {
                 Modular.to.navigate('/home');
+              } else if (option == 'Manual Upload') {
+                dialog(context, const ManualUploadDialog());
               } else {
                 dialog(context, const VehicleFormDialog());
               }
@@ -72,6 +75,7 @@ class _ChatPageState extends State<ChatPage>
             itemBuilder: (BuildContext context) {
               return {
                 'Vehicle Settings',
+                'Manual Upload',
                 'Api Key',
                 'Logout',
               }.map((String choice) {

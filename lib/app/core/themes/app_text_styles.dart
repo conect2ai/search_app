@@ -7,4 +7,6 @@ class AppTextStyles {
     fontSize: 16,
   );
   static const dialogTextButtonStyle = TextStyle(fontSize: 18);
+  static const deactivatedDialogTextButtonStyle =
+      TextStyle(fontSize: 18, color: Colors.grey);
 }
