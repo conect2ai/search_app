@@ -1,8 +1,13 @@
+![Conecta.ai Logo](assets/images/main_logo.png)
+
+![Flutter](https://img.shields.io/badge/Flutter-3.13.1-white.svg)
+![Dart](https://img.shields.io/badge/Dart-3.1.0-white.svg)
+
 # Chatbot AI
 
-O app Chatbot AI é um aplicativo desenvolvido em Flutter que realiza pesquisas em manuais de veículos cadastrados na plataforma com o auxílio de inteligência artificial para auxiliar na resolução de problemas relacionados aos veículos, assim como tirar dúvidas referentes a luzes no painel do carro.
+O app Chatbot AI é um aplicativo desenvolvido em Flutter que realiza pesquisas em manuais de veículos cadastrados na plataforma com o auxílio de inteligência artificial para auxiliar na resolução de problemas relacionados aos veículos.
 
-## Iniciando
+## Instalação
 
 1. Clone o repositório:
      ```
@@ -29,11 +34,5 @@ O app Chatbot AI é um aplicativo desenvolvido em Flutter que realiza pesquisas 
      ```
 
 
-
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### License
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
