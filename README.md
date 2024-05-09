@@ -1,12 +1,35 @@
-# app_search
+# Chatbot AI
 
-A new Flutter project.
+O app Chatbot AI é um aplicativo desenvolvido em Flutter que realiza pesquisas em manuais de veículos cadastrados na plataforma com o auxílio de inteligência artificial para auxiliar na resolução de problemas relacionados aos veículos, assim como tirar dúvidas referentes a luzes no painel do carro.
 
-## Getting Started
+## Iniciando
 
-This project is a starting point for a Flutter application.
+1. Clone o repositório:
+     ```
+    git clone https://github.com/conect2ai/search_app.git
+     ```
 
-A few resources to get you started if this is your first Flutter project:
+2. Mudei para a pasta:
+     ```
+    cd search_app
+     ```
+3. Cria o arquivo .env na pasta lib e insira a informação abaixo:
+   ```
+    API_AUTH_URL = "endereçoApi/user"
+    API_SEARCH_URL = "endereçoApi"
+    API_SEARCH_ENDPOINT_QUESTION = "/chat/answer_question"
+    API_SEARCH_ENDPOINT_QUESTION_IMAGE = "/chat/answer_question_image"
+    API_SEARCH_ENDPOINT_QUESTION_AUDIO = "/chat/answer_question_audio"
+    API_CARS_ENDPOINT = "/chat/get_stored_cars"
+    ```
+4. Selecione o dispositivo que deseja utilizar para realizar a instalação do app
+5. Execute o comando:
+     ```
+     flutter run lib/app/main.dart
+     ```
+
+
+
 
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
