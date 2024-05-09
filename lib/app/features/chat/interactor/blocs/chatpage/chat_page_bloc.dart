@@ -63,23 +63,23 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     );
     on<SendAudioEvent>(
       (event, emit) async {
-        if (_selectedImage != null && event.path.isNotEmpty) {
+        if (event.path.isNotEmpty) {
           _results.add(ChatMessage(
-              audioPath: event.path,
-              isQuestion: true,
-              isAudio: true,
-              imagePath: _selectedImage!.path));
+            audioPath: event.path,
+            isQuestion: true,
+            isAudio: true,
+          ));
           emit(ReceiveResponseState(results: _results));
           _loadingOverlayBloc.add(ShowLoadingOverlayEvent());
           try {
-            final convertedAudio = await _searchRepository.sendQuestionByAudio(
-                event.path, _selectedImage?.path ?? '');
-            final answer = await _searchRepository.sendQuestionByTextWithImage(
-                convertedAudio, _selectedImage!.path);
+            final response = await _searchRepository.sendQuestionByAudio(
+              event.path,
+            );
+
             _results.add(ChatMessage(
               isQuestion: false,
               isAudio: false,
-              message: answer,
+              message: response,
             ));
           } on HttpException catch (error) {
             _loadingOverlayBloc.add(ShowErrorEvent(message: error.message));

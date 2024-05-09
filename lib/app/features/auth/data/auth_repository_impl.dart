@@ -4,17 +4,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
 
 import '../../../core/entities/auth_user.dart';
-import '../../../services/secure_storage_service.dart';
+import '../../../mixins/secure_storage.dart';
 import 'auth_repository.dart';
 
-class AuthRepositoryImpl implements AuthRepository {
+class AuthRepositoryImpl with SecureStorage implements AuthRepository {
   final Client client;
   final AuthUser user;
-  SecureStorageService secureStorage;
   final baseAuthUrl = dotenv.env['API_AUTH_URL'];
 
-  AuthRepositoryImpl(
-      {required this.client, required this.user, required this.secureStorage});
+  AuthRepositoryImpl({required this.client, required this.user});
 
   @override
   Future<bool> login(Map<String, String> loginData) async {
@@ -35,10 +33,10 @@ class AuthRepositoryImpl implements AuthRepository {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         user.updateToken(data);
         user.updatedUsernameAndPassword(loginInfo);
-        secureStorage.writeSecureData('username', loginData['username']);
-        secureStorage.writeSecureData('password', loginData['password']);
-        secureStorage.writeSecureData('access_token', user.token);
-        secureStorage.writeSecureData('token_type', user.tokenType);
+        writeSecureData('username', loginData['username']);
+        writeSecureData('password', loginData['password']);
+        writeSecureData('access_token', user.token);
+        writeSecureData('token_type', user.tokenType);
         return true;
       } else {
         return false;
@@ -80,7 +78,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   void logout() async {
     user.updateToken({'access_token': null, 'token_type': null});
-    secureStorage.deleteSecureData('access_token');
-    secureStorage.deleteSecureData('token_type');
+    deleteSecureData('access_token');
+    deleteSecureData('token_type');
   }
 }

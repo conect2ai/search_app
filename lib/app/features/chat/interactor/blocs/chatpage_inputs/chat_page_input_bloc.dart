@@ -40,9 +40,12 @@ class ChatPageInputBloc extends Bloc<ChatPageInputEvent, ChatPageInputState> {
   void startRecording() async {
     final hasPermission = await _recorderController.checkPermission();
     if (hasPermission) {
-      _path =
-          '${_appDirectory.path}/${DateTime.now().millisecondsSinceEpoch}.mp4';
-      await _recorderController.record(path: _path);
+      _path = '${_appDirectory.path}/${DateTime.now().millisecondsSinceEpoch}';
+      await _recorderController.record(
+          path: _path,
+          androidOutputFormat: AndroidOutputFormat.ogg,
+          androidEncoder: AndroidEncoder.amr_wb,
+          iosEncoder: IosEncoder.kAudioFormatAMR_WB);
     }
   }
 

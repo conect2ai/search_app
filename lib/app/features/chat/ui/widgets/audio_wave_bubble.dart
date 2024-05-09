@@ -8,8 +8,7 @@ import '../../../../core/themes/app_colors.dart';
 
 class WaveBubble extends StatefulWidget {
   final String path;
-  final String? imagePath;
-  const WaveBubble({required this.path, this.imagePath, super.key});
+  const WaveBubble({required this.path, super.key});
 
   @override
   State<WaveBubble> createState() => _WaveBubbleState();
@@ -79,14 +78,6 @@ class _WaveBubbleState extends State<WaveBubble> {
             borderRadius: BorderRadius.circular(15)),
         child: Column(
           children: [
-            widget.imagePath != null
-                ? Image.file(
-                    File(widget.imagePath!),
-                    height: 150,
-                    width: 220,
-                    fit: BoxFit.fill,
-                  )
-                : const SizedBox(),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [

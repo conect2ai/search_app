@@ -5,5 +5,6 @@ abstract interface class SearchRepository {
   Future<String> sendQuestionByTextWithImage(
       String question, String imageFilePath);
   Future<String> sendQuestionByAudio(
-      String audioFilePath, String imageFilePath);
+    String audioFilePath,
+  );
 }

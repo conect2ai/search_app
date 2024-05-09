@@ -5,33 +5,38 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../core/entities/auth_user.dart';
-import '../../../services/secure_storage_service.dart';
+import '../../../core/entities/car_info.dart';
+import '../../../mixins/secure_storage.dart';
 import 'search_repository.dart';
 
-class SearchRepositoryImpl implements SearchRepository {
-  final SecureStorageService _secureStorageService;
+class SearchRepositoryImpl with SecureStorage implements SearchRepository {
   final AuthUser _authUser;
+  final CarInfo _carInfo;
 
-  SearchRepositoryImpl(this._secureStorageService, this._authUser);
+  SearchRepositoryImpl(this._authUser, this._carInfo);
 
   final apiBaseUrl = dotenv.get('API_SEARCH_URL');
-  final apiConvertAudioToTextEndpoint =
-      dotenv.get('API_SEARCH_ENDPOINT_CONVERT_AUDIO_TO_TEXT');
+  final apiQuestionWithAudio = dotenv.get('API_SEARCH_ENDPOINT_QUESTION_AUDIO');
   final apiQuestionEndpoint = dotenv.get('API_SEARCH_ENDPOINT_QUESTION');
   final apiQuestionWithImageEndpoint =
       dotenv.get('API_SEARCH_ENDPOINT_QUESTION_IMAGE');
 
   Future<String?> getApiKey() {
-    return _secureStorageService.readSecureData(_authUser.username ?? '');
+    return readSecureData(_authUser.username ?? '');
   }
 
   @override
-  Future<String> sendQuestionByAudio(
-      String audioFilePath, String imageFilePath) async {
+  Future<String> sendQuestionByAudio(String audioFilePath) async {
     final audioFile =
         await http.MultipartFile.fromPath('audio_file', audioFilePath);
 
-    final apiUri = Uri.http(apiBaseUrl, apiConvertAudioToTextEndpoint);
+    final queryParams = {
+      'brand': _carInfo.brand,
+      'model': _carInfo.model,
+      'year': _carInfo.year
+    };
+
+    final apiUri = Uri.http(apiBaseUrl, apiQuestionWithAudio, queryParams);
 
     final apiKey = await getApiKey();
 
@@ -44,19 +49,24 @@ class SearchRepositoryImpl implements SearchRepository {
       ..headers.addAll(headers)
       ..files.add(audioFile);
 
-    final questionStreamedResponse = await requestConversion.send().timeout(
+    final response = await requestConversion.send().timeout(
       const Duration(seconds: 120),
       onTimeout: () {
         throw const HttpException("Failed to communicate with server");
       },
     );
-    final questionString =
-        await questionStreamedResponse.stream.bytesToString();
 
-    final questionJson = jsonDecode(questionString) as Map<String, dynamic>;
-    final question = questionJson['text'] as String;
-
-    return question;
+    if (response.statusCode == 200) {
+      final data = await http.Response.fromStream(response);
+      final responseData = jsonDecode(utf8.decode(data.bodyBytes));
+      return responseData['response_content'];
+    } else if (response.statusCode == 422) {
+      final error = await response.stream.bytesToString();
+      final responseError = jsonDecode(error);
+      throw HttpException(responseError['detail']['msg']);
+    } else {
+      throw const HttpException('An error occurred!');
+    }
   }
 
   @override
@@ -72,9 +82,9 @@ class SearchRepositoryImpl implements SearchRepository {
 
     final fields = {
       'question': question,
-      'brand': 'Volkswagen',
-      'model': 'Polo',
-      'year': '2023',
+      'brand': _carInfo.brand,
+      'model': _carInfo.model,
+      'year': _carInfo.year,
     };
 
     final response = await http
@@ -87,11 +97,13 @@ class SearchRepositoryImpl implements SearchRepository {
     );
 
     if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
+      final responseData = jsonDecode(utf8.decode(response.bodyBytes));
       return responseData['response_content'];
-    } else {
-      final responseErrorJson = jsonDecode(response.body);
+    } else if (response.statusCode == 422) {
+      final responseErrorJson = jsonDecode(utf8.decode(response.bodyBytes));
       throw HttpException(responseErrorJson['detail']['msg']);
+    } else {
+      throw const HttpException('An error occurred!');
     }
   }
 
@@ -102,7 +114,9 @@ class SearchRepositoryImpl implements SearchRepository {
         await http.MultipartFile.fromPath('image_file', imageFilePath);
 
     final apiKey = await getApiKey();
-    final apiUri = Uri.http(apiBaseUrl, apiQuestionWithImageEndpoint);
+    final apiUri = Uri.http(apiBaseUrl, apiQuestionWithImageEndpoint, {
+      'question': question,
+    });
 
     final Map<String, String> headers = {
       'accept': 'multipart/form-data',
@@ -111,14 +125,17 @@ class SearchRepositoryImpl implements SearchRepository {
 
     final fields = {
       'question': question,
-      'brand': 'Volkswagen',
-      'model': 'Polo',
-      'year': '2023',
+      'brand': _carInfo.brand,
+      'model': _carInfo.model,
+      'year': _carInfo.year,
     };
 
-    final request = http.MultipartRequest('POST', apiUri)
+    final request = http.MultipartRequest(
+      'POST',
+      apiUri,
+    )
       ..files.add(imageFile)
-      ..fields.addAll(fields)
+      // ..fields.addAll(fields)
       ..headers.addAll(headers);
 
     final response = await request.send().timeout(
@@ -129,13 +146,15 @@ class SearchRepositoryImpl implements SearchRepository {
     );
 
     if (response.statusCode == 200) {
-      final data = await response.stream.bytesToString();
-      final responseData = jsonDecode(data);
-      return responseData['response_content'];
-    } else {
+      final data = await http.Response.fromStream(response);
+      final responseData = jsonDecode(utf8.decode(data.bodyBytes));
+      return responseData['choices'][0]['message']['content'];
+    } else if (response.statusCode == 422) {
       final error = await response.stream.bytesToString();
       final responseError = jsonDecode(error);
       throw HttpException(responseError['detail']['msg']);
+    } else {
+      throw const HttpException('An error occurred!');
     }
   }
 }
