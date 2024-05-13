@@ -70,7 +70,7 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
                       if (state is PdfSelectedState) {
                         return TextButton(
                           onPressed: () {
-                            print('Manual enviado');
+                            _manualUploadBloc.uploadPdf();
                           },
                           child: Text(
                             'Upload',

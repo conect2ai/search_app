@@ -1,12 +1,10 @@
-import 'package:image_picker/image_picker.dart';
-
 abstract class ManualUploadEvent {}
 
 class SelectPdfEvent extends ManualUploadEvent {
   String pdfName;
-  XFile? pdfFile;
+  String pdfFilePath;
 
-  SelectPdfEvent({required this.pdfName, required this.pdfFile});
+  SelectPdfEvent({required this.pdfName, required this.pdfFilePath});
 }
 
 class RemovePdfEvent extends ManualUploadEvent {}
