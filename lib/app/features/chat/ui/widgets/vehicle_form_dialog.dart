@@ -26,6 +26,7 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
 
   @override
   initState() {
+    _vehicleFormBloc.getAvailableVehicles();
     _vehicleFormBloc.updateBrandsList();
     super.initState();
   }
