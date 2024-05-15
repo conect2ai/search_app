@@ -1,3 +1,3 @@
 abstract interface class UploadManualRepository {
-  void uploadManualPdf(String path);
+  void uploadManualPdf(String pdfFileName, String pdfFilePath);
 }

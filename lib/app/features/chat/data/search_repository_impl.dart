@@ -123,19 +123,11 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
       'Authorization': 'Bearer $apiKey',
     };
 
-    final fields = {
-      'question': question,
-      'brand': _carInfo.brand,
-      'model': _carInfo.model,
-      'year': _carInfo.year,
-    };
-
     final request = http.MultipartRequest(
       'POST',
       apiUri,
     )
       ..files.add(imageFile)
-      // ..fields.addAll(fields)
       ..headers.addAll(headers);
 
     final response = await request.send().timeout(
