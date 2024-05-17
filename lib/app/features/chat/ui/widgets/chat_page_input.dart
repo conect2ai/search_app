@@ -1,4 +1,5 @@
 import 'package:audio_waveforms/audio_waveforms.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import '../../interactor/blocs/chatpage/chat_page_event.dart';
 import '../../interactor/blocs/chatpage_inputs/chat_page_input_bloc.dart';
 import '../../interactor/blocs/chatpage_inputs/chat_page_input_events.dart';
 import '../../interactor/blocs/chatpage_inputs/chat_page_input_state.dart';
+import '../pages/camera_page.dart';
 
 class ChatPageInput extends StatefulWidget {
   const ChatPageInput({super.key});
@@ -26,6 +28,7 @@ class _ChatPageInputState extends State<ChatPageInput> {
   final FocusNode _textFocusNode = FocusNode();
 
   Widget? _chatInputBtn;
+  late List<CameraDescription> _cameras;
 
   @override
   void initState() {
@@ -33,6 +36,7 @@ class _ChatPageInputState extends State<ChatPageInput> {
     _chatPageInputBloc.getDir();
     _chatPageInputBloc.checkPermission();
     _textFocusNode.addListener(_onFocusChanged);
+    _getAvailableCameras();
     _buildChatInputBtn(_textFocusNode.hasFocus);
 
     super.initState();
@@ -40,6 +44,10 @@ class _ChatPageInputState extends State<ChatPageInput> {
 
   void _onFocusChanged() {
     _buildChatInputBtn(_textFocusNode.hasFocus);
+  }
+
+  void _getAvailableCameras() async {
+    _cameras = await availableCameras();
   }
 
   @override
@@ -131,10 +139,13 @@ class _ChatPageInputState extends State<ChatPageInput> {
                     right: 0,
                     child: IconButton(
                         onPressed: () {
-                          _chatPageBloc.pickImage(ImageSource.camera);
+                          // _chatPageBloc.pickImage(ImageSource.camera);
+                          Modular.to.push(MaterialPageRoute(
+                            builder: (context) => CameraPage(_cameras),
+                          ));
                         },
                         icon: const Icon(
-                          Icons.camera,
+                          Icons.camera_alt,
                           color: Colors.grey,
                         ))),
                 Positioned(

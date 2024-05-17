@@ -13,7 +13,7 @@ import '../interactor/blocs/chatpage/chat_page_bloc.dart';
 import '../interactor/blocs/chatpage_inputs/chat_page_input_bloc.dart';
 import '../interactor/blocs/manual_upload/manual_upload_bloc.dart';
 import '../interactor/blocs/vehicle_form/vehicle_form_bloc.dart';
-import '../ui/chat_page.dart';
+import '../ui/pages/chat_page.dart';
 
 class ChatPageModule extends Module {
   @override

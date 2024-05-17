@@ -29,19 +29,20 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
             message: event.question,
             isQuestion: true,
             isAudio: false,
-            imagePath: _selectedImage?.path));
+            imagePath: _selectedImage?.path ?? event.picture?.path));
         emit(ReceiveResponseState(results: _results));
 
         _loadingOverlayBloc.add(ShowLoadingOverlayEvent());
-        if (_selectedImage != null) {
+        if (_selectedImage != null || event.picture != null) {
           try {
             final message = await _searchRepository.sendQuestionByTextWithImage(
-                event.question, _selectedImage!.path);
+                event.question, _selectedImage?.path ?? event.picture!.path);
             _results.add(ChatMessage(
               message: message,
               isQuestion: false,
               isAudio: false,
             ));
+            _selectedImage = null;
           } on HttpException catch (error) {
             _loadingOverlayBloc.add(ShowErrorEvent(message: error.message));
           } catch (error) {
