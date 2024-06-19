@@ -71,8 +71,9 @@ class _ApiKeyInputState extends State<ApiKeyInput> {
                     _errorText = 'Please insert a valid api key';
                   });
                 } else {
-                  widget._homebloc.saveApiKey(_apiKeyInputController.text);
-                  Modular.to.navigate('/chat/');
+                  widget._homebloc
+                      .saveApiKey(_apiKeyInputController.text)
+                      .then((_) => Modular.to.navigate('/chat/'));
                 }
               },
               icon: const Icon(

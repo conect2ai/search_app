@@ -21,7 +21,7 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
   final apiQuestionWithImageEndpoint =
       dotenv.get('API_SEARCH_ENDPOINT_QUESTION_IMAGE');
 
-  Future<String?> getApiKey() {
+  Future<String?> getApiKey() async {
     return readSecureData(_authUser.username ?? '');
   }
 
@@ -42,7 +42,7 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
 
     final Map<String, String> headers = {
       'accept': 'multipart/form-data',
-      'Authorization': 'Bearer $apiKey',
+      'Authorization': 'Bearer ${_authUser.token}',
     };
 
     final requestConversion = http.MultipartRequest('POST', apiUri)
@@ -77,7 +77,7 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
     final Map<String, String> headers = {
       'accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer $apiKey',
+      'Authorization': 'Bearer ${_authUser.token}',
     };
 
     final fields = {
@@ -120,7 +120,7 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
 
     final Map<String, String> headers = {
       'accept': 'multipart/form-data',
-      'Authorization': 'Bearer $apiKey',
+      'Authorization': 'Bearer ${_authUser.token}',
     };
 
     final request = http.MultipartRequest(
