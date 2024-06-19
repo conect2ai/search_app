@@ -50,10 +50,8 @@ class ManualUploadBloc extends Bloc<ManualUploadEvent, ManualUploadState> {
       if (_pdf != null) {
         _manualRepository.uploadManualPdf(pdf!.name, pdf!.path);
       }
-    } on HttpException catch (error) {
-      print(error.message);
-    } catch (e) {
-      print(e);
+    } catch (error) {
+      rethrow;
     }
   }
 }

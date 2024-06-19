@@ -19,10 +19,6 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
 
   ChatPageBloc(this._searchRepository, this._loadingOverlayBloc)
       : super(InitialChatPageState()) {
-    // on<RemoveImageEvent>((event, emit) {
-    //   _selectedImage = null;
-    //   emit(InitialChatPageState());
-    // });
     on<SendTextEvent>(
       (event, emit) async {
         _results.add(ChatMessage(
@@ -43,10 +39,9 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
               isAudio: false,
             ));
             _selectedImage = null;
-          } on HttpException catch (error) {
-            _loadingOverlayBloc.add(ShowErrorEvent(message: error.message));
-          } catch (error) {
-            _loadingOverlayBloc.add(ShowErrorEvent(message: error.toString()));
+          } catch (_) {
+            _loadingOverlayBloc.add(
+                ShowErrorEvent(message: 'Failed to communicate with server'));
           }
         } else {
           try {
@@ -54,8 +49,9 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
                 await _searchRepository.sendQuestionByText(event.question);
             _results.add(ChatMessage(
                 message: message, isQuestion: false, isAudio: false));
-          } catch (error) {
-            _loadingOverlayBloc.add(ShowErrorEvent(message: error.toString()));
+          } catch (_) {
+            _loadingOverlayBloc.add(
+                ShowErrorEvent(message: 'Failed to communicate with server'));
           }
         }
         _loadingOverlayBloc.add(HideLoadingOverlayEvent());
@@ -82,10 +78,9 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
               isAudio: false,
               message: response,
             ));
-          } on HttpException catch (error) {
-            _loadingOverlayBloc.add(ShowErrorEvent(message: error.message));
-          } catch (error) {
-            _loadingOverlayBloc.add(ShowErrorEvent(message: error.toString()));
+          } catch (_) {
+            _loadingOverlayBloc.add(
+                ShowErrorEvent(message: 'Failed to communicate with server'));
           }
 
           _loadingOverlayBloc.add(HideLoadingOverlayEvent());

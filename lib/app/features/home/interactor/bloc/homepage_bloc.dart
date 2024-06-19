@@ -34,8 +34,20 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState>
     if (key != null) {
       writeSecureData(key, apiKey);
       if (_user.token != null) {
-        await _authRepository.validateKey(_user.token!);
+        try {
+          await _authRepository.validateKey();
+        } catch (e) {
+          rethrow;
+        }
       }
+    }
+  }
+
+  Future<void> checkApiKeyIsValid() async {
+    try {
+      await _authRepository.checkIfKeyIsValid();
+    } catch (e) {
+      rethrow;
     }
   }
 }

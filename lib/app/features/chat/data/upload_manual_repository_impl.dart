@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../core/entities/auth_user.dart';
@@ -15,8 +15,8 @@ class UploadManualRepositoryImpl
 
   UploadManualRepositoryImpl(this._authUser);
 
-  final apiBaseUrl = dotenv.get('API_SEARCH_URL');
-  final processPdfEndpoint = dotenv.get('PROCESS_PDF_ENDPOINT');
+  final apiBaseUrl = FlutterConfig.get('API_SEARCH_URL');
+  final processPdfEndpoint = FlutterConfig.get('PROCESS_PDF_ENDPOINT');
 
   Future<String?> getApiKey() {
     return readSecureData(_authUser.username ?? '');

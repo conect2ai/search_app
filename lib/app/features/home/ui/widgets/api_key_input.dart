@@ -71,9 +71,20 @@ class _ApiKeyInputState extends State<ApiKeyInput> {
                     _errorText = 'Please insert a valid api key';
                   });
                 } else {
-                  widget._homebloc
-                      .saveApiKey(_apiKeyInputController.text)
-                      .then((_) => Modular.to.navigate('/chat/'));
+                  try {
+                    widget._homebloc
+                        .saveApiKey(_apiKeyInputController.text)
+                        .then((_) {
+                      widget._homebloc.checkApiKeyIsValid();
+                      Modular.to.navigate('/chat/');
+                    });
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content:
+                              Text('Não foi possível validar a chave da api.')),
+                    );
+                  }
                 }
               },
               icon: const Icon(

@@ -109,7 +109,7 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
       width: MediaQuery.of(context).size.width * 0.6,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black)),
+          border: Border.all(color: Colors.grey)),
       child: BlocBuilder<ManualUploadBloc, ManualUploadState>(
         bloc: _manualUploadBloc,
         builder: (context, state) {
