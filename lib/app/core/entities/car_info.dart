@@ -12,9 +12,6 @@ class CarInfo {
     _brand = carInfoMap['brand'] ?? '';
     _model = carInfoMap['model'] ?? '';
     _year = carInfoMap['year'] ?? '';
-    print('brand: $_brand');
-    print('model: $_model');
-    print('year: $_year');
   }
 
   String get brand => _brand;

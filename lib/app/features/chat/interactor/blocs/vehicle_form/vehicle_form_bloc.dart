@@ -45,11 +45,11 @@ class VehicleFormBloc with SecureStorage {
     Future.delayed(const Duration(seconds: 2));
     try {
       vehicles = await _vehicleInfoRepository.getVehicleInfo();
-    } on HttpException catch (_) {
+    } on HttpException catch (e) {
+      _loadingOverlayBloc.add(ShowErrorEvent(message: e.message));
+    } catch (error) {
       _loadingOverlayBloc
           .add(ShowErrorEvent(message: 'Could not retrieve vehicles data'));
-    } catch (error) {
-      _loadingOverlayBloc.add(ShowErrorEvent(message: error.toString()));
     }
 
     _loadingOverlayBloc.add(HideLoadingOverlayEvent());

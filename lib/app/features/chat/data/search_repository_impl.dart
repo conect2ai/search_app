@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../core/entities/auth_user.dart';
@@ -15,15 +15,12 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
 
   SearchRepositoryImpl(this._authUser, this._carInfo);
 
-  final apiBaseUrl = dotenv.get('API_SEARCH_URL');
-  final apiQuestionWithAudio = dotenv.get('API_SEARCH_ENDPOINT_QUESTION_AUDIO');
-  final apiQuestionEndpoint = dotenv.get('API_SEARCH_ENDPOINT_QUESTION');
+  final apiBaseUrl = FlutterConfig.get('API_SEARCH_URL');
+  final apiQuestionWithAudio =
+      FlutterConfig.get('API_SEARCH_ENDPOINT_QUESTION_AUDIO');
+  final apiQuestionEndpoint = FlutterConfig.get('API_SEARCH_ENDPOINT_QUESTION');
   final apiQuestionWithImageEndpoint =
-      dotenv.get('API_SEARCH_ENDPOINT_QUESTION_IMAGE');
-
-  Future<String?> getApiKey() {
-    return readSecureData(_authUser.username ?? '');
-  }
+      FlutterConfig.get('API_SEARCH_ENDPOINT_QUESTION_IMAGE');
 
   @override
   Future<String> sendQuestionByAudio(String audioFilePath) async {
@@ -38,11 +35,9 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
 
     final apiUri = Uri.http(apiBaseUrl, apiQuestionWithAudio, queryParams);
 
-    final apiKey = await getApiKey();
-
     final Map<String, String> headers = {
       'accept': 'multipart/form-data',
-      'Authorization': 'Bearer $apiKey',
+      'Authorization': 'Bearer ${_authUser.token}',
     };
 
     final requestConversion = http.MultipartRequest('POST', apiUri)
@@ -60,24 +55,20 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
       final data = await http.Response.fromStream(response);
       final responseData = jsonDecode(utf8.decode(data.bodyBytes));
       return responseData['response_content'];
-    } else if (response.statusCode == 422) {
-      final error = await response.stream.bytesToString();
-      final responseError = jsonDecode(error);
-      throw HttpException(responseError['detail']['msg']);
     } else {
-      throw const HttpException('An error occurred!');
+      throw const HttpException(
+          'Failed to process your question. Try again later.');
     }
   }
 
   @override
   Future<String> sendQuestionByText(String question) async {
-    final apiKey = await getApiKey();
     final apiUri = Uri.http(apiBaseUrl, apiQuestionEndpoint);
 
     final Map<String, String> headers = {
       'accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer $apiKey',
+      'Authorization': 'Bearer ${_authUser.token}',
     };
 
     final fields = {
@@ -92,18 +83,17 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
         .timeout(
       const Duration(seconds: 120),
       onTimeout: () {
-        throw Exception("Failed to communicate with server");
+        throw const HttpException(
+            "Failed to communicate with server. Timeout.");
       },
     );
 
     if (response.statusCode == 200) {
       final responseData = jsonDecode(utf8.decode(response.bodyBytes));
       return responseData['response_content'];
-    } else if (response.statusCode == 422) {
-      final responseErrorJson = jsonDecode(utf8.decode(response.bodyBytes));
-      throw HttpException(responseErrorJson['detail']['msg']);
     } else {
-      throw const HttpException('An error occurred!');
+      throw const HttpException(
+          'Failed to process your question. Try again later.');
     }
   }
 
@@ -113,14 +103,13 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
     final imageFile =
         await http.MultipartFile.fromPath('image_file', imageFilePath);
 
-    final apiKey = await getApiKey();
     final apiUri = Uri.http(apiBaseUrl, apiQuestionWithImageEndpoint, {
       'question': question,
     });
 
     final Map<String, String> headers = {
       'accept': 'multipart/form-data',
-      'Authorization': 'Bearer $apiKey',
+      'Authorization': 'Bearer ${_authUser.token}',
     };
 
     final request = http.MultipartRequest(
@@ -133,7 +122,8 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
     final response = await request.send().timeout(
       const Duration(seconds: 120),
       onTimeout: () {
-        throw const HttpException("Failed to communicate with server");
+        throw const HttpException(
+            "Failed to communicate with server. Timeout.");
       },
     );
 
@@ -141,12 +131,9 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
       final data = await http.Response.fromStream(response);
       final responseData = jsonDecode(utf8.decode(data.bodyBytes));
       return responseData['choices'][0]['message']['content'];
-    } else if (response.statusCode == 422) {
-      final error = await response.stream.bytesToString();
-      final responseError = jsonDecode(error);
-      throw HttpException(responseError['detail']['msg']);
     } else {
-      throw const HttpException('An error occurred!');
+      throw const HttpException(
+          'Failed to process your question. Try again later.');
     }
   }
 }

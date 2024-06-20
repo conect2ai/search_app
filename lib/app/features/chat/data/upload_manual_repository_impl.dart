@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../core/entities/auth_user.dart';
@@ -15,21 +15,15 @@ class UploadManualRepositoryImpl
 
   UploadManualRepositoryImpl(this._authUser);
 
-  final apiBaseUrl = dotenv.get('API_SEARCH_URL');
-  final processPdfEndpoint = dotenv.get('PROCESS_PDF_ENDPOINT');
-
-  Future<String?> getApiKey() {
-    return readSecureData(_authUser.username ?? '');
-  }
+  final apiBaseUrl = FlutterConfig.get('API_SEARCH_URL');
+  final processPdfEndpoint = FlutterConfig.get('PROCESS_PDF_ENDPOINT');
 
   @override
-  void uploadManualPdf(String pdfFileName, String pdfFilePath) async {
+  Future<bool> uploadManualPdf(String pdfFileName, String pdfFilePath) async {
     final apiUri = Uri.http(
       apiBaseUrl,
       processPdfEndpoint,
     );
-
-    final apiKey = await getApiKey();
 
     final pdf = await http.MultipartFile.fromPath(
       'pdfs',
@@ -39,7 +33,7 @@ class UploadManualRepositoryImpl
 
     final Map<String, String> headers = {
       'accept': 'multipart/form-data',
-      'Authorization': 'Bearer $apiKey',
+      'Authorization': 'Bearer ${_authUser.token}',
     };
 
     final requestConversion = http.MultipartRequest('POST', apiUri)
@@ -49,18 +43,16 @@ class UploadManualRepositoryImpl
     final response = await requestConversion.send().timeout(
       const Duration(seconds: 120),
       onTimeout: () {
-        throw const HttpException("Failed to communicate with server");
+        throw const HttpException("Failed to communicate with server. Timeout");
       },
     );
-
+    print(response.statusCode);
     if (response.statusCode == 200) {
-      final data = await http.Response.fromStream(response);
-      final responseData = jsonDecode(utf8.decode(data.bodyBytes));
-      print(responseData);
+      // final data = await http.Response.fromStream(response);
+      // final responseData = jsonDecode(utf8.decode(data.bodyBytes));
+      return true;
     } else if (response.statusCode == 422) {
-      final error = await response.stream.bytesToString();
-      final responseError = jsonDecode(error);
-      throw HttpException(responseError['detail'][0]['msg']);
+      throw const HttpException('Manual upload failed. Try again later');
     } else {
       throw const HttpException('An error occurred!');
     }

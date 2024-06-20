@@ -4,22 +4,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import '../../../blocs/loading_overlay_bloc.dart';
-import '../../../blocs/loading_overlay_state.dart';
-import '../../../core/themes/app_colors.dart';
-import '../../../mixins/custom_dialogs.dart';
-import '../../../widgets/custom_dialog.dart';
-import '../../../mixins/loading_overlay.dart';
-import '../../../mixins/logo_appbar.dart';
-import '../../auth/data/auth_repository.dart';
-import '../interactor/blocs/chatpage/chat_page_bloc.dart';
-import '../interactor/blocs/chatpage/chat_page_states.dart';
-import '../interactor/blocs/chatpage_inputs/chat_page_input_bloc.dart';
-import '../interactor/blocs/vehicle_form/vehicle_form_bloc.dart';
-import 'widgets/chat_page_input.dart';
-import 'widgets/manual_upload_dialog.dart';
-import 'widgets/messages_list.dart';
-import 'widgets/vehicle_form_dialog.dart';
+import '../../../../blocs/loading_overlay_bloc.dart';
+import '../../../../blocs/loading_overlay_state.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../mixins/custom_dialogs.dart';
+import '../../../../widgets/custom_dialog.dart';
+import '../../../../mixins/loading_overlay.dart';
+import '../../../../mixins/logo_appbar.dart';
+import '../../../auth/data/auth_repository.dart';
+import '../../interactor/blocs/chatpage/chat_page_bloc.dart';
+import '../../interactor/blocs/chatpage/chat_page_states.dart';
+import '../../interactor/blocs/chatpage_inputs/chat_page_input_bloc.dart';
+import '../../interactor/blocs/vehicle_form/vehicle_form_bloc.dart';
+import '../widgets/chat_page_input.dart';
+import '../widgets/manual_upload_dialog.dart';
+import '../widgets/messages_list.dart';
+import '../widgets/vehicle_form_dialog.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});

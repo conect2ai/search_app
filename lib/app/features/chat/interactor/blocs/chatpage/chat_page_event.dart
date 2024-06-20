@@ -1,4 +1,4 @@
-import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 abstract class ChatPageEvent {}
 
@@ -8,7 +8,8 @@ class PickImageEvent extends ChatPageEvent {}
 
 class SendTextEvent extends ChatPageEvent {
   String question;
-  SendTextEvent({required this.question});
+  File? picture;
+  SendTextEvent({required this.question, this.picture});
 }
 
 class SendAudioEvent extends ChatPageEvent {

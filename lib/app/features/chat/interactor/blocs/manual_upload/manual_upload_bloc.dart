@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:rxdart/subjects.dart';
 
 import '../../../data/upload_manual_repository.dart';
 import 'manual_upload_event.dart';
@@ -12,7 +12,7 @@ import 'manual_upload_state.dart';
 class ManualUploadBloc extends Bloc<ManualUploadEvent, ManualUploadState> {
   FilePickerResult? _results;
   XFile? _pdf;
-  UploadManualRepository _manualRepository;
+  final UploadManualRepository _manualRepository;
   ManualUploadBloc(this._manualRepository) : super(NoPdfSelectedState()) {
     on<SelectPdfEvent>((event, emit) {
       if (_results != null) {
@@ -27,6 +27,17 @@ class ManualUploadBloc extends Bloc<ManualUploadEvent, ManualUploadState> {
   }
 
   XFile? get pdf => _pdf;
+
+  BehaviorSubject<bool>? _sendingManualSubject;
+  Stream<bool>? get isSendingManual => _sendingManualSubject?.stream;
+
+  void initSubjects() {
+    _sendingManualSubject = BehaviorSubject<bool>();
+  }
+
+  void updateManualUploadButton(bool isUploading) {
+    _sendingManualSubject?.sink.add(isUploading);
+  }
 
   void openFileExplorer() async {
     _results = await FilePicker.platform
@@ -45,15 +56,20 @@ class ManualUploadBloc extends Bloc<ManualUploadEvent, ManualUploadState> {
     }
   }
 
-  void uploadPdf() async {
+  Future<void> uploadPdf() async {
     try {
       if (_pdf != null) {
-        _manualRepository.uploadManualPdf(pdf!.name, pdf!.path);
+        await _manualRepository.uploadManualPdf(pdf!.name, pdf!.path);
       }
-    } on HttpException catch (error) {
-      print(error.message);
-    } catch (e) {
-      print(e);
+    } on HttpException catch (_) {
+      rethrow;
+    } catch (error) {
+      rethrow;
     }
+  }
+
+  void dispose() {
+    _sendingManualSubject?.close();
+    _sendingManualSubject = null;
   }
 }
