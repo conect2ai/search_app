@@ -15,6 +15,8 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
   final _verifyKeyValidEnpoint =
       FlutterConfig.get('CHECK_IF_VALID_API_KEY_ENDPOINT');
   final _saveKeyEnpoint = FlutterConfig.get('SAVE_API_KEY_ENDPOINT');
+  final _tokenValidationEndpoint =
+      FlutterConfig.get('TOKEN_VALIDATION_ENDPOINT');
 
   AuthRepositoryImpl(this._user);
 
@@ -23,11 +25,30 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
   }
 
   @override
+  Future<void> checkIfTokenIsValid() async {
+    final token = _user.token;
+    final validateTokenUri =
+        Uri.http(_baseAuthUrl, _tokenValidationEndpoint, {'token': token});
+
+    final Map<String, String> headers = {
+      'accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+
+    final response = await http.post(
+      validateTokenUri,
+      headers: headers,
+    );
+
+    if (response.statusCode != 200) {
+      throw const HttpException('Invalid token.');
+    }
+  }
+
+  @override
   Future<void> checkIfKeyIsValid() async {
     final validateKeyUri =
         Uri.http(_baseValidateKeyUrl, _verifyKeyValidEnpoint);
-
-    final apiKey = await getApiKey();
 
     final Map<String, String> headers = {
       'accept': 'application/json',

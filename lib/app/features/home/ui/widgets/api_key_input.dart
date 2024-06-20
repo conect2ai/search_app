@@ -75,7 +75,7 @@ class _ApiKeyInputState extends State<ApiKeyInput> {
                     widget._homebloc
                         .saveApiKey(_apiKeyInputController.text)
                         .then((_) {
-                      widget._homebloc.checkApiKeyIsValid();
+                      // widget._homebloc.checkApiKeyIsValid();
                       Modular.to.navigate('/chat/');
                     });
                   } catch (e) {

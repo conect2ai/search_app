@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:app_search/app/features/chat/interactor/blocs/manual_upload/manual_upload_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
 import '../../../../mixins/custom_dialogs.dart';
 import '../../interactor/blocs/manual_upload/manual_upload_bloc.dart';
@@ -20,7 +23,14 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
   final _manualUploadBloc = Modular.get<ManualUploadBloc>();
   @override
   void initState() {
+    _manualUploadBloc.initSubjects();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _manualUploadBloc.dispose();
+    super.dispose();
   }
 
   @override
@@ -55,7 +65,7 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
           Padding(
             padding: const EdgeInsets.all(8),
             child: Wrap(
-              spacing: 30,
+              spacing: 15,
               children: [
                 TextButton(
                   onPressed: () => Modular.to.pop(),
@@ -69,16 +79,89 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
                     builder: (context, state) {
                       if (state is PdfSelectedState) {
                         return TextButton(
-                          onPressed: () {
-                            _manualUploadBloc.uploadPdf();
+                          onPressed: () async {
+                            try {
+                              _manualUploadBloc.updateManualUploadButton(true);
+                              await _manualUploadBloc.uploadPdf().then((_) {
+                                _manualUploadBloc
+                                    .updateManualUploadButton(false);
+                              });
+                            } on HttpException catch (_) {
+                              if (!mounted) {
+                                return;
+                              }
+                              _manualUploadBloc.updateManualUploadButton(false);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        'Manual upload failed. Try again later.')),
+                              );
+                            } catch (e) {
+                              if (!mounted) {
+                                return;
+                              }
+                              _manualUploadBloc.updateManualUploadButton(false);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        'Manual upload failed. Try again later.')),
+                              );
+                            }
                           },
-                          child: Text(
-                            'Upload',
-                            style: _manualUploadBloc.pdf != null
-                                ? AppTextStyles.dialogTextButtonStyle
-                                : AppTextStyles
-                                    .deactivatedDialogTextButtonStyle,
-                          ),
+                          child: StreamBuilder<bool>(
+                              stream: _manualUploadBloc.isSendingManual,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  final isSendingManual = snapshot.data!;
+                                  if (isSendingManual) {
+                                    return Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'Sending',
+                                          style: _manualUploadBloc.pdf != null
+                                              ? AppTextStyles
+                                                  .dialogTextButtonStyle
+                                              : AppTextStyles
+                                                  .deactivatedDialogTextButtonStyle,
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                          height: 10,
+                                          child: Visibility(
+                                            visible: snapshot.data ?? false,
+                                            child:
+                                                const CircularProgressIndicator(
+                                              color: AppColors.mainColor,
+                                              strokeWidth: 2,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    );
+                                  } else {
+                                    return Text(
+                                      'Upload',
+                                      style: _manualUploadBloc.pdf != null
+                                          ? AppTextStyles.dialogTextButtonStyle
+                                          : AppTextStyles
+                                              .deactivatedDialogTextButtonStyle,
+                                    );
+                                  }
+                                }
+                                return Text(
+                                  'Upload',
+                                  style: _manualUploadBloc.pdf != null
+                                      ? AppTextStyles.dialogTextButtonStyle
+                                      : AppTextStyles
+                                          .deactivatedDialogTextButtonStyle,
+                                );
+                              }),
                         );
                       } else {}
                       return const TextButton(
