@@ -17,6 +17,8 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
   final _saveKeyEnpoint = FlutterConfig.get('SAVE_API_KEY_ENDPOINT');
   final _tokenValidationEndpoint =
       FlutterConfig.get('TOKEN_VALIDATION_ENDPOINT');
+  final _loginEndpoint = FlutterConfig.get('LOGIN_ENDPOINT');
+  final _signUpEndpoint = FlutterConfig.get('SIGN_UP_ENDPOINT');
 
   AuthRepositoryImpl(this._user);
 
@@ -92,66 +94,51 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
   }
 
   @override
-  Future<bool> login(Map<String, String> loginData) async {
-    try {
-      final loginUrl = Uri.http(_baseAuthUrl, '/account/user/login');
-      final loginInfo = {
-        'username': loginData['username'],
-        'password': loginData['password'],
-      };
+  Future<void> login(Map<String, String> loginData) async {
+    final loginUrl = Uri.http(_baseAuthUrl, _loginEndpoint);
+    final loginInfo = {
+      'username': loginData['username'],
+      'password': loginData['password'],
+    };
 
-      final response = await http.post(loginUrl,
-          headers: {
-            'accept': 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: loginInfo);
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body) as Map<String, dynamic>;
-        _user.updateToken(data);
-        _user.updatedUsernameAndPassword(loginInfo);
-        writeSecureData('username', loginData['username']);
-        writeSecureData('password', loginData['password']);
-        writeSecureData('access_token', _user.token);
-        writeSecureData('token_type', _user.tokenType);
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      return false;
+    final response = await http.post(loginUrl,
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: loginInfo);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      _user.updateToken(data);
+      _user.updatedUsernameAndPassword(loginInfo);
+      writeSecureData('username', loginData['username']);
+      writeSecureData('password', loginData['password']);
+      writeSecureData('access_token', _user.token);
+      writeSecureData('token_type', _user.tokenType);
+    } else {
+      throw const HttpException('Login failed. Try again.');
     }
   }
 
   @override
-  Future<bool> signUp(Map<String, String> signUpData) async {
-    final signUpUrl = Uri.http(_baseAuthUrl, '/register');
-    final signUpInfo = json.encode({
-      'username': signUpData['username'],
-      'email': signUpData['email'],
-      'password': signUpData['password'],
-      'role': signUpData['role'],
-    });
+  Future<void> signUp(String signUpData) async {
+    final signUpUrl = Uri.http(_baseAuthUrl, _signUpEndpoint);
+    final response = await http.post(signUpUrl,
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': signUpData,
+        }));
 
-    try {
-      final response = await http.post(signUpUrl,
-          headers: {
-            'accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: signUpInfo);
-      if (response.statusCode == 201) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      return false;
+    if (response.statusCode != 200) {
+      throw const HttpException('Erro ao enviar o email. Tente novamente');
     }
   }
 
   @override
-  void logout() async {
+  Future<void> logout() async {
     _user.updateToken({'access_token': null, 'token_type': null});
     deleteSecureData('access_token');
     deleteSecureData('token_type');

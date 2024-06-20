@@ -128,18 +128,20 @@ class _LoginFormState extends State<LoginForm> {
                         _unfocusAllTextFields();
                         if (_formKey.currentState!.validate()) {
                           _saveFormData();
-                          final isLogged = await _authBloc.login(_formData);
-                          if (isLogged) {
+                          await _authBloc.login(_formData);
+                          try {
                             Modular.to.navigate('/home/');
-                          } else {
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Credenciais inválidas!'),
-                                  duration: Duration(milliseconds: 600),
-                                ),
-                              );
+                          } catch (_) {
+                            if (!mounted) {
+                              return;
                             }
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Credenciais inválidas!'),
+                                duration: Duration(milliseconds: 600),
+                              ),
+                            );
                           }
                         }
                       },

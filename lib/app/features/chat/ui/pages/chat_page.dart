@@ -63,7 +63,7 @@ class _ChatPageState extends State<ChatPage>
             onSelected: (option) async {
               if (option == 'Logout') {
                 _authRepo.logout();
-                Modular.to.navigate('/');
+                // Modular.to.navigate('/');
               } else if (option == 'Api Key') {
                 Modular.to.navigate('/home');
               } else if (option == 'Manual Upload') {
