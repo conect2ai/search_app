@@ -12,6 +12,7 @@ import '../../../../widgets/custom_dialog.dart';
 import '../../../../mixins/loading_overlay.dart';
 import '../../../../mixins/logo_appbar.dart';
 import '../../../auth/data/auth_repository.dart';
+import '../../../auth/interactor/bloc/auth_bloc.dart';
 import '../../interactor/blocs/chatpage/chat_page_bloc.dart';
 import '../../interactor/blocs/chatpage/chat_page_states.dart';
 import '../../interactor/blocs/chatpage_inputs/chat_page_input_bloc.dart';
@@ -31,10 +32,10 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage>
     with LoadingOverlay, LogoAppBar, CustomDialogs {
   final _bloc = Modular.get<ChatPageBloc>();
+  final _authBloc = Modular.get<AuthBloc>();
   final _vehicleInfoBloc = Modular.get<VehicleFormBloc>();
   final _chatInputBloc = Modular.get<ChatPageInputBloc>();
   final _loadingOverlayBloc = Modular.get<LoadingOverlayBloc>();
-  final _authRepo = Modular.get<AuthRepository>();
   int lastIndex = 0;
 
   @override
@@ -62,7 +63,7 @@ class _ChatPageState extends State<ChatPage>
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             onSelected: (option) async {
               if (option == 'Logout') {
-                _authRepo.logout();
+                _authBloc.logout();
                 // Modular.to.navigate('/');
               } else if (option == 'Api Key') {
                 Modular.to.navigate('/home');

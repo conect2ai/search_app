@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../app_module.dart';
 import '../../../blocs/loading_overlay_bloc.dart';
+import '../../auth/interactor/bloc/auth_bloc.dart';
 import '../data/search_repository.dart';
 import '../data/search_repository_impl.dart';
 import '../data/upload_manual_repository.dart';
@@ -25,6 +26,7 @@ class ChatPageModule extends Module {
     i.addLazySingleton<ManualUploadBloc>(ManualUploadBloc.new);
     i.add<UploadManualRepository>(UploadManualRepositoryImpl.new);
     i.add<VehicleInfoRepository>(VehicleInfoRepositoryImpl.new);
+    i.addSingleton<AuthBloc>(AuthBloc.new);
     i.add<SearchRepository>(SearchRepositoryImpl.new);
     i.add<http.Client>(http.Client.new);
   }

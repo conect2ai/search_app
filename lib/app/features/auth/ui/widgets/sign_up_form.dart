@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
 import '../../../../mixins/logo_appbar.dart';
 import '../../../../mixins/snackbar_mixin.dart';
 import '../../interactor/bloc/auth_bloc.dart';
@@ -65,6 +66,7 @@ class _SingUpFormState extends State<SignUpForm>
                 children: [
                   const Text(
                     'Criar Conta',
+                    style: AppTextStyles.authScreenTitleTextStyle,
                   ),
                   const SizedBox(
                     height: 10,
@@ -74,6 +76,7 @@ class _SingUpFormState extends State<SignUpForm>
                     child: Text(
                       'Digite seu email e você será redirecionado para completar o cadastro.',
                       textAlign: TextAlign.center,
+                      style: AppTextStyles.authScreenSubtitleTextStyle,
                     ),
                   ),
                   const SizedBox(
@@ -90,10 +93,7 @@ class _SingUpFormState extends State<SignUpForm>
                       cursorColor: AppColors.mainColor,
                       decoration: InputDecoration(
                         hintText: 'Email',
-                        hintStyle: const TextStyle(
-                            fontSize: 17,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400),
+                        hintStyle: AppTextStyles.textFieldTextStyle,
                         prefixIcon: const Icon(
                           Icons.email_outlined,
                           color: AppColors.mainColor,
@@ -130,6 +130,7 @@ class _SingUpFormState extends State<SignUpForm>
                         onPressed: _sendSignUp,
                         child: const Text(
                           'Cadastro',
+                          style: AppTextStyles.authScreenButtonsTextStyle,
                         )),
                   ),
                   Row(
