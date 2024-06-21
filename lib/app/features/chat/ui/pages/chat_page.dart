@@ -11,7 +11,6 @@ import '../../../../mixins/custom_dialogs.dart';
 import '../../../../widgets/custom_dialog.dart';
 import '../../../../mixins/loading_overlay.dart';
 import '../../../../mixins/logo_appbar.dart';
-import '../../../auth/data/auth_repository.dart';
 import '../../../auth/interactor/bloc/auth_bloc.dart';
 import '../../interactor/blocs/chatpage/chat_page_bloc.dart';
 import '../../interactor/blocs/chatpage/chat_page_states.dart';

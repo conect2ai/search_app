@@ -33,7 +33,7 @@ class _AuthPageState extends State<AuthPage> with LogoAppBar {
             return LoginForm(
                 username: state.username, password: state.password);
           } else if (state is SignUpState) {
-            return SignUpForm();
+            return const SignUpForm();
           } else {
             return const SpinKitSpinningLines(
               size: 100,

@@ -42,7 +42,7 @@ class _MessagesListState extends State<MessagesList> {
                   path: message.audioPath!,
                 ))
             : MessageBubble(
-                message: message.message!,
+                chatMessage: message,
                 isQuestion: message.isQuestion,
                 imagePath: message.imagePath,
               );

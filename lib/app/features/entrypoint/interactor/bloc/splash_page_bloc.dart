@@ -7,8 +7,8 @@ import '../../../../mixins/secure_storage.dart';
 import '../../../auth/data/auth_repository.dart';
 
 class SplashPageBloc with SecureStorage {
-  AuthUser _user;
-  AuthRepository _authRepository;
+  final AuthUser _user;
+  final AuthRepository _authRepository;
 
   SplashPageBloc(this._user, this._authRepository);
 

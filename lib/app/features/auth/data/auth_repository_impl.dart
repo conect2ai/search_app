@@ -37,7 +37,7 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
       'Content-Type': 'application/json',
     };
 
-    final response = await http.post(
+    final response = await http.get(
       validateTokenUri,
       headers: headers,
     );
@@ -48,7 +48,7 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
   }
 
   @override
-  Future<void> checkIfKeyIsValid() async {
+  Future<String> checkIfUserHasKey() async {
     final validateKeyUri =
         Uri.http(_baseValidateKeyUrl, _verifyKeyValidEnpoint);
 
@@ -62,7 +62,10 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
       headers: headers,
     );
 
-    if (response.statusCode != 200) {
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['key'];
+    } else {
       throw const HttpException('Não foi possível validar a chave.');
     }
   }

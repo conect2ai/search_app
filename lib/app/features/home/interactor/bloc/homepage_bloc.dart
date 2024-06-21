@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 
 import '../../../../core/entities/auth_user.dart';
@@ -13,7 +15,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState>
 
   final AuthUser _user;
 
-  bool validateApiKey(String apiKey) {
+  bool checkIfApiKeyIsNotEmpty(String apiKey) {
     if (apiKey.isEmpty || apiKey == '') {
       return false;
     } else {
@@ -36,6 +38,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState>
       if (_user.token != null) {
         try {
           await _authRepository.validateKey();
+        } on HttpException catch (_) {
+          rethrow;
         } catch (e) {
           rethrow;
         }
@@ -43,9 +47,13 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState>
     }
   }
 
-  Future<void> checkApiKeyIsValid() async {
+  Future<String> checkIfUserHasKey() async {
     try {
-      await _authRepository.checkIfKeyIsValid();
+      final userKey = await _authRepository.checkIfUserHasKey();
+      writeSecureData(_user.username!, userKey);
+      return userKey;
+    } on HttpException catch (_) {
+      rethrow;
     } catch (e) {
       rethrow;
     }

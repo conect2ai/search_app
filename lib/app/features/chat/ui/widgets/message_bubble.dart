@@ -1,19 +1,23 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../../../core/entities/chat_message.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
+import '../../interactor/blocs/chatpage/chat_page_bloc.dart';
+import '../../interactor/blocs/message_rate/message_rate_bloc.dart';
 
 class MessageBubble extends StatefulWidget {
-  final String message;
+  final ChatMessage chatMessage;
   final String? imagePath;
   final bool isQuestion;
   late final Color bubbleColor;
 
   MessageBubble(
       {super.key,
-      required this.message,
+      required this.chatMessage,
       required this.isQuestion,
       this.imagePath}) {
     bubbleColor = isQuestion ? AppColors.mainColor : Colors.orange;
@@ -27,6 +31,9 @@ class _MessageBubbleState extends State<MessageBubble> {
   bool _isGoodAnswer = false;
 
   bool _isBadAnswer = false;
+
+  final _messageRateBloc = Modular.get<MessageRateBloc>();
+  final _chatPageBloc = Modular.get<ChatPageBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +67,7 @@ class _MessageBubbleState extends State<MessageBubble> {
                     height: 5,
                   ),
                   Text(
-                    widget.message,
+                    widget.chatMessage.message ?? '',
                     style: AppTextStyles.chatMessageTextStyle,
                     softWrap: true,
                   ),
@@ -72,7 +79,20 @@ class _MessageBubbleState extends State<MessageBubble> {
                             spacing: 5,
                             children: [
                               IconButton(
-                                onPressed: () {
+                                onPressed: () async {
+                                  final question = _chatPageBloc.results
+                                      .firstWhere((chatMessage) =>
+                                          chatMessage.id ==
+                                          widget.chatMessage.id);
+                                  final rateData = {
+                                    'message_id': widget.chatMessage.id,
+                                    'assistant_message':
+                                        widget.chatMessage.message,
+                                    'user_message': question.message ?? '',
+                                    'feedback': '',
+                                    'additional_info': '',
+                                  };
+                                  await _messageRateBloc.sendLike(rateData);
                                   setState(() {
                                     if (!_isBadAnswer && _isGoodAnswer) {
                                       _isGoodAnswer = false;

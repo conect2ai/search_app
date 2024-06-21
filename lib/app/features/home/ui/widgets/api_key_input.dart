@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../../../mixins/snackbar_mixin.dart';
 import '../../interactor/bloc/homepage_bloc.dart';
 
 class ApiKeyInput extends StatefulWidget {
@@ -11,14 +14,35 @@ class ApiKeyInput extends StatefulWidget {
   State<ApiKeyInput> createState() => _ApiKeyInputState();
 }
 
-class _ApiKeyInputState extends State<ApiKeyInput> {
+class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
   final _apiKeyInputController = TextEditingController();
   var _isValidApiKey = false;
   var _errorText = '';
   @override
   void initState() {
+    _checkIfUserHasKey();
     _checkApiKeySavedData();
     super.initState();
+  }
+
+  void _checkIfUserHasKey() async {
+    try {
+      await widget._homebloc.checkIfUserHasKey().then((value) {
+        // _apiKeyInputController.text = value;
+      });
+    } on HttpException catch (_) {
+      if (!mounted) {
+        return;
+      }
+      generateSnackBar(
+          'Could not retrieve api key information from user', context);
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      generateSnackBar(
+          'Could not retrieve api key information from user', context);
+    }
   }
 
   void _checkApiKeySavedData() async {
@@ -63,27 +87,33 @@ class _ApiKeyInputState extends State<ApiKeyInput> {
           right: 0,
           child: IconButton(
               iconSize: 20,
-              onPressed: () {
+              onPressed: () async {
                 _isValidApiKey = widget._homebloc
-                    .validateApiKey(_apiKeyInputController.text);
+                    .checkIfApiKeyIsNotEmpty(_apiKeyInputController.text);
                 if (!_isValidApiKey) {
                   setState(() {
                     _errorText = 'Please insert a valid api key';
                   });
                 } else {
                   try {
-                    widget._homebloc
+                    await widget._homebloc
                         .saveApiKey(_apiKeyInputController.text)
                         .then((_) {
-                      // widget._homebloc.checkApiKeyIsValid();
+                      //  widget._homebloc.checkApiKeyIsValid();
                       Modular.to.navigate('/chat/');
                     });
+                  } on HttpException catch (_) {
+                    if (!mounted) {
+                      return;
+                    }
+                    generateSnackBar(
+                        'Failed to save your api key information', context);
                   } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content:
-                              Text('Não foi possível validar a chave da api.')),
-                    );
+                    if (!mounted) {
+                      return;
+                    }
+                    generateSnackBar(
+                        'Failed to save your api key information', context);
                   }
                 }
               },
