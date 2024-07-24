@@ -28,7 +28,7 @@ class CustomDialog extends StatelessWidget {
                 width: 200,
                 child: Text(
                   _message,
-                  style: AppTextStyles.dialogTextStyle,
+                  style: AppTextStyles.dialogtextStyle,
                   textAlign: TextAlign.center,
                   softWrap: true,
                 ),
@@ -41,7 +41,7 @@ class CustomDialog extends StatelessWidget {
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(
                   _buttonMessage,
-                  style: AppTextStyles.dialogTextButtonStyle,
+                  style: AppTextStyles.dialogSecondaryTextStyle,
                 ))
           ],
         ),

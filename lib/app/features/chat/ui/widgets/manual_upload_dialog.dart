@@ -13,7 +13,7 @@ import '../../interactor/blocs/manual_upload/manual_upload_bloc.dart';
 import '../../interactor/blocs/manual_upload/manual_upload_state.dart';
 
 class ManualUploadDialog extends StatefulWidget {
-  const ManualUploadDialog({super.key});
+  ManualUploadDialog({super.key});
 
   @override
   State<ManualUploadDialog> createState() => _ManualUploadDialogState();
@@ -41,11 +41,11 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(8),
+          Padding(
+            padding: const EdgeInsets.all(8),
             child: Text(
               'Manual Upload',
-              style: AppTextStyles.dialogTextStyle,
+              style: AppTextStyles.dialogtextStyle,
             ),
           ),
           const Divider(
@@ -70,9 +70,9 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
               children: [
                 TextButton(
                   onPressed: () => Modular.to.pop(),
-                  child: const Text(
+                  child: Text(
                     'Cancel',
-                    style: AppTextStyles.dialogTextButtonStyle,
+                    style: AppTextStyles.dialogtextStyle,
                   ),
                 ),
                 BlocBuilder<ManualUploadBloc, ManualUploadState>(
@@ -120,9 +120,9 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
                                           'Sending',
                                           style: _manualUploadBloc.pdf != null
                                               ? AppTextStyles
-                                                  .dialogTextButtonStyle
+                                                  .dialogOptionsextStyle
                                               : AppTextStyles
-                                                  .deactivatedDialogTextButtonStyle,
+                                                  .dialogSecondaryTextStyle,
                                         ),
                                         const SizedBox(
                                           width: 5,
@@ -145,27 +145,26 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
                                     return Text(
                                       'Upload',
                                       style: _manualUploadBloc.pdf != null
-                                          ? AppTextStyles.dialogTextButtonStyle
+                                          ? AppTextStyles.dialogtextStyle
                                           : AppTextStyles
-                                              .deactivatedDialogTextButtonStyle,
+                                              .dialogSecondaryTextStyle,
                                     );
                                   }
                                 }
                                 return Text(
                                   'Upload',
                                   style: _manualUploadBloc.pdf != null
-                                      ? AppTextStyles.dialogTextButtonStyle
-                                      : AppTextStyles
-                                          .deactivatedDialogTextButtonStyle,
+                                      ? AppTextStyles.dialogtextStyle
+                                      : AppTextStyles.dialogSecondaryTextStyle,
                                 );
                               }),
                         );
                       } else {}
-                      return const TextButton(
+                      return TextButton(
                         onPressed: null,
                         child: Text(
                           'Upload',
-                          style: AppTextStyles.deactivatedDialogTextButtonStyle,
+                          style: AppTextStyles.dialogSecondaryTextStyle,
                         ),
                       );
                     }),

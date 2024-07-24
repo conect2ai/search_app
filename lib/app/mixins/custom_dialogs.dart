@@ -29,7 +29,7 @@ mixin CustomDialogs {
             padding: const EdgeInsets.all(8),
             child: Text(
               title,
-              style: AppTextStyles.dialogTextStyle,
+              style: AppTextStyles.dialogtextStyle,
             ),
           ),
           const Divider(
@@ -67,7 +67,7 @@ mixin CustomDialogs {
                   onPressed: () => callBack(index),
                   child: Text(
                     actions[index],
-                    style: AppTextStyles.dialogTextButtonStyle,
+                    style: AppTextStyles.dialogSecondaryTextStyle,
                   )))),
     );
   }

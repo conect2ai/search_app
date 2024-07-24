@@ -19,6 +19,8 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
       FlutterConfig.get('TOKEN_VALIDATION_ENDPOINT');
   final _loginEndpoint = FlutterConfig.get('LOGIN_ENDPOINT');
   final _signUpEndpoint = FlutterConfig.get('SIGN_UP_ENDPOINT');
+  final _recoverPasswordEndpoint =
+      FlutterConfig.get('RECOVER_PASSWORD_ENDPOINT');
 
   AuthRepositoryImpl(this._user);
 
@@ -66,7 +68,24 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
       final data = jsonDecode(response.body);
       return data['key'];
     } else {
-      throw const HttpException('Não foi possível validar a chave.');
+      throw const HttpException('Could not validate API key.');
+    }
+  }
+
+  @override
+  Future<void> recoverPassword(String email) async {
+    final response =
+        await http.post(Uri.http(_baseAuthUrl, _recoverPasswordEndpoint),
+            headers: {
+              'accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              'email': email,
+            }));
+
+    if (response.statusCode != 200) {
+      throw const HttpException('Erro ao enviar o email. Tente novamente');
     }
   }
 
@@ -92,7 +111,7 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
     );
 
     if (response.statusCode != 200) {
-      throw const HttpException('Não foi possível validar a chave.');
+      throw const HttpException('Could not validate API key.');
     }
   }
 

@@ -68,7 +68,7 @@ class _MessageBubbleState extends State<MessageBubble> {
                   ),
                   Text(
                     widget.chatMessage.message ?? '',
-                    style: AppTextStyles.chatMessageTextStyle,
+                    style: AppTextStyles.mainTextStyle,
                     softWrap: true,
                   ),
                   widget.isQuestion

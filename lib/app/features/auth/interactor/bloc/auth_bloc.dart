@@ -29,4 +29,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     await authRepository.logout();
     Modular.to.navigate('/');
   }
+
+  Future<void> recoverPassword(String email) async {
+    await authRepository.recoverPassword(email);
+  }
 }

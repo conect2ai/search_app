@@ -12,7 +12,7 @@ import '../../../../mixins/snackbar_mixin.dart';
 import '../../interactor/bloc/auth_bloc.dart';
 
 class SignUpForm extends StatefulWidget {
-  const SignUpForm({super.key});
+  SignUpForm({super.key});
 
   @override
   State<SignUpForm> createState() => _SingUpFormState();
@@ -64,14 +64,14 @@ class _SingUpFormState extends State<SignUpForm>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     'Criar Conta',
                     style: AppTextStyles.authScreenTitleTextStyle,
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  const SizedBox(
+                  SizedBox(
                     width: 300,
                     child: Text(
                       'Digite seu email e você será redirecionado para completar o cadastro.',
@@ -128,7 +128,7 @@ class _SingUpFormState extends State<SignUpForm>
                         style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.mainColor),
                         onPressed: _sendSignUp,
-                        child: const Text(
+                        child: Text(
                           'Cadastro',
                           style: AppTextStyles.authScreenButtonsTextStyle,
                         )),

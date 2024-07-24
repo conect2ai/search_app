@@ -67,7 +67,7 @@ class _ChatPageState extends State<ChatPage>
               } else if (option == 'Api Key') {
                 Modular.to.navigate('/home');
               } else if (option == 'Manual Upload') {
-                dialog(context, const ManualUploadDialog());
+                dialog(context, ManualUploadDialog());
               } else {
                 dialog(context, const VehicleFormDialog());
               }

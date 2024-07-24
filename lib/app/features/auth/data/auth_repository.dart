@@ -4,5 +4,6 @@ abstract interface class AuthRepository {
   Future<void> validateKey();
   Future<String> checkIfUserHasKey();
   Future<void> checkIfTokenIsValid();
+  Future<void> recoverPassword(String email);
   Future<void> logout();
 }
