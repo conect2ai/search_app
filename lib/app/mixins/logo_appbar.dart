@@ -4,13 +4,14 @@ mixin LogoAppBar {
   AppBar generateLogoAppBar(BuildContext context, [List<Widget>? actions]) {
     return AppBar(
         centerTitle: true,
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         shadowColor: const Color(0xFF00AAD0),
         toolbarHeight: 75,
         title: Image.asset(
-          'assets/images/main_logo.png',
+          'assets/images/main_logo_white.png',
           fit: BoxFit.fill,
-          width: MediaQuery.of(context).size.width * 0.8,
+          width: MediaQuery.of(context).size.width * 0.4,
         ),
         actions: actions);
   }

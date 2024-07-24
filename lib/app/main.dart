@@ -19,7 +19,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      theme: ThemeData(scaffoldBackgroundColor: AppColors.backgroundColor),
+      theme: ThemeData(
+        scaffoldBackgroundColor: AppColors.backgroundColor,
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Colors.white,
+          selectionColor: AppColors.mainColor,
+          selectionHandleColor: AppColors.mainColor,
+        ),
+      ),
       title: "Search App",
       routerConfig: Modular.routerConfig,
       debugShowCheckedModeBanner: false,

@@ -1,8 +1,11 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
 import '../../../../mixins/snackbar_mixin.dart';
 import '../../interactor/bloc/homepage_bloc.dart';
 
@@ -17,7 +20,7 @@ class ApiKeyInput extends StatefulWidget {
 class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
   final _apiKeyInputController = TextEditingController();
   var _isValidApiKey = false;
-  var _errorText = '';
+
   @override
   void initState() {
     _checkIfUserHasKey();
@@ -28,7 +31,7 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
   void _checkIfUserHasKey() async {
     try {
       await widget._homebloc.checkIfUserHasKey().then((value) {
-        // _apiKeyInputController.text = value;
+        _apiKeyInputController.text = value;
       });
     } on HttpException catch (_) {
       if (!mounted) {
@@ -52,77 +55,105 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.7,
-      height: 50,
-      decoration: BoxDecoration(
-          color: Colors.blueGrey.shade100,
-          borderRadius: BorderRadius.circular(15)),
-      child: Stack(children: [
-        Positioned(
-          top: 0,
-          child: SizedBox(
-            width: 200,
-            child: TextField(
-              controller: _apiKeyInputController,
-              onChanged: (value) {
-                _errorText = '';
-              },
-              decoration: InputDecoration(
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                fillColor: Colors.blueGrey.shade100,
-                hintStyle: const TextStyle(color: Colors.grey),
-                filled: true,
-                hintText: 'Insert Your Api Key',
-                errorText: _errorText,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide.none),
+    final screenWidth = MediaQuery.of(context).size.width;
+    return Center(
+      child: SingleChildScrollView(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'OpenAI Key',
+                style: AppTextStyles.authScreenTitleTextStyle,
               ),
-            ),
-          ),
-        ),
-        Positioned(
-          right: 0,
-          child: IconButton(
-              iconSize: 20,
-              onPressed: () async {
-                _isValidApiKey = widget._homebloc
-                    .checkIfApiKeyIsNotEmpty(_apiKeyInputController.text);
-                if (!_isValidApiKey) {
-                  setState(() {
-                    _errorText = 'Please insert a valid api key';
-                  });
-                } else {
-                  try {
-                    await widget._homebloc
-                        .saveApiKey(_apiKeyInputController.text)
-                        .then((_) {
-                      //  widget._homebloc.checkApiKeyIsValid();
-                      Modular.to.navigate('/chat/');
-                    });
-                  } on HttpException catch (_) {
-                    if (!mounted) {
-                      return;
-                    }
-                    generateSnackBar(
-                        'Failed to save your api key information', context);
-                  } catch (e) {
-                    if (!mounted) {
-                      return;
-                    }
-                    generateSnackBar(
-                        'Failed to save your api key information', context);
-                  }
-                }
-              },
-              icon: const Icon(
-                Icons.login,
-                color: Colors.grey,
-              )),
-        ),
-      ]),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 80,
+                child: TextField(
+                  selectionHeightStyle: BoxHeightStyle.strut,
+                  controller: _apiKeyInputController,
+                  keyboardType: TextInputType.emailAddress,
+                  style: AppTextStyles.textFieldTextStyle,
+                  textAlignVertical: TextAlignVertical.center,
+                  cursorColor: AppColors.mainColor,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    hintText: 'Key',
+                    hintStyle: const TextStyle(
+                        fontSize: 17,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400),
+                    prefixIcon: const Icon(
+                      Icons.lock_outline_rounded,
+                      color: AppColors.mainColor,
+                    ),
+                    constraints: BoxConstraints.tight(
+                        Size(MediaQuery.of(context).size.width * 0.9, 120)),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 15),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide:
+                            const BorderSide(color: AppColors.mainColor)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide:
+                            const BorderSide(color: AppColors.mainColor)),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: AppColors.mainColor),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                width: screenWidth * 0.8,
+                height: 65,
+                decoration: BoxDecoration(
+                    color: AppColors.mainColor,
+                    borderRadius: BorderRadius.circular(10)),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.mainColor),
+                    onPressed: () async {
+                      _isValidApiKey = widget._homebloc
+                          .checkIfApiKeyIsNotEmpty(_apiKeyInputController.text);
+                      if (!_isValidApiKey) {
+                        generateSnackBar('Please insert a key', context);
+                      } else {
+                        try {
+                          await widget._homebloc
+                              .saveApiKey(_apiKeyInputController.text)
+                              .then((_) {
+                            //  widget._homebloc.checkApiKeyIsValid();
+                            Modular.to.navigate('/chat/');
+                          });
+                        } on HttpException catch (_) {
+                          if (!mounted) {
+                            return;
+                          }
+                          generateSnackBar(
+                              'Failed to save your api key information',
+                              context);
+                        } catch (e) {
+                          if (!mounted) {
+                            return;
+                          }
+                          generateSnackBar(
+                              'Failed to save your api key information',
+                              context);
+                        }
+                      }
+                    },
+                    child: Text(
+                      'Confirmar',
+                      style: AppTextStyles.authScreenButtonsTextStyle,
+                    )),
+              ),
+            ]),
+      ),
     );
   }
 }
