@@ -18,7 +18,7 @@ class AuthModule extends Module {
 
   @override
   void routes(r) {
-    r.child('/', child: (context) => AuthPage());
+    r.child('/', child: (context) => const AuthPage());
     r.module('/home', module: HomePageModule());
   }
 }

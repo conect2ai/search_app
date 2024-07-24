@@ -1,6 +1,4 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 
 import 'core/entities/auth_user.dart';
 import 'core/entities/car_info.dart';
@@ -21,7 +19,6 @@ class AppModule extends Module {
     i.addSingleton<AuthUser>(AuthUser.new);
     i.addSingleton<CarInfo>(CarInfo.new);
     i.addSingleton<AuthRepository>(AuthRepositoryImpl.new);
-    i.add<Client>(http.Client.new);
   }
 
   @override

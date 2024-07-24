@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../../core/entities/auth_user.dart';
 import '../../data/auth_repository.dart';
@@ -16,18 +17,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(SignUpState(username: event.username, password: event.password)));
   }
 
-  Future<bool> login(Map<String, String> formData) async {
-    final isLogged = await authRepository.login(formData);
-    if (isLogged) {}
-    return isLogged; //mudar quando implementar os status code
+  Future<void> login(Map<String, String> formData) async {
+    await authRepository.login(formData);
   }
 
-  Future<bool> signUp(Map<String, String> formData) async {
-    final isRegistered = await authRepository.signUp(formData);
-    return isRegistered; //mudar quando implementar os status code
+  Future<void> signUp(String formData) async {
+    await authRepository.signUp(formData);
   }
 
-  void logout() async {
-    authRepository.logout();
+  Future<void> logout() async {
+    await authRepository.logout();
+    Modular.to.navigate('/');
   }
 }

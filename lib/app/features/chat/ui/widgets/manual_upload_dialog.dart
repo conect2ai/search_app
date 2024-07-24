@@ -8,6 +8,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
 import '../../../../mixins/custom_dialogs.dart';
+import '../../../../mixins/snackbar_mixin.dart';
 import '../../interactor/blocs/manual_upload/manual_upload_bloc.dart';
 import '../../interactor/blocs/manual_upload/manual_upload_state.dart';
 
@@ -19,7 +20,7 @@ class ManualUploadDialog extends StatefulWidget {
 }
 
 class _ManualUploadDialogState extends State<ManualUploadDialog>
-    with CustomDialogs {
+    with CustomDialogs, SnackBarMixin {
   final _manualUploadBloc = Modular.get<ManualUploadBloc>();
   @override
   void initState() {
@@ -91,21 +92,17 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
                                 return;
                               }
                               _manualUploadBloc.updateManualUploadButton(false);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(
-                                        'Manual upload failed. Try again later.')),
-                              );
+                              generateSnackBar(
+                                  'Manual upload failed. Try again later.',
+                                  context);
                             } catch (e) {
                               if (!mounted) {
                                 return;
                               }
                               _manualUploadBloc.updateManualUploadButton(false);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(
-                                        'Manual upload failed. Try again later.')),
-                              );
+                              generateSnackBar(
+                                  'Manual upload failed. Try again later.',
+                                  context);
                             }
                           },
                           child: StreamBuilder<bool>(

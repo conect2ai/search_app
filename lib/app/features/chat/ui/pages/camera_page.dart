@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:app_search/app/features/chat/ui/widgets/chat_page_input.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';

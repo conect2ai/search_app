@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_config/flutter_config.dart';
@@ -46,7 +45,6 @@ class UploadManualRepositoryImpl
         throw const HttpException("Failed to communicate with server. Timeout");
       },
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       // final data = await http.Response.fromStream(response);
       // final responseData = jsonDecode(utf8.decode(data.bodyBytes));

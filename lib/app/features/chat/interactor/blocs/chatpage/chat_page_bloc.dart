@@ -21,7 +21,9 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
       : super(InitialChatPageState()) {
     on<SendTextEvent>(
       (event, emit) async {
+        final messageId = DateTime.timestamp().toIso8601String();
         _results.add(ChatMessage(
+            id: messageId,
             message: event.question,
             isQuestion: true,
             isAudio: false,
@@ -33,7 +35,9 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
           try {
             final message = await _searchRepository.sendQuestionByTextWithImage(
                 event.question, _selectedImage?.path ?? event.picture!.path);
+
             _results.add(ChatMessage(
+              id: messageId,
               message: message,
               isQuestion: false,
               isAudio: false,
@@ -48,7 +52,10 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
             final message =
                 await _searchRepository.sendQuestionByText(event.question);
             _results.add(ChatMessage(
-                message: message, isQuestion: false, isAudio: false));
+                id: messageId,
+                message: message,
+                isQuestion: false,
+                isAudio: false));
           } catch (_) {
             _loadingOverlayBloc.add(
                 ShowErrorEvent(message: 'Failed to communicate with server'));
@@ -60,8 +67,10 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     );
     on<SendAudioEvent>(
       (event, emit) async {
+        final messageId = DateTime.timestamp().toIso8601String();
         if (event.path.isNotEmpty) {
           _results.add(ChatMessage(
+            id: messageId,
             audioPath: event.path,
             isQuestion: true,
             isAudio: true,
@@ -74,6 +83,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
             );
 
             _results.add(ChatMessage(
+              id: messageId,
               isQuestion: false,
               isAudio: false,
               message: response,
@@ -89,6 +99,8 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
       },
     );
   }
+
+  List<ChatMessage> get results => _results;
 
   void pickImage(ImageSource source) async {
     final file = await _imagePicker.pickImage(source: source);
