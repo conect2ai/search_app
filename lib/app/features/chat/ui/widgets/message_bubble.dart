@@ -20,7 +20,7 @@ class MessageBubble extends StatefulWidget {
       required this.chatMessage,
       required this.isQuestion,
       this.imagePath}) {
-    bubbleColor = isQuestion ? AppColors.mainColor : Colors.orange;
+    bubbleColor = isQuestion ? AppColors.mainColor : Colors.grey.shade500;
   }
 
   @override

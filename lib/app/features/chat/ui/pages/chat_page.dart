@@ -7,6 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../../../blocs/loading_overlay_bloc.dart';
 import '../../../../blocs/loading_overlay_state.dart';
 import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
 import '../../../../mixins/custom_dialogs.dart';
 import '../../../../widgets/custom_dialog.dart';
 import '../../../../mixins/loading_overlay.dart';
@@ -17,6 +18,7 @@ import '../../interactor/blocs/chatpage/chat_page_states.dart';
 import '../../interactor/blocs/chatpage_inputs/chat_page_input_bloc.dart';
 import '../../interactor/blocs/vehicle_form/vehicle_form_bloc.dart';
 import '../widgets/chat_page_input.dart';
+import '../widgets/custom_drawer.dart';
 import '../widgets/manual_upload_dialog.dart';
 import '../widgets/messages_list.dart';
 import '../widgets/vehicle_form_dialog.dart';
@@ -115,7 +117,10 @@ class _ChatPageState extends State<ChatPage>
                     bloc: _bloc,
                     builder: (context, state) {
                       if (state is InitialChatPageState) {
-                        return const Text('Ask a question');
+                        return Text(
+                          'Ask a question',
+                          style: AppTextStyles.mainTextStyle,
+                        );
                       } else if (state is ReceiveResponseState) {
                         return MessagesList(
                           state: state,
@@ -132,20 +137,17 @@ class _ChatPageState extends State<ChatPage>
               ),
               Container(
                 width: double.infinity,
-                decoration: const BoxDecoration(color: Colors.grey, boxShadow: [
-                  BoxShadow(
-                      color: AppColors.mainColor,
-                      offset: Offset(0, 0),
-                      blurStyle: BlurStyle.solid,
-                      blurRadius: 5)
-                ]),
+                decoration: const BoxDecoration(
+                  color: Colors.transparent,
+                ),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                 child: const ChatPageInput(),
               )
             ],
           ),
         ),
+        drawer: const CustomDrawer(),
       ),
     );
   }

@@ -59,117 +59,112 @@ class _ChatPageInputState extends State<ChatPageInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.blueGrey.shade100,
-                borderRadius: BorderRadius.circular(10)),
-            child: Stack(
-              children: [
-                BlocBuilder<ChatPageInputBloc, ChatPageInputState>(
-                  bloc: _chatPageInputBloc,
-                  builder: (context, state) {
-                    if (state is TextModeState) {
-                      return Stack(children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.58,
-                          child: TextField(
-                            controller: _textInputController,
-                            focusNode: _textFocusNode,
-                            inputFormatters: [
-                              TextInputFormatter.withFunction(
-                                  (oldValue, newValue) {
-                                int newLines = newValue.text.split('\n').length;
-                                if (newLines > 4) {
-                                  return oldValue;
-                                } else {
-                                  return newValue;
-                                }
-                              }),
-                            ],
-                            onEditingComplete: () {
-                              if (_textInputController.text.isNotEmpty) {
-                                _chatPageBloc.add(SendTextEvent(
-                                    question: _textInputController.text));
-                                _textInputController.text = '';
-                                FocusManager.instance.primaryFocus?.unfocus();
-                              }
-                            },
-                            decoration: InputDecoration(
-                              isDense: true,
-                              fillColor: Colors.blueGrey.shade100,
-                              filled: true,
-                              hintText: 'Text here...',
-                              hintStyle: const TextStyle(color: Colors.grey),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none),
-                            ),
-                          ),
-                        ),
-                      ]);
-                    } else {
-                      return Container(
-                          alignment: Alignment.centerLeft,
-                          width: MediaQuery.of(context).size.width * 0.58,
-                          height: 49,
-                          padding: const EdgeInsets.only(left: 10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.blueGrey.shade100,
-                          ),
-                          child: AudioWaveforms(
-                            size: Size(
-                                MediaQuery.of(context).size.width * 0.6, 30),
-                            recorderController:
-                                _chatPageInputBloc.recorderController,
-                            waveStyle: const WaveStyle(
-                              backgroundColor: Colors.white,
-                              showBottom: false,
-                              extendWaveform: true,
-                              showMiddleLine: false,
-                            ),
-                          ));
-                    }
-                  },
-                ),
-                Positioned(
-                    right: 0,
-                    child: IconButton(
-                        onPressed: () {
-                          // _chatPageBloc.pickImage(ImageSource.camera);
-                          Modular.to.push(MaterialPageRoute(
-                            builder: (context) => CameraPage(_cameras),
-                          ));
-                        },
-                        icon: const Icon(
-                          Icons.camera_alt,
-                          color: Colors.grey,
-                        ))),
-                Positioned(
-                    right: 35,
-                    child: IconButton(
-                        onPressed: () {
-                          _chatPageBloc.pickImage(ImageSource.gallery);
-                        },
-                        icon: const Icon(
-                          Icons.image_outlined,
-                          color: Colors.grey,
-                        ))),
-              ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          IconButton(
+            constraints: const BoxConstraints(maxWidth: 25),
+            onPressed: () {
+              _chatPageBloc.pickImage(ImageSource.gallery);
+            },
+            splashRadius: 20,
+            iconSize: 20,
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            icon: const Icon(
+              Icons.image_outlined,
+              color: Colors.white,
             ),
           ),
-        ),
-        Container(
-            margin: const EdgeInsets.only(left: 5),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.blueGrey.shade200),
-            padding: const EdgeInsets.symmetric(vertical: 1),
-            child: _chatInputBtn),
-      ],
+          const SizedBox(
+            width: 10,
+          ),
+          IconButton(
+            constraints: const BoxConstraints(maxWidth: 20),
+            onPressed: () {
+              // _chatPageBloc.pickImage(ImageSource.camera);
+              Modular.to.push(MaterialPageRoute(
+                builder: (context) => CameraPage(_cameras),
+              ));
+            },
+            iconSize: 20,
+            splashRadius: 20,
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            icon: const Icon(
+              Icons.camera_alt_outlined,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: BlocBuilder<ChatPageInputBloc, ChatPageInputState>(
+              bloc: _chatPageInputBloc,
+              builder: (context, state) {
+                if (state is TextModeState) {
+                  return Container(
+                    height: 30,
+                    alignment: Alignment.center,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: TextField(
+                      controller: _textInputController,
+                      focusNode: _textFocusNode,
+                      inputFormatters: [
+                        TextInputFormatter.withFunction((oldValue, newValue) {
+                          int newLines = newValue.text.split('\n').length;
+                          if (newLines > 4) {
+                            return oldValue;
+                          } else {
+                            return newValue;
+                          }
+                        }),
+                      ],
+                      onEditingComplete: () {
+                        if (_textInputController.text.isNotEmpty) {
+                          _chatPageBloc.add(SendTextEvent(
+                              question: _textInputController.text));
+                          _textInputController.text = '';
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        }
+                      },
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 0),
+                        fillColor: Colors.grey.shade600,
+                        filled: true,
+                        hintText: 'Message',
+                        hintStyle: const TextStyle(color: Colors.grey),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none),
+                      ),
+                    ),
+                  );
+                } else {
+                  return AudioWaveforms(
+                    size: Size(MediaQuery.of(context).size.width * 0.6, 30),
+                    recorderController: _chatPageInputBloc.recorderController,
+                    waveStyle: const WaveStyle(
+                      backgroundColor: Colors.white,
+                      showBottom: false,
+                      extendWaveform: true,
+                      showMiddleLine: false,
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          _chatInputBtn!,
+        ],
+      ),
     );
   }
 
@@ -187,7 +182,7 @@ class _ChatPageInputState extends State<ChatPageInput> {
             },
             icon: const Icon(
               Icons.send_outlined,
-              color: Colors.grey,
+              color: Colors.white,
             ));
       });
     } else {
@@ -203,10 +198,10 @@ class _ChatPageInputState extends State<ChatPageInput> {
               _chatPageInputBloc.add(FocusTextEvent());
             },
             child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 11, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
               child: Icon(
                 Icons.mic_none,
-                color: Colors.grey,
+                color: Colors.white,
               ),
             ));
       });

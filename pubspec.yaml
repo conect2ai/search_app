@@ -53,6 +53,7 @@ dependencies:
   camera: ^0.10.5+9
   flutter_config: ^2.0.2
   google_fonts: 6.1.0
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:

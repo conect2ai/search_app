@@ -18,6 +18,12 @@ class AppTextStyles {
           color: Colors.white, fontSize: 17, fontWeight: FontWeight.w400));
   static final errorTravelHistoryScreenTextStyle = GoogleFonts.roboto(
       textStyle: const TextStyle(color: Colors.white, fontSize: 18));
+  static final drawerOptionsTextStyle = GoogleFonts.roboto(
+      textStyle: const TextStyle(
+          color: Colors.white, fontSize: 18, fontWeight: FontWeight.w400));
+  static final drawerTitlesTextStyle = GoogleFonts.roboto(
+      textStyle: const TextStyle(
+          color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500));
   static final appBarTitleTextStyle = GoogleFonts.roboto(
       textStyle: const TextStyle(color: Colors.white, fontSize: 21));
   static final dialogtextStyle = GoogleFonts.roboto(
