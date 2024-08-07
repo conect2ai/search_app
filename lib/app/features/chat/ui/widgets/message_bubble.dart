@@ -8,6 +8,7 @@ import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
 import '../../interactor/blocs/chatpage/chat_page_bloc.dart';
 import '../../interactor/blocs/message_rate/message_rate_bloc.dart';
+import 'like_dislike_button.dart';
 
 class MessageBubble extends StatefulWidget {
   final ChatMessage chatMessage;
@@ -20,7 +21,8 @@ class MessageBubble extends StatefulWidget {
       required this.chatMessage,
       required this.isQuestion,
       this.imagePath}) {
-    bubbleColor = isQuestion ? AppColors.mainColor : Colors.grey.shade500;
+    bubbleColor =
+        isQuestion ? AppColors.questionCardColor : AppColors.responseCardColor;
   }
 
   @override
@@ -41,97 +43,108 @@ class _MessageBubbleState extends State<MessageBubble> {
         mainAxisAlignment:
             widget.isQuestion ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          Card(
-            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            elevation: 5,
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              width: 200,
-              decoration: BoxDecoration(
-                  color: widget.isQuestion ? widget.bubbleColor : Colors.yellow,
-                  borderRadius: BorderRadius.circular(15)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  widget.imagePath != null
-                      ? Image.file(
-                          File(widget.imagePath!),
-                          height: 150,
-                          width: 220,
-                          fit: BoxFit.fill,
-                        )
-                      : const SizedBox(),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    widget.chatMessage.message ?? '',
-                    style: AppTextStyles.mainTextStyle,
-                    softWrap: true,
-                  ),
-                  widget.isQuestion
-                      ? const SizedBox()
-                      : Align(
-                          alignment: Alignment.centerRight,
-                          child: Wrap(
-                            spacing: 5,
-                            children: [
-                              IconButton(
-                                onPressed: () async {
-                                  final question = _chatPageBloc.results
-                                      .firstWhere((chatMessage) =>
-                                          chatMessage.id ==
-                                          widget.chatMessage.id);
-                                  final rateData = {
-                                    'message_id': widget.chatMessage.id,
-                                    'assistant_message':
-                                        widget.chatMessage.message,
-                                    'user_message': question.message ?? '',
-                                    'feedback': '',
-                                    'additional_info': '',
-                                  };
-                                  await _messageRateBloc.sendLike(rateData);
-                                  setState(() {
-                                    if (!_isBadAnswer && _isGoodAnswer) {
-                                      _isGoodAnswer = false;
-                                      return;
-                                    }
-                                    _isGoodAnswer = !_isGoodAnswer;
-                                    _isBadAnswer = !_isGoodAnswer;
-                                  });
-                                },
-                                icon: Icon(
-                                  Icons.thumb_up_sharp,
-                                  color: _isGoodAnswer
-                                      ? Colors.green
-                                      : Colors.grey.shade400,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    if (!_isGoodAnswer && _isBadAnswer) {
-                                      _isBadAnswer = false;
-                                      return;
-                                    }
-                                    _isBadAnswer = !_isBadAnswer;
-                                    _isGoodAnswer = !_isBadAnswer;
-                                  });
-                                },
-                                icon: Icon(
-                                  Icons.thumb_down,
-                                  color: _isBadAnswer
-                                      ? Colors.red
-                                      : Colors.grey.shade400,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                ],
-              ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            width: 216,
+            decoration: BoxDecoration(
+                color: widget.bubbleColor,
+                borderRadius: widget.isQuestion
+                    ? const BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(0),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      )
+                    : const BorderRadius.only(
+                        topLeft: Radius.circular(0),
+                        topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      )),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                widget.imagePath != null
+                    ? Image.file(
+                        File(widget.imagePath!),
+                        height: 150,
+                        width: 220,
+                        fit: BoxFit.fill,
+                      )
+                    : const SizedBox(),
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  widget.chatMessage.message ?? '',
+                  style: widget.isQuestion
+                      ? AppTextStyles.questionTextStyle
+                      : AppTextStyles.responseTextStyle,
+                  softWrap: true,
+                ),
+                widget.isQuestion
+                    ? const SizedBox()
+                    : LikeDislikeButton(
+                        chatMessage: widget.chatMessage,
+                      ),
+                // : Row(
+                //     mainAxisAlignment: MainAxisAlignment.end,
+                //     children: [
+                //       GestureDetector(
+                //         onTap: () async {
+                //           final question = _chatPageBloc.results.firstWhere(
+                //               (chatMessage) =>
+                //                   chatMessage.id == widget.chatMessage.id);
+                //           final rateData = {
+                //             'message_id': widget.chatMessage.id,
+                //             'assistant_message': widget.chatMessage.message,
+                //             'user_message': question.message ?? '',
+                //             'feedback': '',
+                //             'additional_info': '',
+                //           };
+                //           // await _messageRateBloc.sendLike(rateData);
+                //           setState(() {
+                //             if (!_isBadAnswer && _isGoodAnswer) {
+                //               _isGoodAnswer = false;
+                //               return;
+                //             }
+                //             _isGoodAnswer = !_isGoodAnswer;
+                //             _isBadAnswer = !_isGoodAnswer;
+                //           });
+                //         },
+                //         child: Icon(
+                //           Icons.thumb_up_sharp,
+                //           size: 18,
+                //           color: _isGoodAnswer
+                //               ? Colors.green
+                //               : Colors.grey.shade400,
+                //         ),
+                //       ),
+                //       const SizedBox(
+                //         width: 10,
+                //       ),
+                //       GestureDetector(
+                //         onTap: () {
+                //           setState(() {
+                //             if (!_isGoodAnswer && _isBadAnswer) {
+                //               _isBadAnswer = false;
+                //               return;
+                //             }
+                //             _isBadAnswer = !_isBadAnswer;
+                //             _isGoodAnswer = !_isBadAnswer;
+                //           });
+                //         },
+                //         child: Icon(
+                //           Icons.thumb_down,
+                //           size: 18,
+                //           color: _isBadAnswer
+                //               ? Colors.red
+                //               : Colors.grey.shade400,
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+              ],
             ),
           ),
         ]);

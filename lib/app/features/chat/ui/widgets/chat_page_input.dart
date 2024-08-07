@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../../core/themes/app_text_styles.dart';
 import '../../interactor/blocs/chatpage/chat_page_bloc.dart';
 import '../../interactor/blocs/chatpage/chat_page_event.dart';
 import '../../interactor/blocs/chatpage_inputs/chat_page_input_bloc.dart';
@@ -105,7 +106,7 @@ class _ChatPageInputState extends State<ChatPageInput> {
               builder: (context, state) {
                 if (state is TextModeState) {
                   return Container(
-                    height: 30,
+                    height: 40,
                     alignment: Alignment.center,
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(10)),
@@ -113,6 +114,7 @@ class _ChatPageInputState extends State<ChatPageInput> {
                     child: TextField(
                       controller: _textInputController,
                       focusNode: _textFocusNode,
+                      style: AppTextStyles.chatInputTextStyle,
                       inputFormatters: [
                         TextInputFormatter.withFunction((oldValue, newValue) {
                           int newLines = newValue.text.split('\n').length;
@@ -133,11 +135,12 @@ class _ChatPageInputState extends State<ChatPageInput> {
                       },
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 0),
+                            horizontal: 20, vertical: 0),
                         fillColor: Colors.grey.shade600,
                         filled: true,
                         hintText: 'Message',
-                        hintStyle: const TextStyle(color: Colors.grey),
+                        hintStyle:
+                            TextStyle(color: Colors.white.withOpacity(0.71)),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none),

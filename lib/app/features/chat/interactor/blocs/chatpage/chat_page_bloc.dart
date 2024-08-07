@@ -49,8 +49,10 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
           }
         } else {
           try {
+            //final message =
+            // await _searchRepository.sendQuestionByText(event.question);
             final message =
-                await _searchRepository.sendQuestionByText(event.question);
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse at arcu eros. Sed et tincidunt lectus. Nam lectus dolor, iaculis at tristique non, gravida a dolor. Ut in nisi dui. Sed tristique vestibulum dignissim. Etiam at ligula eget libero porta eleifend sed quis nisl. Sed metus erat, euismod et lorem.';
             _results.add(ChatMessage(
                 id: messageId,
                 message: message,

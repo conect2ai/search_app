@@ -30,7 +30,10 @@ class _MessagesListState extends State<MessagesList> {
   @override
   Widget build(BuildContext context) {
     _updateScrollControllerPosition();
-    return ListView.builder(
+    return ListView.separated(
+      separatorBuilder: (context, index) => const SizedBox(
+        height: 20,
+      ),
       controller: _scrollController,
       itemCount: widget.state.results.length,
       itemBuilder: (context, index) {

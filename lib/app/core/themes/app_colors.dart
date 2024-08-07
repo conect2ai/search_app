@@ -9,4 +9,6 @@ class AppColors {
   static const stopIconActivatedColor = Color.fromRGBO(244, 65, 57, 1);
   static const playIconActivatedColor = Color.fromRGBO(11, 171, 214, 1);
   static final dialogCardColors = Colors.blueGrey.shade500.withOpacity(0.95);
+  static const questionCardColor = Color.fromRGBO(92, 104, 119, 1);
+  static const responseCardColor = Colors.white;
 }

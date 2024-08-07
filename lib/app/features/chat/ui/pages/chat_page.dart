@@ -122,8 +122,12 @@ class _ChatPageState extends State<ChatPage>
                           style: AppTextStyles.mainTextStyle,
                         );
                       } else if (state is ReceiveResponseState) {
-                        return MessagesList(
-                          state: state,
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 20),
+                          child: MessagesList(
+                            state: state,
+                          ),
                         );
                       } else {
                         return const SpinKitSpinningLines(
