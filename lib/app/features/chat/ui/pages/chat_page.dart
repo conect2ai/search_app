@@ -123,8 +123,8 @@ class _ChatPageState extends State<ChatPage>
                         );
                       } else if (state is ReceiveResponseState) {
                         return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 20),
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 20, bottom: 0),
                           child: MessagesList(
                             state: state,
                           ),

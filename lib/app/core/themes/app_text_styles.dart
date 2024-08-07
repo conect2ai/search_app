@@ -43,13 +43,24 @@ class AppTextStyles {
     color: Colors.green,
     fontSize: 20,
   ));
-  static final questionTextStyle = GoogleFonts.roboto(
+  static final chatInputTextStyle = GoogleFonts.roboto(
       textStyle: const TextStyle(
           color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400));
-  static final chatInputTextStyle = GoogleFonts.roboto(
+  static final chatInputHintTextStyle = GoogleFonts.roboto(
+      textStyle: TextStyle(
+          color: Colors.white.withOpacity(0.71),
+          fontSize: 14,
+          fontWeight: FontWeight.w400));
+  static final questionTextStyle = GoogleFonts.roboto(
       textStyle: const TextStyle(
           color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400));
   static final responseTextStyle = GoogleFonts.roboto(
       textStyle: const TextStyle(
           color: Colors.black, fontSize: 14, fontWeight: FontWeight.w400));
+  static final commentarySubmitButtonTextStyle = GoogleFonts.roboto(
+      textStyle: const TextStyle(
+          color: Colors.green, fontSize: 10, fontWeight: FontWeight.w400));
+  static final commentaryHintTextStyle = GoogleFonts.roboto(
+      textStyle: const TextStyle(
+          color: Colors.green, fontSize: 10, fontWeight: FontWeight.w400));
 }
