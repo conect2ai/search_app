@@ -20,13 +20,8 @@ class MessageRateRepositoryImpl implements MessageRateRepository {
     final sendDislikeUri = Uri.http(_baseUrl, _dislikeEndpoint);
 
     final dislikeData = {
-      {
-        'message_id': messageRateData['messageId'],
-        'assistant_message': messageRateData['responseMessage'],
-        'user_message': messageRateData['userMessage'],
-        'feedback': messageRateData['feedback'],
-        'additional_info': messageRateData['additionalInfo']
-      }
+      'response_id': messageRateData['response_id'],
+      'additional_info': messageRateData['additional_info']
     };
     final headers = {
       'accept': 'application/json',
@@ -47,13 +42,8 @@ class MessageRateRepositoryImpl implements MessageRateRepository {
     final sendLikeUri = Uri.http(_baseUrl, _likeEndpoint);
 
     final likeData = {
-      {
-        'message_id': messageRateData['messageId'],
-        'assistant_message': messageRateData['responseMessage'],
-        'user_message': messageRateData['userMessage'],
-        'feedback': messageRateData['feedback'],
-        'additional_info': messageRateData['additionalInfo']
-      }
+      'response_id': messageRateData['response_id'],
+      'additional_info': messageRateData['additional_info']
     };
 
     final headers = {

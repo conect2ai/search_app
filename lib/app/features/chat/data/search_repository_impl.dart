@@ -23,7 +23,8 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
       FlutterConfig.get('API_SEARCH_ENDPOINT_QUESTION_IMAGE');
 
   @override
-  Future<String> sendQuestionByAudio(String audioFilePath) async {
+  Future<Map<dynamic, dynamic>> sendQuestionByAudio(
+      String audioFilePath) async {
     final audioFile =
         await http.MultipartFile.fromPath('audio_file', audioFilePath);
 
@@ -45,7 +46,7 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
       ..files.add(audioFile);
 
     final response = await requestConversion.send().timeout(
-      const Duration(seconds: 120),
+      const Duration(seconds: 300),
       onTimeout: () {
         throw const HttpException("Failed to communicate with server");
       },
@@ -54,7 +55,7 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
     if (response.statusCode == 200) {
       final data = await http.Response.fromStream(response);
       final responseData = jsonDecode(utf8.decode(data.bodyBytes));
-      return responseData['response_content'];
+      return responseData;
     } else {
       throw const HttpException(
           'Failed to process your question. Try again later.');
@@ -62,7 +63,7 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
   }
 
   @override
-  Future<String> sendQuestionByText(String question) async {
+  Future<Map<dynamic, dynamic>> sendQuestionByText(String question) async {
     final apiUri = Uri.http(apiBaseUrl, apiQuestionEndpoint);
 
     final Map<String, String> headers = {
@@ -81,7 +82,7 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
     final response = await http
         .post(apiUri, body: jsonEncode(fields), headers: headers)
         .timeout(
-      const Duration(seconds: 120),
+      const Duration(seconds: 300),
       onTimeout: () {
         throw const HttpException(
             "Failed to communicate with server. Timeout.");
@@ -90,7 +91,7 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
 
     if (response.statusCode == 200) {
       final responseData = jsonDecode(utf8.decode(response.bodyBytes));
-      return responseData['response_content'];
+      return responseData;
     } else {
       throw const HttpException(
           'Failed to process your question. Try again later.');
@@ -98,7 +99,7 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
   }
 
   @override
-  Future<String> sendQuestionByTextWithImage(
+  Future<Map<dynamic, dynamic>> sendQuestionByTextWithImage(
       String question, String imageFilePath) async {
     final imageFile =
         await http.MultipartFile.fromPath('image_file', imageFilePath);
@@ -120,7 +121,7 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
       ..headers.addAll(headers);
 
     final response = await request.send().timeout(
-      const Duration(seconds: 120),
+      const Duration(seconds: 300),
       onTimeout: () {
         throw const HttpException(
             "Failed to communicate with server. Timeout.");

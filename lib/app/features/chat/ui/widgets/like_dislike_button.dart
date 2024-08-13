@@ -23,6 +23,17 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
   final _commentaryFocusNode = FocusNode();
   final _commentaryTextController = TextEditingController();
 
+  void _sendMessageRate() {
+    final formData = {
+      "response_id": widget.chatMessage.id!,
+      "additional_info": _commentaryTextController.text
+    };
+
+    _isGoodAnswer
+        ? _messageRateBloc.sendLike(formData)
+        : _messageRateBloc.sendDislike(formData);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -34,9 +45,6 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
                 (chatMessage) => chatMessage.id == widget.chatMessage.id);
             final rateData = {
               'message_id': widget.chatMessage.id,
-              'assistant_message': widget.chatMessage.message,
-              'user_message': question.message ?? '',
-              'feedback': '',
               'additional_info': '',
             };
             // await _messageRateBloc.sendLike(rateData);
@@ -129,6 +137,7 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
                         if (_commentaryFocusNode.hasFocus) {
                           _commentaryFocusNode.unfocus();
                         }
+                        _sendMessageRate();
                         print(_commentaryTextController.text);
                       },
                       child: Text(

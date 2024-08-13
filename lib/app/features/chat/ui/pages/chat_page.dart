@@ -118,13 +118,13 @@ class _ChatPageState extends State<ChatPage>
                     builder: (context, state) {
                       if (state is InitialChatPageState) {
                         return Text(
-                          'Ask a question',
+                          'Faça uma pergunta',
                           style: AppTextStyles.mainTextStyle,
                         );
                       } else if (state is ReceiveResponseState) {
                         return Padding(
                           padding: const EdgeInsets.only(
-                              left: 20, right: 20, top: 20, bottom: 0),
+                              left: 20, right: 20, top: 10, bottom: 0),
                           child: MessagesList(
                             state: state,
                           ),

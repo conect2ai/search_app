@@ -15,7 +15,7 @@ class CustomDialog extends StatelessWidget {
     return Center(
       child: Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30), color: Colors.white),
+            borderRadius: BorderRadius.circular(30), color: Colors.grey),
         height: 250,
         width: MediaQuery.of(context).size.width,
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
