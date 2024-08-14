@@ -63,4 +63,13 @@ class AppTextStyles {
   static final commentaryHintTextStyle = GoogleFonts.roboto(
       textStyle: const TextStyle(
           color: Colors.green, fontSize: 10, fontWeight: FontWeight.w400));
+  static final dropdownItemsTextStyle = GoogleFonts.roboto(
+      textStyle: const TextStyle(
+          color: Colors.white, fontSize: 12, fontWeight: FontWeight.w400));
+  static final dropdownMenuTitleTextStyle = GoogleFonts.roboto(
+      textStyle: const TextStyle(
+          color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500));
+  static final logoutButtonTextStyle = GoogleFonts.roboto(
+      textStyle: const TextStyle(
+          color: Colors.white, fontSize: 15, fontWeight: FontWeight.w400));
 }

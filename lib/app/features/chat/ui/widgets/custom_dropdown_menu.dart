@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/app_text_styles.dart';
+
 class CustomDropdownMenu<T> extends StatelessWidget {
   List<DropdownMenuItem<T>> items;
   String label;
@@ -24,7 +26,10 @@ class CustomDropdownMenu<T> extends StatelessWidget {
           onChanged(value);
         },
         value: value,
-        hint: Text(hintText),
+        hint: Text(
+          hintText,
+          style: AppTextStyles.dropdownItemsTextStyle,
+        ),
         items: items);
   }
 }

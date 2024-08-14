@@ -138,7 +138,7 @@ class _ChatPageInputState extends State<ChatPageInput> {
                             horizontal: 20, vertical: 0),
                         fillColor: Colors.grey.shade600,
                         filled: true,
-                        hintText: 'Message',
+                        hintText: 'Mensagem',
                         hintStyle: AppTextStyles.chatInputHintTextStyle,
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),

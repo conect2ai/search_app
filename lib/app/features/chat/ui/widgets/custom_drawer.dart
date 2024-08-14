@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
+import '../../../auth/interactor/bloc/auth_bloc.dart';
+import 'vehicle_selection_dropdown_menu.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -11,110 +14,100 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
-  final _vehicleSelectionController = TextEditingController();
-
-  @override
-  void initState() {
-    _vehicleSelectionController.text = '';
-    super.initState();
-  }
+  final _authBloc = Modular.get<AuthBloc>();
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
       width: MediaQuery.of(context).size.width * 0.75,
       backgroundColor: AppColors.backgroundColor,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Stack(
             children: [
-              const SizedBox(
-                height: 200,
-              ),
-              Text(
-                'Filtrar',
-                style: AppTextStyles.drawerTitlesTextStyle,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Theme(
-                data: Theme.of(context).copyWith(canvasColor: Colors.blue),
-                child: DropdownMenu(
-                  menuHeight: 110,
-                  trailingIcon: const Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.white,
-                    size: 20,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 100,
                   ),
-                  hintText: 'Select Vehicle',
-                  controller: _vehicleSelectionController,
-                  requestFocusOnTap: true,
-                  textStyle: AppTextStyles.textFieldTextStyle,
-                  inputDecorationTheme: InputDecorationTheme(
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                    hintStyle: AppTextStyles.textFieldTextStyle,
-                    constraints: const BoxConstraints(maxHeight: 40),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: const BorderSide(color: Colors.white)),
+                  Text(
+                    'Filtrar',
+                    style: AppTextStyles.drawerTitlesTextStyle,
                   ),
-                  dropdownMenuEntries: const [
-                    DropdownMenuEntry(
-                      value: 'Honda civic 2021',
-                      label: 'Honda Civic 2021',
+                  const SizedBox(
+                    height: 20,
+                  ),
+
+                  const VehicleSelectionDropdownMenu(),
+                  // const VehicleFormDialog(),
+                  const SizedBox(
+                    height: 35,
+                  ),
+                ],
+              ),
+              Positioned(
+                top: 380,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Opções',
+                      style: AppTextStyles.drawerTitlesTextStyle,
                     ),
-                    DropdownMenuEntry(
-                      value: 'Toyota corolla 2023',
-                      label: 'Toyota Corola 2023',
+                    const SizedBox(
+                      height: 16,
                     ),
-                    DropdownMenuEntry(
-                      value: 'Toyota hilux 2023',
-                      label: 'Toyota Hilux 2023',
+                    TextButton.icon(
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        alignment: Alignment.centerLeft,
+                        // tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.file_upload_outlined,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      label: Text(
+                        'Exportar Chat',
+                        style: AppTextStyles.drawerOptionsTextStyle,
+                      ),
                     ),
-                    DropdownMenuEntry(
-                      value: 'Volkswagen Polo 2023',
-                      label: 'Volkswagen Polo  2023',
+                    TextButton.icon(
+                      style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          alignment: Alignment.centerLeft),
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.file_download_outlined,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      label: Text(
+                        'Importar Manual',
+                        style: AppTextStyles.drawerOptionsTextStyle,
+                      ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 30,
-              ),
-              Text(
-                'Opções',
-                style: AppTextStyles.drawerTitlesTextStyle,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextButton.icon(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.file_upload_outlined,
-                  color: Colors.white,
-                ),
-                label: Text(
-                  'Exportar Chat',
-                  style: AppTextStyles.drawerOptionsTextStyle,
-                ),
-              ),
-              TextButton.icon(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.file_download_outlined,
-                  color: Colors.white,
-                ),
-                label: Text(
-                  'Importar Manual',
-                  style: AppTextStyles.drawerOptionsTextStyle,
-                ),
-              ),
+              Positioned(
+                bottom: 10,
+                left: 0,
+                child: TextButton(
+                    style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        alignment: Alignment.centerLeft),
+                    onPressed: () => _authBloc.logout(),
+                    child: Text(
+                      'Sair',
+                      style: AppTextStyles.logoutButtonTextStyle,
+                    )),
+              )
             ],
           ),
         ),

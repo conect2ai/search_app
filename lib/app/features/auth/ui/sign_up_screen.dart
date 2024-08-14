@@ -23,6 +23,7 @@ class _SignUpScreenState extends State<SignUpScreen>
   final _emailTextController = TextEditingController();
 
   void _sendSignUp() async {
+    FocusScope.of(context).unfocus();
     try {
       await _authBloc.signUp(_emailTextController.text).then((_) {
         generateSnackBar('E-mail enviado com sucesso!', context);

@@ -20,6 +20,7 @@ class ApiKeyInput extends StatefulWidget {
 class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
   final _apiKeyInputController = TextEditingController();
   var _isValidApiKey = false;
+  var _isLoadingChatPage = false;
 
   @override
   void initState() {
@@ -118,6 +119,9 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.mainColor),
                     onPressed: () async {
+                      setState(() {
+                        _isLoadingChatPage = true;
+                      });
                       _isValidApiKey = widget._homebloc
                           .checkIfApiKeyIsNotEmpty(_apiKeyInputController.text);
                       if (!_isValidApiKey) {
@@ -134,6 +138,9 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                           if (!mounted) {
                             return;
                           }
+                          setState(() {
+                            _isLoadingChatPage = false;
+                          });
                           generateSnackBar(
                               'Failed to save your api key information',
                               context);
@@ -147,10 +154,14 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                         }
                       }
                     },
-                    child: Text(
-                      'Confirmar',
-                      style: AppTextStyles.authScreenButtonsTextStyle,
-                    )),
+                    child: _isLoadingChatPage
+                        ? const CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                        : Text(
+                            'Confirmar',
+                            style: AppTextStyles.authScreenButtonsTextStyle,
+                          )),
               ),
             ]),
       ),

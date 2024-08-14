@@ -40,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   void _sendLogin() async {
+    FocusScope.of(context).unfocus();
     final userData = {
       'username': _usernameTextController.text,
       'password': _passwordTextController.text,
