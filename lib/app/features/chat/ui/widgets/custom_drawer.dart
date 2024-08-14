@@ -18,13 +18,15 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Drawer(
-      width: MediaQuery.of(context).size.width * 0.75,
+      width: screenWidth * 0.75,
       backgroundColor: AppColors.backgroundColor,
       child: SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height,
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          height: screenHeight,
+          padding: const EdgeInsets.symmetric(horizontal: 25),
           child: Stack(
             children: [
               Column(
@@ -40,9 +42,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   const SizedBox(
                     height: 20,
                   ),
-
                   const VehicleSelectionDropdownMenu(),
-                  // const VehicleFormDialog(),
                   const SizedBox(
                     height: 35,
                   ),

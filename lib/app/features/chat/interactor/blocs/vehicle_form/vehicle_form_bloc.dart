@@ -91,6 +91,7 @@ class VehicleFormBloc with SecureStorage {
   }
 
   void saveVehicleData(Map<String, String> vehicleInfo) {
+    print(vehicleInfo);
     writeSecureData('brand', vehicleInfo['brand']);
     writeSecureData('model', vehicleInfo['model']);
     writeSecureData('year', vehicleInfo['year']);
