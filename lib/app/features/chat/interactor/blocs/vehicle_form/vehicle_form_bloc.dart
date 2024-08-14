@@ -90,11 +90,18 @@ class VehicleFormBloc with SecureStorage {
     yearsSink.add(_years);
   }
 
-  void saveVehicleData(Map<String, String> vehicleInfo) {
-    print(vehicleInfo);
+  void saveVehicleData(Map<String, String?> vehicleInfo) {
     writeSecureData('brand', vehicleInfo['brand']);
     writeSecureData('model', vehicleInfo['model']);
     writeSecureData('year', vehicleInfo['year']);
     _carInfo.updateCarInfo(vehicleInfo);
+  }
+
+  Future<Map<String, String?>> readSecureVehicleData() async {
+    final Map<String, String?> vehicleData = {};
+    vehicleData['brand'] = await readSecureData('brand');
+    vehicleData['model'] = await readSecureData('model');
+    vehicleData['year'] = await readSecureData('year');
+    return vehicleData;
   }
 }

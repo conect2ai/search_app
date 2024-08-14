@@ -25,30 +25,30 @@ class _VehicleSelectionDropdownMenuState
   var _modelborderColor = Colors.white;
   var _yearborderColor = Colors.white;
 
-  // List<String> _brandItems = [];
-  // List<String> _modelItems = [];
-  // List<String> _yearItems = [];
-
-  // String? _selectedBrand;
-  // String? _selectedModel;
-  // String? _selectedYear;
-
-  final Map<String, String> _vehicleData = {};
+  Map<String, String?> _vehicleData = {};
 
   @override
   void initState() {
     _vehicleFormBloc.getAvailableVehicles();
+    _readSecureVehicleInfo();
     _vehicleFormBloc.updateBrandsList();
     super.initState();
+  }
+
+  void _readSecureVehicleInfo() async {
+    _vehicleData = await _vehicleFormBloc.readSecureVehicleData();
+    _brandSelectionController.text = _vehicleData['brand'] ?? '';
+    _modelSelectionController.text = _vehicleData['model'] ?? '';
+    _yearSelectionController.text = _vehicleData['year'] ?? '';
   }
 
   void _updateModelItems(String? value) {
     _vehicleFormBloc.modelsSink.add([]);
     _vehicleFormBloc.yearsSink.add([]);
     setState(() {
-      _vehicleData['brand'] = value ?? '';
-      _vehicleData['model'] = '';
-      _vehicleData['year'] = '';
+      _vehicleData['brand'] = value;
+      _vehicleData['model'] = null;
+      _vehicleData['year'] = null;
       _vehicleFormBloc.updateModelsList(value!);
       _modelSelectionController.clear();
       _yearSelectionController.clear();
@@ -58,8 +58,8 @@ class _VehicleSelectionDropdownMenuState
   void _updateYearItems(String? value) {
     _vehicleFormBloc.yearsSink.add([]);
     setState(() {
-      _vehicleData['model'] = value ?? '';
-      _vehicleData['year'] = '';
+      _vehicleData['model'] = value;
+      _vehicleData['year'] = null;
       _vehicleFormBloc.updateYearsList(_vehicleData['brand']!, value!);
       _yearSelectionController.clear();
     });
@@ -67,7 +67,7 @@ class _VehicleSelectionDropdownMenuState
 
   void _updateYearInfo(String? value) {
     setState(() {
-      _vehicleData['year'] = value ?? '';
+      _vehicleData['year'] = value;
     });
   }
 
@@ -136,24 +136,6 @@ class _VehicleSelectionDropdownMenuState
                             label: brand,
                           ))
                       .toList(),
-                  // const [
-                  //   DropdownMenuEntry(
-                  //     value: 'Honda civic 2021',
-                  //     label: 'Honda Civic 2021',
-                  //   ),
-                  //   DropdownMenuEntry(
-                  //     value: 'Toyota corolla 2023',
-                  //     label: 'Toyota Corola 2023',
-                  //   ),
-                  //   DropdownMenuEntry(
-                  //     value: 'Toyota hilux 2023',
-                  //     label: 'Toyota Hilux 2023',
-                  //   ),
-                  //   DropdownMenuEntry(
-                  //     value: 'Volkswagen Polo 2023',
-                  //     label: 'Volkswagen Polo  2023',
-                  //   ),
-                  // ],
                 );
               }),
           const SizedBox(
@@ -216,24 +198,6 @@ class _VehicleSelectionDropdownMenuState
                             label: model,
                           ))
                       .toList(),
-                  // const [
-                  //   DropdownMenuEntry(
-                  //     value: 'Honda civic 2021',
-                  //     label: 'Honda Civic 2021',
-                  //   ),
-                  //   DropdownMenuEntry(
-                  //     value: 'Toyota corolla 2023',
-                  //     label: 'Toyota Corola 2023',
-                  //   ),
-                  //   DropdownMenuEntry(
-                  //     value: 'Toyota hilux 2023',
-                  //     label: 'Toyota Hilux 2023',
-                  //   ),
-                  //   DropdownMenuEntry(
-                  //     value: 'Volkswagen Polo 2023',
-                  //     label: 'Volkswagen Polo  2023',
-                  //   ),
-                  // ],
                 );
               }),
           const SizedBox(
@@ -297,24 +261,6 @@ class _VehicleSelectionDropdownMenuState
                             label: year,
                           ))
                       .toList(),
-                  // const [
-                  //   DropdownMenuEntry(
-                  //     value: 'Honda civic 2021',
-                  //     label: 'Honda Civic 2021',
-                  //   ),
-                  //   DropdownMenuEntry(
-                  //     value: 'Toyota corolla 2023',
-                  //     label: 'Toyota Corola 2023',
-                  //   ),
-                  //   DropdownMenuEntry(
-                  //     value: 'Toyota hilux 2023',
-                  //     label: 'Toyota Hilux 2023',
-                  //   ),
-                  //   DropdownMenuEntry(
-                  //     value: 'Volkswagen Polo 2023',
-                  //     label: 'Volkswagen Polo  2023',
-                  //   ),
-                  // ],
                 );
               }),
         ],

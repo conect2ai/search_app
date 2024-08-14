@@ -123,38 +123,37 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                       setState(() {
                         _isLoadingChatPage = true;
                       });
-                      Modular.to.navigate('/chat/');
-                      // _isValidApiKey = widget._homebloc
-                      //     .checkIfApiKeyIsNotEmpty(_apiKeyInputController.text);
-                      // if (!_isValidApiKey) {
-                      //   generateSnackBar('Please insert a key', context);
-                      // } else {
-                      //   try {
-                      //     await widget._homebloc
-                      //         .saveApiKey(_apiKeyInputController.text)
-                      //         .then((_) {
-                      //       //  widget._homebloc.checkApiKeyIsValid();
-                      //       Modular.to.navigate('/chat/');
-                      //     });
-                      //   } on HttpException catch (_) {
-                      //     if (!mounted) {
-                      //       return;
-                      //     }
-                      //     setState(() {
-                      //       _isLoadingChatPage = false;
-                      //     });
-                      //     generateSnackBar(
-                      //         'Failed to save your api key information',
-                      //         context);
-                      //   } catch (e) {
-                      //     if (!mounted) {
-                      //       return;
-                      //     }
-                      //     generateSnackBar(
-                      //         'Failed to save your api key information',
-                      //         context);
-                      //   }
-                      // }
+                      _isValidApiKey = widget._homebloc
+                          .checkIfApiKeyIsNotEmpty(_apiKeyInputController.text);
+                      if (!_isValidApiKey) {
+                        generateSnackBar('Please insert a key', context);
+                      } else {
+                        try {
+                          await widget._homebloc
+                              .saveApiKey(_apiKeyInputController.text)
+                              .then((_) {
+                            //  widget._homebloc.checkApiKeyIsValid();
+                            Modular.to.navigate('/chat/');
+                          });
+                        } on HttpException catch (_) {
+                          if (!mounted) {
+                            return;
+                          }
+                          setState(() {
+                            _isLoadingChatPage = false;
+                          });
+                          generateSnackBar(
+                              'Failed to save your api key information',
+                              context);
+                        } catch (e) {
+                          if (!mounted) {
+                            return;
+                          }
+                          generateSnackBar(
+                              'Failed to save your api key information',
+                              context);
+                        }
+                      }
                     },
                     child: _isLoadingChatPage
                         ? const CircularProgressIndicator(
