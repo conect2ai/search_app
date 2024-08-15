@@ -39,9 +39,15 @@ class SplashPageBloc with SecureStorage {
     }
   }
 
-  void selectInitialRoute() {
+  void selectInitialRoute() async {
     if (_user.token != null) {
-      Modular.to.navigate('/home/');
+      final apiKey = await _authRepository.checkIfUserHasKey();
+      _user.updateApiKey(apiKey);
+      if (apiKey.isNotEmpty) {
+        Modular.to.navigate('/check-api-key/');
+      } else {
+        Modular.to.navigate('/home/');
+      }
     } else {
       Modular.to.navigate('/auth/');
     }

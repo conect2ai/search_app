@@ -21,37 +21,12 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
   final _apiKeyInputController = TextEditingController();
   var _isValidApiKey = false;
   var _isLoadingChatPage = false;
+  final _homeBloc = Modular.get<HomePageBloc>();
 
   @override
   void initState() {
-    _checkIfUserHasKey();
-    _checkApiKeySavedData();
+    _apiKeyInputController.text = '';
     super.initState();
-  }
-
-  void _checkIfUserHasKey() async {
-    try {
-      await widget._homebloc.checkIfUserHasKey().then((value) {
-        _apiKeyInputController.text = value;
-      });
-    } on HttpException catch (_) {
-      if (!mounted) {
-        return;
-      }
-      generateSnackBar(
-          'Could not retrieve api key information from user', context);
-    } catch (_) {
-      if (!mounted) {
-        return;
-      }
-      generateSnackBar(
-          'Could not retrieve api key information from user', context);
-    }
-  }
-
-  void _checkApiKeySavedData() async {
-    _apiKeyInputController.text =
-        await widget._homebloc.readSavedApiKey() ?? '';
   }
 
   @override
@@ -81,10 +56,10 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                   cursorColor: AppColors.mainColor,
                   decoration: InputDecoration(
                     isDense: true,
-                    hintText: 'Key',
+                    hintText: 'Chave da api Open Ai',
                     hintStyle: const TextStyle(
                         fontSize: 17,
-                        color: Colors.white,
+                        color: Colors.white60,
                         fontWeight: FontWeight.w400),
                     prefixIcon: const Icon(
                       Icons.lock_outline_rounded,
@@ -127,13 +102,15 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                       _isValidApiKey = widget._homebloc
                           .checkIfApiKeyIsNotEmpty(_apiKeyInputController.text);
                       if (!_isValidApiKey) {
-                        generateSnackBar('Please insert a key', context);
+                        generateSnackBar('Por favor insira uma chave', context);
+                        setState(() {
+                          _isLoadingChatPage = false;
+                        });
                       } else {
                         try {
                           await widget._homebloc
                               .saveApiKey(_apiKeyInputController.text)
                               .then((_) {
-                            //  widget._homebloc.checkApiKeyIsValid();
                             Modular.to.navigate('/chat/');
                           });
                         } on HttpException catch (_) {
@@ -144,15 +121,13 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                             _isLoadingChatPage = false;
                           });
                           generateSnackBar(
-                              'Failed to save your api key information',
-                              context);
+                              'Falha ao tentar salvar chave da api', context);
                         } catch (e) {
                           if (!mounted) {
                             return;
                           }
                           generateSnackBar(
-                              'Failed to save your api key information',
-                              context);
+                              'Falha ao tentar salvar chave da api', context);
                         }
                       }
                     },
@@ -164,6 +139,46 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                             'Confirmar',
                             style: AppTextStyles.authScreenButtonsTextStyle,
                           )),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              TextButton(
+                onPressed: () async {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  try {
+                    await _homeBloc.checkIfUserHasKey().then((key) {
+                      Modular.to.pushReplacementNamed('/check-api-key/');
+                    });
+                  } on HttpException catch (e) {
+                    if (!mounted) {
+                      return;
+                    }
+                    generateSnackBar(e.message, context);
+                  } catch (e) {
+                    if (!mounted) {
+                      return;
+                    }
+                    generateSnackBar(
+                        'Erro ao tentar carregar chave da api', context);
+                  }
+                },
+                child: RichText(
+                  text: const TextSpan(
+                      text: 'Mudou de ideia? ',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 15,
+                          color: Colors.white),
+                      children: [
+                        TextSpan(
+                            text: 'Voltar',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.white))
+                      ]),
+                ),
               ),
             ]),
       ),

@@ -47,8 +47,7 @@ class _ChatPageState extends State<ChatPage>
   }
 
   void _readVehicleData() async {
-    final data = await _vehicleInfoBloc.readSecureVehicleData();
-    print(data);
+    await _vehicleInfoBloc.readSecureVehicleData();
   }
 
   @override

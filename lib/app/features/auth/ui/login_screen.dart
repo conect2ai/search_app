@@ -7,6 +7,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import '../../../core/themes/app_colors.dart';
 import '../../../core/themes/app_text_styles.dart';
 import '../../../core/widgets/custom_appbar.dart';
+import '../../home/interactor/bloc/homepage_bloc.dart';
 import '../interactor/bloc/auth_bloc.dart';
 import '../interactor/bloc/login_bloc.dart';
 import 'widgets/snackbar_mixin.dart';
@@ -22,6 +23,9 @@ class _LoginScreenState extends State<LoginScreen>
     with CustomAppbar, SnackBarMixin {
   final _authBloc = Modular.get<AuthBloc>();
   final _loginBloc = Modular.get<LoginBloc>();
+  final _homeBloc = Modular.get<HomePageBloc>();
+
+  String? _apiKey;
 
   final _usernameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
@@ -48,9 +52,14 @@ class _LoginScreenState extends State<LoginScreen>
 
     try {
       _loginBloc.updateLoginButton(true);
-      await _authBloc.login(userData).then((_) {
-        _loginBloc.updateLoginButton(false);
-        Modular.to.navigate('/home');
+      await _authBloc.login(userData).then((_) async {
+        // _loginBloc.updateLoginButton(false);
+
+        _apiKey = await _homeBloc.checkIfUserHasKey();
+
+        _apiKey == null
+            ? Modular.to.pushReplacementNamed('/home/')
+            : Modular.to.pushReplacementNamed('/check-api-key/');
       });
     } on HttpException catch (e) {
       if (!mounted) {

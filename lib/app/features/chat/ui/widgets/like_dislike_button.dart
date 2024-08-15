@@ -158,7 +158,6 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
                           _commentaryFocusNode.unfocus();
                         }
                         _sendMessageRate();
-                        print(_commentaryTextController.text);
                       },
                       child: Text(
                         'SUBMIT',

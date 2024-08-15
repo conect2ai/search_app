@@ -23,21 +23,20 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState>
     }
   }
 
-  Future<String?> readSavedApiKey() async {
-    final key = _user.username;
-    if (key != null) {
-      return await readSecureData(key);
-    }
-    return null;
-  }
+  // Future<String?> readSavedApiKey() async {
+  //   final key = _user.username;
+  //   if (key != null) {
+  //     return await readSecureData(key);
+  //   }
+  //   return null;
+  // }
 
   Future<void> saveApiKey(String apiKey) async {
     final key = _user.username;
     if (key != null) {
-      writeSecureData(key, apiKey);
       if (_user.token != null) {
         try {
-          await _authRepository.validateKey();
+          await _authRepository.validateKey(apiKey);
         } on HttpException catch (_) {
           rethrow;
         } catch (e) {
@@ -50,12 +49,16 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState>
   Future<String> checkIfUserHasKey() async {
     try {
       final userKey = await _authRepository.checkIfUserHasKey();
-      writeSecureData(_user.username!, userKey);
+      // writeSecureData(_user.username!, userKey);
       return userKey;
     } on HttpException catch (_) {
       rethrow;
     } catch (e) {
       rethrow;
     }
+  }
+
+  String? getApiKey() {
+    return _user.apiKey;
   }
 }

@@ -90,10 +90,10 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
   }
 
   @override
-  Future<void> validateKey() async {
+  Future<void> validateKey(String apiKey) async {
     final validateKeyUri = Uri.http(_baseValidateKeyUrl, _saveKeyEnpoint);
 
-    final apiKey = await getApiKey();
+    // final apiKey = await getApiKey();
 
     final Map<String, String> headers = {
       'accept': 'application/json',
