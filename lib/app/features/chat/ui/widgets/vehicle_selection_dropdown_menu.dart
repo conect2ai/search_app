@@ -40,6 +40,7 @@ class _VehicleSelectionDropdownMenuState
     _brandSelectionController.text = _vehicleData['brand'] ?? '';
     _modelSelectionController.text = _vehicleData['model'] ?? '';
     _yearSelectionController.text = _vehicleData['year'] ?? '';
+    _vehicleFormBloc.saveVehicleData(_vehicleData);
   }
 
   void _updateModelItems(String? value) {

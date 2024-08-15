@@ -17,6 +17,8 @@ class LikeDislikeButton extends StatefulWidget {
 class _LikeDislikeButtonState extends State<LikeDislikeButton> {
   bool _isGoodAnswer = false;
   bool _isBadAnswer = false;
+  bool _isCommentaryTextFieldClosed = true;
+  bool _isCommentaryDone = false;
   final _messageRateBloc = Modular.get<MessageRateBloc>();
   final _chatPageBloc = Modular.get<ChatPageBloc>();
 
@@ -32,6 +34,21 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
     _isGoodAnswer
         ? _messageRateBloc.sendLike(formData)
         : _messageRateBloc.sendDislike(formData);
+
+    setState(() {
+      _isCommentaryTextFieldClosed = true;
+      _isCommentaryDone = true;
+    });
+  }
+
+  void _checkIfShouldCloseCommentary() {
+    setState(() {
+      if (_isBadAnswer == false && _isGoodAnswer == false) {
+        _isCommentaryTextFieldClosed = true;
+      } else {
+        _isCommentaryTextFieldClosed = false;
+      }
+    });
   }
 
   @override
@@ -41,21 +58,19 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
       children: [
         GestureDetector(
           onTap: () async {
-            final question = _chatPageBloc.results.firstWhere(
-                (chatMessage) => chatMessage.id == widget.chatMessage.id);
-            final rateData = {
-              'message_id': widget.chatMessage.id,
-              'additional_info': '',
-            };
-            // await _messageRateBloc.sendLike(rateData);
-            setState(() {
-              if (!_isBadAnswer && _isGoodAnswer) {
-                _isGoodAnswer = false;
-                return;
-              }
-              _isGoodAnswer = !_isGoodAnswer;
-              _isBadAnswer = !_isGoodAnswer;
-            });
+            if (!_isCommentaryDone) {
+              setState(() {
+                if (!_isBadAnswer && _isGoodAnswer) {
+                  _isGoodAnswer = false;
+                  _checkIfShouldCloseCommentary();
+                  return;
+                }
+                _isGoodAnswer = !_isGoodAnswer;
+                _isBadAnswer = !_isGoodAnswer;
+
+                _checkIfShouldCloseCommentary();
+              });
+            }
           },
           child: Icon(
             _isGoodAnswer
@@ -70,14 +85,19 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
         ),
         GestureDetector(
           onTap: () {
-            setState(() {
-              if (!_isGoodAnswer && _isBadAnswer) {
-                _isBadAnswer = false;
-                return;
-              }
-              _isBadAnswer = !_isBadAnswer;
-              _isGoodAnswer = !_isBadAnswer;
-            });
+            if (!_isCommentaryDone) {
+              setState(() {
+                if (!_isGoodAnswer && _isBadAnswer) {
+                  _isBadAnswer = false;
+                  _checkIfShouldCloseCommentary();
+                  return;
+                }
+                _isBadAnswer = !_isBadAnswer;
+                _isGoodAnswer = !_isBadAnswer;
+
+                _checkIfShouldCloseCommentary();
+              });
+            }
           },
           child: Icon(
             _isBadAnswer ? Icons.thumb_down_sharp : Icons.thumb_down_off_alt,
@@ -90,7 +110,7 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
         ),
         Visibility(
             maintainSize: false,
-            visible: _isGoodAnswer || _isBadAnswer,
+            visible: !_isCommentaryTextFieldClosed,
             child: Expanded(
               child: Row(
                 children: [

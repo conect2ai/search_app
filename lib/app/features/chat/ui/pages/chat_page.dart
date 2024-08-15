@@ -42,7 +42,13 @@ class _ChatPageState extends State<ChatPage>
   @override
   void initState() {
     _vehicleInfoBloc.getAvailableVehicles();
+    _readVehicleData();
     super.initState();
+  }
+
+  void _readVehicleData() async {
+    final data = await _vehicleInfoBloc.readSecureVehicleData();
+    print(data);
   }
 
   @override

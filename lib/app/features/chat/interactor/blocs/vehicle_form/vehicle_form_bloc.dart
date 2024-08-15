@@ -94,6 +94,10 @@ class VehicleFormBloc with SecureStorage {
     writeSecureData('brand', vehicleInfo['brand']);
     writeSecureData('model', vehicleInfo['model']);
     writeSecureData('year', vehicleInfo['year']);
+    updateCarInfo(vehicleInfo);
+  }
+
+  void updateCarInfo(Map<String, String?> vehicleInfo) {
     _carInfo.updateCarInfo(vehicleInfo);
   }
 
@@ -102,6 +106,7 @@ class VehicleFormBloc with SecureStorage {
     vehicleData['brand'] = await readSecureData('brand');
     vehicleData['model'] = await readSecureData('model');
     vehicleData['year'] = await readSecureData('year');
+    _carInfo.updateCarInfo(vehicleData);
     return vehicleData;
   }
 }

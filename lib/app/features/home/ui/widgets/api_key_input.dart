@@ -123,6 +123,7 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                       setState(() {
                         _isLoadingChatPage = true;
                       });
+                      // Modular.to.navigate('/chat/');
                       _isValidApiKey = widget._homebloc
                           .checkIfApiKeyIsNotEmpty(_apiKeyInputController.text);
                       if (!_isValidApiKey) {
