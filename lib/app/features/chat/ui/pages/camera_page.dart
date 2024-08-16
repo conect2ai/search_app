@@ -60,25 +60,30 @@ class _CameraPageState extends State<CameraPage> {
           ),
         ),
         Positioned(
-          top: 30,
-          child: IconButton(
-              onPressed: () {
-                if (_isCameraPaused) {
-                  setState(() {
-                    _isCameraPaused = false;
-                    _picture = null;
-                    _pictureFile = null;
-                  });
-                  _controller.resumePreview();
-                } else {
-                  Modular.to.pop();
-                }
-              },
-              icon: Icon(
-                _isCameraPaused ? Icons.close : Icons.arrow_back_ios_rounded,
-                color: Colors.red.shade300,
-                size: 40,
-              )),
+          top: 40,
+          left: 10,
+          child: CircleAvatar(
+            radius: 20,
+            backgroundColor: Colors.white,
+            child: IconButton(
+                iconSize: 20,
+                onPressed: () {
+                  if (_isCameraPaused) {
+                    setState(() {
+                      _isCameraPaused = false;
+                      _picture = null;
+                      _pictureFile = null;
+                    });
+                    _controller.resumePreview();
+                  } else {
+                    Modular.to.pop();
+                  }
+                },
+                icon: Icon(
+                  _isCameraPaused ? Icons.close : Icons.arrow_back_ios_rounded,
+                  color: AppColors.backgroundColor,
+                )),
+          ),
         ),
         Positioned(
           width: MediaQuery.of(context).size.width,

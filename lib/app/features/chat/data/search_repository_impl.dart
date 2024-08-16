@@ -46,7 +46,7 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
       ..files.add(audioFile);
 
     final response = await requestConversion.send().timeout(
-      const Duration(seconds: 300),
+      const Duration(seconds: 60),
       onTimeout: () {
         throw const HttpException("Failed to communicate with server");
       },
@@ -82,7 +82,7 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
     final response = await http
         .post(apiUri, body: jsonEncode(fields), headers: headers)
         .timeout(
-      const Duration(seconds: 300),
+      const Duration(seconds: 60),
       onTimeout: () {
         throw const HttpException(
             "Failed to communicate with server. Timeout.");
@@ -110,6 +110,7 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
 
     final Map<String, String> headers = {
       'accept': 'multipart/form-data',
+      // 'Content-Type': 'multipart/form-data',
       'Authorization': 'Bearer ${_authUser.token}',
     };
 
@@ -121,7 +122,7 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
       ..headers.addAll(headers);
 
     final response = await request.send().timeout(
-      const Duration(seconds: 300),
+      const Duration(seconds: 60),
       onTimeout: () {
         throw const HttpException(
             "Failed to communicate with server. Timeout.");
@@ -131,7 +132,7 @@ class SearchRepositoryImpl with SecureStorage implements SearchRepository {
     if (response.statusCode == 200) {
       final data = await http.Response.fromStream(response);
       final responseData = jsonDecode(utf8.decode(data.bodyBytes));
-      return responseData['choices'][0]['message']['content'];
+      return responseData;
     } else {
       throw const HttpException(
           'Failed to process your question. Try again later.');

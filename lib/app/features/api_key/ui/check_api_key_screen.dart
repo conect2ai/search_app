@@ -28,6 +28,12 @@ class _CheckApiKeyScreenState extends State<CheckApiKeyScreen>
   }
 
   @override
+  void didChangeDependencies() {
+    _apiKey ??= _homeBloc.getApiKey();
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: generateLogoAppBar(context),

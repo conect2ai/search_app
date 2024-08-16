@@ -56,5 +56,10 @@ class ChatPageInputBloc extends Bloc<ChatPageInputEvent, ChatPageInputState> {
     return null;
   }
 
+  void cancelRecording() {
+    _recorderController.pause();
+    _recorderController.reset();
+  }
+
   RecorderController get recorderController => _recorderController;
 }

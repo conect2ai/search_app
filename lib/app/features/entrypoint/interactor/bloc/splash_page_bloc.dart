@@ -41,9 +41,12 @@ class SplashPageBloc with SecureStorage {
 
   void selectInitialRoute() async {
     if (_user.token != null) {
-      final apiKey = await _authRepository.checkIfUserHasKey();
-      _user.updateApiKey(apiKey);
-      if (apiKey.isNotEmpty) {
+      String? apiKey;
+      await _authRepository.checkIfUserHasKey().then((value) {
+        apiKey = value;
+        _user.updateApiKey(apiKey);
+      });
+      if (apiKey != null) {
         Modular.to.navigate('/check-api-key/');
       } else {
         Modular.to.navigate('/home/');

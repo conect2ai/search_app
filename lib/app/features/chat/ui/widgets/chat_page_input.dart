@@ -147,14 +147,22 @@ class _ChatPageInputState extends State<ChatPageInput> {
                     ),
                   );
                 } else {
-                  return AudioWaveforms(
-                    size: Size(MediaQuery.of(context).size.width * 0.6, 30),
-                    recorderController: _chatPageInputBloc.recorderController,
-                    waveStyle: const WaveStyle(
-                      backgroundColor: Colors.white,
-                      showBottom: false,
-                      extendWaveform: true,
-                      showMiddleLine: false,
+                  return SizedBox(
+                    height: 40,
+                    child: AudioWaveforms(
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade600,
+                          borderRadius: BorderRadius.circular(10)),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      size: Size(MediaQuery.of(context).size.width * 0.6, 30),
+                      recorderController: _chatPageInputBloc.recorderController,
+                      waveStyle: WaveStyle(
+                        waveColor: Colors.white,
+                        backgroundColor: Colors.grey.shade600,
+                        showBottom: false,
+                        extendWaveform: true,
+                        showMiddleLine: false,
+                      ),
                     ),
                   );
                 }
@@ -193,6 +201,9 @@ class _ChatPageInputState extends State<ChatPageInput> {
             onLongPress: () {
               _chatPageInputBloc.startRecording();
               _chatPageInputBloc.add(FocusAudioEvent());
+            },
+            onVerticalDragEnd: (details) {
+              _chatPageInputBloc.cancelRecording();
             },
             onLongPressUp: () async {
               final audioFilePath = await _chatPageInputBloc.stopRecording();

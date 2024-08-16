@@ -81,10 +81,13 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
           emit(ReceiveResponseState(results: _results));
           _loadingOverlayBloc.add(ShowLoadingOverlayEvent());
           try {
-            final message = await _searchRepository.sendQuestionByAudio(
-              event.path,
-            );
-
+            // final message = await _searchRepository.sendQuestionByAudio(
+            //   event.path,
+            // );
+            final message = {
+              'response_id': '1',
+              'response_content': 'Isso ai bixão',
+            };
             _results.add(ChatMessage(
               id: message['response_id'],
               isQuestion: false,

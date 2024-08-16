@@ -29,7 +29,7 @@ class AuthUser {
     _tokenType = tokenInfo['token_type'];
   }
 
-  void updateApiKey(String apiKeyInfo) {
+  void updateApiKey(String? apiKeyInfo) {
     _apiKey = apiKeyInfo;
   }
 }

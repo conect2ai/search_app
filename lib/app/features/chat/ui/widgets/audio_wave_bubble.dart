@@ -65,45 +65,45 @@ class _WaveBubbleState extends State<WaveBubble> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 5,
-      child: Container(
-        width: 200,
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        decoration: BoxDecoration(
-            color: AppColors.mainColor,
-            borderRadius: BorderRadius.circular(15)),
-        child: Column(
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                    onPressed: _startOrPausePlayer,
-                    icon: Icon(
-                      _playerController.playerState.isPlaying
-                          ? Icons.pause
-                          : Icons.play_arrow,
-                      color: Colors.white,
-                    )),
-                AudioFileWaveforms(
-                  size: Size(MediaQuery.of(context).size.width * 0.3, 20),
-                  playerController: _playerController,
-                  backgroundColor: AppColors.mainColor,
-                  waveformType: WaveformType.long,
-                  playerWaveStyle: const PlayerWaveStyle(
-                    showSeekLine: true,
-                    fixedWaveColor: Colors.grey,
-                    liveWaveColor: Colors.black,
-                    spacing: 6,
-                  ),
-                ),
-              ],
+    return Container(
+      width: 230,
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      decoration: const BoxDecoration(
+          color: AppColors.mainColor,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10),
+            topRight: Radius.circular(0),
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10),
+          )),
+      child: Row(
+        children: [
+          IconButton(
+            onPressed: _startOrPausePlayer,
+            icon: Icon(
+              _playerController.playerState.isPlaying
+                  ? Icons.pause
+                  : Icons.play_arrow,
+              color: Colors.white,
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: AudioFileWaveforms(
+                size: Size(MediaQuery.of(context).size.width * 0.5, 40),
+                playerController: _playerController,
+                backgroundColor: AppColors.mainColor,
+                waveformType: WaveformType.long,
+                playerWaveStyle: const PlayerWaveStyle(
+                  showSeekLine: true,
+                  fixedWaveColor: Colors.white,
+                  liveWaveColor: AppColors.backgroundColor,
+                  spacing: 6,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
