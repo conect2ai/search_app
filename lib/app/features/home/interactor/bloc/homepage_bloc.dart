@@ -49,6 +49,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState>
   Future<String> checkIfUserHasKey() async {
     try {
       final userKey = await _authRepository.checkIfUserHasKey();
+      _user.updateApiKey(userKey);
       // writeSecureData(_user.username!, userKey);
       return userKey;
     } on HttpException catch (_) {

@@ -28,6 +28,12 @@ class _ChatPageInputState extends State<ChatPageInput> {
   final _textInputController = TextEditingController();
   final FocusNode _textFocusNode = FocusNode();
 
+  bool _isRecording = false;
+  Icon _btnIcon = Icon(
+    Icons.mic_none,
+    color: Colors.white,
+  );
+
   Widget? _chatInputBtn;
   late List<CameraDescription> _cameras;
 
@@ -147,22 +153,52 @@ class _ChatPageInputState extends State<ChatPageInput> {
                     ),
                   );
                 } else {
-                  return SizedBox(
+                  return Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade600,
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     height: 40,
-                    child: AudioWaveforms(
-                      decoration: BoxDecoration(
-                          color: Colors.grey.shade600,
-                          borderRadius: BorderRadius.circular(10)),
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      size: Size(MediaQuery.of(context).size.width * 0.6, 30),
-                      recorderController: _chatPageInputBloc.recorderController,
-                      waveStyle: WaveStyle(
-                        waveColor: Colors.white,
-                        backgroundColor: Colors.grey.shade600,
-                        showBottom: false,
-                        extendWaveform: true,
-                        showMiddleLine: false,
-                      ),
+                    child: Row(
+                      children: [
+                        StreamBuilder<Duration>(
+                            stream: _chatPageInputBloc.duration,
+                            builder: (context, snapshot) {
+                              String formatDuration(int n) =>
+                                  n.toString().padLeft(2, '0');
+                              final duration = snapshot.data;
+                              final durationSeconds = formatDuration(
+                                  duration?.inSeconds.remainder(60) ?? 0);
+                              final durationMinutes = formatDuration(
+                                  duration?.inMinutes.remainder(60) ?? 0);
+
+                              return Text(
+                                '$durationMinutes:$durationSeconds',
+                                style: const TextStyle(
+                                    fontSize: 14, color: Colors.white),
+                              );
+                            }),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: AudioWaveforms(
+                              size: Size(
+                                  MediaQuery.of(context).size.width * 0.5, 30),
+                              recorderController:
+                                  _chatPageInputBloc.recorderController,
+                              waveStyle: WaveStyle(
+                                waveColor: Colors.white,
+                                backgroundColor: Colors.grey.shade600,
+                                showBottom: false,
+                                extendWaveform: true,
+                                showMiddleLine: false,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }
@@ -198,25 +234,31 @@ class _ChatPageInputState extends State<ChatPageInput> {
     } else {
       setState(() {
         _chatInputBtn = GestureDetector(
-            onLongPress: () {
-              _chatPageInputBloc.startRecording();
-              _chatPageInputBloc.add(FocusAudioEvent());
+            onTap: () async {
+              if (_isRecording) {
+                _isRecording = false;
+                _btnIcon = Icon(
+                  Icons.mic_none,
+                  color: Colors.white,
+                );
+                final audioFilePath = await _chatPageInputBloc.stopRecording();
+                _chatPageBloc.add(SendAudioEvent(path: audioFilePath ?? ''));
+                _chatPageInputBloc.add(FocusTextEvent());
+                _buildChatInputBtn(isTextMode);
+              } else {
+                _isRecording = true;
+                _btnIcon = Icon(
+                  Icons.stop,
+                  color: Colors.red,
+                );
+                _chatPageInputBloc.startRecording();
+                _chatPageInputBloc.add(FocusAudioEvent());
+                _buildChatInputBtn(isTextMode);
+              }
             },
-            onVerticalDragEnd: (details) {
-              _chatPageInputBloc.cancelRecording();
-            },
-            onLongPressUp: () async {
-              final audioFilePath = await _chatPageInputBloc.stopRecording();
-              _chatPageBloc.add(SendAudioEvent(path: audioFilePath ?? ''));
-              _chatPageInputBloc.add(FocusTextEvent());
-            },
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-              child: Icon(
-                Icons.mic_none,
-                color: Colors.white,
-              ),
-            ));
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                child: _btnIcon));
       });
     }
   }

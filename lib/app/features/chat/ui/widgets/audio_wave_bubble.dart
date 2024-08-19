@@ -77,6 +77,7 @@ class _WaveBubbleState extends State<WaveBubble> {
             bottomRight: Radius.circular(10),
           )),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
             onPressed: _startOrPausePlayer,
@@ -93,11 +94,9 @@ class _WaveBubbleState extends State<WaveBubble> {
                 size: Size(MediaQuery.of(context).size.width * 0.5, 40),
                 playerController: _playerController,
                 backgroundColor: AppColors.mainColor,
-                waveformType: WaveformType.long,
+                waveformType: WaveformType.fitWidth,
                 playerWaveStyle: const PlayerWaveStyle(
                   showSeekLine: true,
-                  fixedWaveColor: Colors.white,
-                  liveWaveColor: AppColors.backgroundColor,
                   spacing: 6,
                 ),
               ),

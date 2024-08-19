@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'chat_page_input_events.dart';
 import 'chat_page_input_state.dart';
@@ -27,6 +28,11 @@ class ChatPageInputBloc extends Bloc<ChatPageInputEvent, ChatPageInputState> {
     });
   }
 
+  final _recordDurationSubject =
+      BehaviorSubject.seeded(const Duration(seconds: 0));
+
+  Stream<Duration> get duration => _recordDurationSubject.stream;
+
   void checkPermission() async {
     await _recorderController.checkPermission();
   }
@@ -41,6 +47,9 @@ class ChatPageInputBloc extends Bloc<ChatPageInputEvent, ChatPageInputState> {
     final hasPermission = await _recorderController.checkPermission();
     if (hasPermission) {
       _path = '${_appDirectory.path}/${DateTime.now().millisecondsSinceEpoch}';
+      _recorderController.onCurrentDuration.listen((duration) {
+        _recordDurationSubject.sink.add(duration);
+      });
       await _recorderController.record(
           path: _path,
           androidOutputFormat: AndroidOutputFormat.ogg,
@@ -51,6 +60,7 @@ class ChatPageInputBloc extends Bloc<ChatPageInputEvent, ChatPageInputState> {
 
   Future<String?> stopRecording() async {
     if (_recorderController.isRecording) {
+      _recorderController.reset();
       return await _recorderController.stop();
     }
     return null;
