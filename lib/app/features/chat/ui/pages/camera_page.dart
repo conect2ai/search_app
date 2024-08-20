@@ -21,11 +21,20 @@ class _CameraPageState extends State<CameraPage> {
   XFile? _picture;
   File? _pictureFile;
   bool _isCameraPaused = false;
+  var _selectedFlashMode = FlashMode.off;
+  int _indexFlash = 0;
+
+  List<FlashMode> _flashModes = [
+    FlashMode.off,
+    FlashMode.torch,
+    FlashMode.auto,
+  ];
 
   @override
   void initState() {
     _controller = CameraController(widget._cameras[0], ResolutionPreset.max);
     _initializeController();
+    _controller.setFlashMode(_selectedFlashMode);
     super.initState();
   }
 
@@ -47,6 +56,24 @@ class _CameraPageState extends State<CameraPage> {
         }
       }
     });
+  }
+
+  void _toggleFlashMode() {
+    setState(() {
+      _indexFlash++;
+      if (_indexFlash > 2) {
+        _indexFlash = 0;
+      }
+      _selectedFlashMode = _flashModes[_indexFlash];
+      _controller.setFlashMode(_selectedFlashMode);
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.setFlashMode(FlashMode.off);
+    _indexFlash = 0;
+    super.dispose();
   }
 
   @override
@@ -81,6 +108,29 @@ class _CameraPageState extends State<CameraPage> {
                 },
                 icon: Icon(
                   _isCameraPaused ? Icons.close : Icons.arrow_back_ios_rounded,
+                  color: AppColors.backgroundColor,
+                )),
+          ),
+        ),
+        Positioned(
+          bottom: MediaQuery.of(context).size.height * 0.4,
+          right: 20,
+          child: CircleAvatar(
+            radius: 20,
+            backgroundColor: Colors.white,
+            child: IconButton(
+                iconSize: 20,
+                onPressed: () {
+                  if (!_isCameraPaused) {
+                    _toggleFlashMode();
+                  }
+                },
+                icon: Icon(
+                  _selectedFlashMode == FlashMode.off
+                      ? Icons.flash_off_outlined
+                      : _selectedFlashMode == FlashMode.torch
+                          ? Icons.flash_on_outlined
+                          : Icons.flash_auto_outlined,
                   color: AppColors.backgroundColor,
                 )),
           ),
