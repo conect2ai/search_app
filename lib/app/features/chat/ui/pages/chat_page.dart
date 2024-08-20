@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_search/app/features/chat/interactor/blocs/chatpage_inputs/chat_page_input_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -113,48 +115,92 @@ class _ChatPageState extends State<ChatPage>
               );
             }
           },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Center(
-                  child: BlocBuilder<ChatPageBloc, ChatPageState>(
-                    bloc: _bloc,
-                    builder: (context, state) {
-                      if (state is InitialChatPageState) {
-                        return Text(
-                          'Faça uma pergunta',
-                          style: AppTextStyles.mainTextStyle,
-                        );
-                      } else if (state is ReceiveResponseState) {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20, right: 20, top: 10, bottom: 0),
-                          child: MessagesList(
-                            state: state,
-                          ),
-                        );
-                      } else {
-                        return const SpinKitSpinningLines(
-                          size: 100,
-                          color: AppColors.mainColor,
-                        );
-                      }
-                    },
+          child: Stack(children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Center(
+                    child: BlocBuilder<ChatPageBloc, ChatPageState>(
+                      bloc: _bloc,
+                      builder: (context, state) {
+                        if (state is InitialChatPageState) {
+                          return Text(
+                            'Faça uma pergunta',
+                            style: AppTextStyles.mainTextStyle,
+                          );
+                        } else if (state is ReceiveResponseState) {
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 10, bottom: 0),
+                            child: MessagesList(
+                              state: state,
+                            ),
+                          );
+                        } else {
+                          return const SpinKitSpinningLines(
+                            size: 100,
+                            color: AppColors.mainColor,
+                          );
+                        }
+                      },
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Colors.transparent,
+                Container(
+                  width: double.maxFinite,
+                  decoration: const BoxDecoration(
+                    color: Colors.transparent,
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                  child: const ChatPageInput(),
                 ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-                child: const ChatPageInput(),
-              )
-            ],
-          ),
+              ],
+            ),
+            Positioned(
+              bottom: 60,
+              right: 20,
+              child: Stack(children: [
+                StreamBuilder<File?>(
+                    stream: _bloc.isImageSelectedStream,
+                    builder: (context, snapshot) {
+                      final selectedImage = snapshot.data;
+                      return Visibility(
+                        visible: selectedImage != null,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              border: Border.all(color: AppColors.mainColor)),
+                          height: 80,
+                          width: 80,
+                          child: selectedImage != null
+                              ? Stack(children: [
+                                  Image.file(
+                                    selectedImage,
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  Positioned(
+                                      top: 2,
+                                      right: 2,
+                                      child: IconButton(
+                                        iconSize: 20,
+                                        onPressed: _bloc.removePicture,
+                                        padding: EdgeInsets.zero,
+                                        alignment: Alignment.topRight,
+                                        icon: const Icon(Icons.delete,
+                                            color: Colors.red),
+                                      )),
+                                ])
+                              : const SizedBox(),
+                        ),
+                      );
+                    }),
+              ]),
+            ),
+          ]),
         ),
         drawer: const CustomDrawer(),
       ),
