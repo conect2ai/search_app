@@ -21,20 +21,13 @@ class _CameraPageState extends State<CameraPage> {
   XFile? _picture;
   File? _pictureFile;
   bool _isCameraPaused = false;
-  var _selectedFlashMode = FlashMode.off;
-  int _indexFlash = 0;
-
-  List<FlashMode> _flashModes = [
-    FlashMode.off,
-    FlashMode.torch,
-    FlashMode.auto,
-  ];
+  bool _isFlashOn = false;
 
   @override
   void initState() {
     _controller = CameraController(widget._cameras[0], ResolutionPreset.max);
     _initializeController();
-    _controller.setFlashMode(_selectedFlashMode);
+    _controller.setFlashMode(FlashMode.off);
     super.initState();
   }
 
@@ -58,21 +51,47 @@ class _CameraPageState extends State<CameraPage> {
     });
   }
 
+  void _takePicture() async {
+    if (_isFlashOn) {
+      await _controller.setFlashMode(FlashMode.torch);
+    } else {
+      await _controller.setFlashMode(FlashMode.off);
+    }
+
+    _picture = await _controller.takePicture();
+
+    final dir = await getApplicationCacheDirectory();
+    final path = dir.path;
+    _pictureFile = File('$path/${_picture?.name}');
+    setState(() {
+      _isCameraPaused = true;
+    });
+    _controller.pausePreview();
+    final pdfData = await _picture!.readAsBytes();
+    await _pictureFile?.writeAsBytes(pdfData);
+  }
+
   void _toggleFlashMode() {
     setState(() {
-      _indexFlash++;
-      if (_indexFlash > 2) {
-        _indexFlash = 0;
-      }
-      _selectedFlashMode = _flashModes[_indexFlash];
-      _controller.setFlashMode(_selectedFlashMode);
+      _isFlashOn = !_isFlashOn;
+      _updateFlashMode();
     });
+  }
+
+  void _updateFlashMode([bool isDisposing = false]) async {
+    if (isDisposing) {
+      _isCameraPaused ? await _controller.resumePreview() : null;
+
+      await _controller.setFlashMode(FlashMode.off);
+    } else {
+      await _controller
+          .setFlashMode(_isFlashOn ? FlashMode.torch : FlashMode.off);
+    }
   }
 
   @override
   void dispose() {
-    _controller.setFlashMode(FlashMode.off);
-    _indexFlash = 0;
+    _updateFlashMode(true);
     super.dispose();
   }
 
@@ -102,6 +121,7 @@ class _CameraPageState extends State<CameraPage> {
                       _pictureFile = null;
                     });
                     _controller.resumePreview();
+                    _updateFlashMode();
                   } else {
                     Modular.to.pop();
                   }
@@ -126,11 +146,9 @@ class _CameraPageState extends State<CameraPage> {
                   }
                 },
                 icon: Icon(
-                  _selectedFlashMode == FlashMode.off
+                  !_isFlashOn
                       ? Icons.flash_off_outlined
-                      : _selectedFlashMode == FlashMode.torch
-                          ? Icons.flash_on_outlined
-                          : Icons.flash_auto_outlined,
+                      : Icons.flash_on_outlined,
                   color: AppColors.backgroundColor,
                 )),
           ),
@@ -152,17 +170,8 @@ class _CameraPageState extends State<CameraPage> {
           ? null
           : FloatingActionButton(
               backgroundColor: AppColors.mainColor,
-              onPressed: () async {
-                _picture = await _controller.takePicture();
-                final dir = await getApplicationCacheDirectory();
-                final path = dir.path;
-                _pictureFile = File('$path/${_picture?.name}');
-                _controller.pausePreview();
-                setState(() {
-                  _isCameraPaused = true;
-                });
-                final pdfData = await _picture!.readAsBytes();
-                await _pictureFile?.writeAsBytes(pdfData);
+              onPressed: () {
+                _takePicture();
               },
               child: const Icon(
                 Icons.camera_alt,
