@@ -15,7 +15,7 @@ class WaveBubble extends StatefulWidget {
 
 class _WaveBubbleState extends State<WaveBubble> {
   late PlayerController _playerController;
-
+  int duration = 0;
   StreamSubscription<PlayerState>? _playerStateSubscription;
   @override
   void initState() {
@@ -43,7 +43,7 @@ class _WaveBubbleState extends State<WaveBubble> {
     await _playerController.preparePlayer(
       path: widget.path,
       shouldExtractWaveform: true,
-      noOfSamples: 200,
+      noOfSamples: 100,
       volume: 1.0,
     );
   }
@@ -89,16 +89,14 @@ class _WaveBubbleState extends State<WaveBubble> {
             ),
           ),
           Expanded(
-            child: SingleChildScrollView(
-              child: AudioFileWaveforms(
-                size: Size(MediaQuery.of(context).size.width * 0.5, 40),
-                playerController: _playerController,
-                backgroundColor: AppColors.mainColor,
-                waveformType: WaveformType.fitWidth,
-                playerWaveStyle: const PlayerWaveStyle(
-                  showSeekLine: true,
-                  spacing: 6,
-                ),
+            child: AudioFileWaveforms(
+              size: Size(MediaQuery.of(context).size.width * 0.5, 40),
+              playerController: _playerController,
+              backgroundColor: AppColors.mainColor,
+              waveformType: WaveformType.long,
+              playerWaveStyle: const PlayerWaveStyle(
+                showSeekLine: true,
+                spacing: 6,
               ),
             ),
           ),

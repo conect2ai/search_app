@@ -29,10 +29,6 @@ class _ChatPageInputState extends State<ChatPageInput> {
   final FocusNode _textFocusNode = FocusNode();
 
   bool _isRecording = false;
-  Icon _btnIcon = Icon(
-    Icons.mic_none,
-    color: Colors.white,
-  );
 
   Widget? _chatInputBtn;
   late List<CameraDescription> _cameras;
@@ -61,6 +57,7 @@ class _ChatPageInputState extends State<ChatPageInput> {
   void dispose() {
     _textFocusNode.dispose();
     _textInputController.dispose();
+    _chatPageInputBloc.dispose();
     super.dispose();
   }
 
@@ -209,6 +206,20 @@ class _ChatPageInputState extends State<ChatPageInput> {
             width: 10,
           ),
           _chatInputBtn!,
+          Visibility(
+              visible: _isRecording,
+              child: IconButton(
+                  onPressed: () {
+                    _chatPageInputBloc.cancelRecording();
+                    setState(() {
+                      _isRecording = false;
+                      _buildChatInputBtn(false);
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.cancel_outlined,
+                    color: Colors.white,
+                  )))
         ],
       ),
     );
@@ -235,30 +246,31 @@ class _ChatPageInputState extends State<ChatPageInput> {
       setState(() {
         _chatInputBtn = GestureDetector(
             onTap: () async {
-              if (_isRecording) {
+              if (!_isRecording) {
+                _isRecording = true;
+
+                _chatPageInputBloc.startRecording();
+                _chatPageInputBloc.add(FocusAudioEvent());
+                _buildChatInputBtn(isTextMode);
+              } else {
                 _isRecording = false;
-                _btnIcon = Icon(
-                  Icons.mic_none,
-                  color: Colors.white,
-                );
                 final audioFilePath = await _chatPageInputBloc.stopRecording();
                 _chatPageBloc.add(SendAudioEvent(path: audioFilePath ?? ''));
                 _chatPageInputBloc.add(FocusTextEvent());
-                _buildChatInputBtn(isTextMode);
-              } else {
-                _isRecording = true;
-                _btnIcon = Icon(
-                  Icons.stop,
-                  color: Colors.red,
-                );
-                _chatPageInputBloc.startRecording();
-                _chatPageInputBloc.add(FocusAudioEvent());
                 _buildChatInputBtn(isTextMode);
               }
             },
             child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                child: _btnIcon));
+                child: !_isRecording
+                    ? const Icon(
+                        Icons.mic_none,
+                        color: Colors.white,
+                      )
+                    : const Icon(
+                        Icons.stop,
+                        color: Colors.red,
+                      )));
       });
     }
   }
