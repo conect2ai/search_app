@@ -78,5 +78,5 @@ class AppTextStyles {
           color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600));
   static final uploadManualTextStyle = GoogleFonts.roboto(
       textStyle: const TextStyle(
-          color: Colors.white, fontSize: 17, fontWeight: FontWeight.w400));
+          color: Colors.white, fontSize: 15, fontWeight: FontWeight.w400));
 }
