@@ -10,6 +10,7 @@ class AppTextStyles {
   static final authScreenButtonsTextStyle = GoogleFonts.roboto(
       textStyle: const TextStyle(
           color: Colors.white, fontSize: 17, fontWeight: FontWeight.w400));
+
   static final authScreenTitleTextStyle = GoogleFonts.roboto(
       textStyle: const TextStyle(
           color: Colors.white, fontSize: 25, fontWeight: FontWeight.w600));
@@ -72,4 +73,10 @@ class AppTextStyles {
   static final logoutButtonTextStyle = GoogleFonts.roboto(
       textStyle: const TextStyle(
           color: Colors.white, fontSize: 15, fontWeight: FontWeight.w400));
+  static final manualCheckTextField = GoogleFonts.roboto(
+      textStyle: const TextStyle(
+          color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600));
+  static final uploadManualTextStyle = GoogleFonts.roboto(
+      textStyle: const TextStyle(
+          color: Colors.white, fontSize: 17, fontWeight: FontWeight.w400));
 }

@@ -53,7 +53,7 @@ class _CameraPageTextInputState extends State<CameraPageTextInput> {
                 isDense: true,
                 fillColor: Colors.blueGrey.shade100,
                 filled: true,
-                hintText: 'Text here...',
+                hintText: 'Mensagem',
                 hintStyle: const TextStyle(color: Colors.grey),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),

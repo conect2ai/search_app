@@ -7,6 +7,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
 import '../../../../mixins/snackbar_mixin.dart';
+import '../../../manual/interactor/blocs/manual_bloc.dart';
 import '../../interactor/bloc/homepage_bloc.dart';
 
 class ApiKeyInput extends StatefulWidget {
@@ -22,6 +23,7 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
   var _isValidApiKey = false;
   var _isLoadingChatPage = false;
   final _homeBloc = Modular.get<HomePageBloc>();
+  final _manualBloc = Modular.get<ManualBloc>();
 
   @override
   void initState() {
@@ -111,7 +113,14 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                           await widget._homebloc
                               .saveApiKey(_apiKeyInputController.text)
                               .then((_) {
-                            Modular.to.navigate('/chat/');
+                            _manualBloc
+                                .checkIfThereIsManuals()
+                                .then((hasManuals) {
+                              hasManuals
+                                  ? Modular.to.pushReplacementNamed('/chat')
+                                  : Modular.to
+                                      .pushReplacementNamed('/manual-check/');
+                            });
                           });
                         } on HttpException catch (_) {
                           if (!mounted) {

@@ -21,7 +21,7 @@ import '../../interactor/blocs/chatpage_inputs/chat_page_input_bloc.dart';
 import '../../interactor/blocs/vehicle_form/vehicle_form_bloc.dart';
 import '../widgets/chat_page_input.dart';
 import '../widgets/custom_drawer.dart';
-import '../widgets/manual_upload_dialog.dart';
+import '../widgets/manual_dialog.dart';
 import '../widgets/messages_list.dart';
 import '../widgets/vehicle_form_dialog.dart';
 
@@ -76,7 +76,7 @@ class _ChatPageState extends State<ChatPage>
               } else if (option == 'Api Key') {
                 Modular.to.navigate('/home');
               } else if (option == 'Manual Upload') {
-                dialog(context, ManualUploadDialog());
+                dialog(context, ManualDialog());
               } else {
                 dialog(context, const VehicleFormDialog());
               }
@@ -153,7 +153,7 @@ class _ChatPageState extends State<ChatPage>
                     color: Colors.transparent,
                   ),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: 0, vertical: 15),
                   child: const ChatPageInput(),
                 ),
               ],

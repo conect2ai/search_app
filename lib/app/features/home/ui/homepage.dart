@@ -5,7 +5,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../../core/themes/app_colors.dart';
 import '../../../mixins/logo_appbar.dart';
-import '../../auth/interactor/bloc/auth_bloc.dart';
 import '../interactor/bloc/homepage_bloc.dart';
 import '../interactor/states/homepage_states.dart';
 import 'widgets/api_key_input.dart';
@@ -19,7 +18,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with LogoAppBar {
   final _homePageBloc = Modular.get<HomePageBloc>();
-  final _authBloc = Modular.get<AuthBloc>();
 
   @override
   void initState() {

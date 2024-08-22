@@ -64,18 +64,18 @@ class _ChatPageInputState extends State<ChatPageInput> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           IconButton(
-            constraints: const BoxConstraints(maxWidth: 25),
+            constraints: const BoxConstraints(maxWidth: 20),
             onPressed: () {
               _chatPageBloc.pickImage(ImageSource.gallery);
             },
             splashRadius: 20,
             iconSize: 20,
-            padding: const EdgeInsets.symmetric(horizontal: 0),
+            padding: EdgeInsets.zero,
             icon: const Icon(
               Icons.image_outlined,
               color: Colors.white,
@@ -94,7 +94,7 @@ class _ChatPageInputState extends State<ChatPageInput> {
             },
             iconSize: 20,
             splashRadius: 20,
-            padding: const EdgeInsets.symmetric(horizontal: 0),
+            padding: EdgeInsets.zero,
             icon: const Icon(
               Icons.camera_alt_outlined,
               color: Colors.white,
@@ -154,7 +154,8 @@ class _ChatPageInputState extends State<ChatPageInput> {
                     decoration: BoxDecoration(
                         color: Colors.grey.shade600,
                         borderRadius: BorderRadius.circular(10)),
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                     height: 40,
                     child: Row(
                       children: [
@@ -179,19 +180,17 @@ class _ChatPageInputState extends State<ChatPageInput> {
                           width: 10,
                         ),
                         Expanded(
-                          child: SingleChildScrollView(
-                            child: AudioWaveforms(
-                              size: Size(
-                                  MediaQuery.of(context).size.width * 0.5, 30),
-                              recorderController:
-                                  _chatPageInputBloc.recorderController,
-                              waveStyle: WaveStyle(
-                                waveColor: Colors.white,
-                                backgroundColor: Colors.grey.shade600,
-                                showBottom: false,
-                                extendWaveform: true,
-                                showMiddleLine: false,
-                              ),
+                          child: AudioWaveforms(
+                            size: Size(
+                                MediaQuery.of(context).size.width * 0.5, 30),
+                            recorderController:
+                                _chatPageInputBloc.recorderController,
+                            waveStyle: WaveStyle(
+                              waveColor: Colors.white,
+                              backgroundColor: Colors.grey.shade600,
+                              showBottom: false,
+                              extendWaveform: true,
+                              showMiddleLine: false,
                             ),
                           ),
                         ),
@@ -206,19 +205,23 @@ class _ChatPageInputState extends State<ChatPageInput> {
             width: 10,
           ),
           _chatInputBtn!,
+          const SizedBox(
+            width: 8,
+          ),
           Visibility(
               visible: _isRecording,
-              child: IconButton(
-                  onPressed: () {
+              child: GestureDetector(
+                  onTap: () {
                     _chatPageInputBloc.cancelRecording();
                     setState(() {
                       _isRecording = false;
                       _buildChatInputBtn(false);
                     });
                   },
-                  icon: const Icon(
-                    Icons.cancel_outlined,
+                  child: const Icon(
+                    Icons.remove_circle_outline,
                     color: Colors.white,
+                    size: 20,
                   )))
         ],
       ),
@@ -228,8 +231,8 @@ class _ChatPageInputState extends State<ChatPageInput> {
   void _buildChatInputBtn(bool isTextMode) {
     if (isTextMode) {
       setState(() {
-        _chatInputBtn = IconButton(
-            onPressed: () {
+        _chatInputBtn = GestureDetector(
+            onTap: () {
               if (_textInputController.text.isNotEmpty) {
                 _chatPageBloc
                     .add(SendTextEvent(question: _textInputController.text));
@@ -237,9 +240,10 @@ class _ChatPageInputState extends State<ChatPageInput> {
                 FocusManager.instance.primaryFocus?.unfocus();
               }
             },
-            icon: const Icon(
+            child: const Icon(
               Icons.send_outlined,
               color: Colors.white,
+              size: 20,
             ));
       });
     } else {
@@ -261,15 +265,17 @@ class _ChatPageInputState extends State<ChatPageInput> {
               }
             },
             child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                padding: EdgeInsets.zero,
                 child: !_isRecording
                     ? const Icon(
                         Icons.mic_none,
                         color: Colors.white,
+                        size: 20,
                       )
                     : const Icon(
-                        Icons.stop,
+                        Icons.stop_rounded,
                         color: Colors.red,
+                        size: 26,
                       )));
       });
     }

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:app_search/app/features/chat/interactor/blocs/manual_upload/manual_upload_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -9,28 +8,29 @@ import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
 import '../../../../mixins/custom_dialogs.dart';
 import '../../../../mixins/snackbar_mixin.dart';
-import '../../interactor/blocs/manual_upload/manual_upload_bloc.dart';
-import '../../interactor/blocs/manual_upload/manual_upload_state.dart';
+import '../../../manual/interactor/blocs/manual_bloc.dart';
+import '../../../manual/interactor/blocs/manual_event.dart';
+import '../../../manual/interactor/blocs/manual_state.dart';
 
-class ManualUploadDialog extends StatefulWidget {
-  ManualUploadDialog({super.key});
+class ManualDialog extends StatefulWidget {
+  ManualDialog({super.key});
 
   @override
-  State<ManualUploadDialog> createState() => _ManualUploadDialogState();
+  State<ManualDialog> createState() => _ManualDialogState();
 }
 
-class _ManualUploadDialogState extends State<ManualUploadDialog>
+class _ManualDialogState extends State<ManualDialog>
     with CustomDialogs, SnackBarMixin {
-  final _manualUploadBloc = Modular.get<ManualUploadBloc>();
+  final _manualBloc = Modular.get<ManualBloc>();
   @override
   void initState() {
-    _manualUploadBloc.initSubjects();
+    _manualBloc.initSubjects();
     super.initState();
   }
 
   @override
   void dispose() {
-    _manualUploadBloc.dispose();
+    _manualBloc.dispose();
     super.dispose();
   }
 
@@ -75,23 +75,22 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
                     style: AppTextStyles.dialogtextStyle,
                   ),
                 ),
-                BlocBuilder<ManualUploadBloc, ManualUploadState>(
-                    bloc: _manualUploadBloc,
+                BlocBuilder<ManualBloc, ManualState>(
+                    bloc: _manualBloc,
                     builder: (context, state) {
                       if (state is PdfSelectedState) {
                         return TextButton(
                           onPressed: () async {
                             try {
-                              _manualUploadBloc.updateManualUploadButton(true);
-                              await _manualUploadBloc.uploadPdf().then((_) {
-                                _manualUploadBloc
-                                    .updateManualUploadButton(false);
+                              _manualBloc.updateManualUploadButton(true);
+                              await _manualBloc.uploadPdf().then((_) {
+                                _manualBloc.updateManualUploadButton(false);
                               });
                             } on HttpException catch (_) {
                               if (!mounted) {
                                 return;
                               }
-                              _manualUploadBloc.updateManualUploadButton(false);
+                              _manualBloc.updateManualUploadButton(false);
                               generateSnackBar(
                                   'Manual upload failed. Try again later.',
                                   context);
@@ -99,14 +98,14 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
                               if (!mounted) {
                                 return;
                               }
-                              _manualUploadBloc.updateManualUploadButton(false);
+                              _manualBloc.updateManualUploadButton(false);
                               generateSnackBar(
                                   'Manual upload failed. Try again later.',
                                   context);
                             }
                           },
                           child: StreamBuilder<bool>(
-                              stream: _manualUploadBloc.isSendingManual,
+                              stream: _manualBloc.isSendingManual,
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   final isSendingManual = snapshot.data!;
@@ -118,7 +117,7 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
                                       children: [
                                         Text(
                                           'Sending',
-                                          style: _manualUploadBloc.pdf != null
+                                          style: _manualBloc.pdf != null
                                               ? AppTextStyles
                                                   .dialogOptionsextStyle
                                               : AppTextStyles
@@ -144,7 +143,7 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
                                   } else {
                                     return Text(
                                       'Upload',
-                                      style: _manualUploadBloc.pdf != null
+                                      style: _manualBloc.pdf != null
                                           ? AppTextStyles.dialogtextStyle
                                           : AppTextStyles
                                               .dialogSecondaryTextStyle,
@@ -153,7 +152,7 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
                                 }
                                 return Text(
                                   'Upload',
-                                  style: _manualUploadBloc.pdf != null
+                                  style: _manualBloc.pdf != null
                                       ? AppTextStyles.dialogtextStyle
                                       : AppTextStyles.dialogSecondaryTextStyle,
                                 );
@@ -189,8 +188,8 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.grey)),
-      child: BlocBuilder<ManualUploadBloc, ManualUploadState>(
-        bloc: _manualUploadBloc,
+      child: BlocBuilder<ManualBloc, ManualState>(
+        bloc: _manualBloc,
         builder: (context, state) {
           if (state is PdfSelectedState) {
             return Row(
@@ -203,7 +202,7 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
                 )),
                 IconButton(
                   onPressed: () {
-                    _manualUploadBloc.add(RemovePdfEvent());
+                    _manualBloc.add(RemovePdfEvent());
                   },
                   icon: const Icon(
                     Icons.cancel,
@@ -215,7 +214,7 @@ class _ManualUploadDialogState extends State<ManualUploadDialog>
           } else {
             return TextButton(
                 onPressed: () {
-                  _manualUploadBloc.openFileExplorer();
+                  _manualBloc.openFileExplorer();
                 },
                 child: const Text(
                   'Selecione o manual',

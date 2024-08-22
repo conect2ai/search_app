@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -8,6 +6,7 @@ import '../../../core/themes/app_text_styles.dart';
 import '../../../mixins/logo_appbar.dart';
 import '../../../mixins/snackbar_mixin.dart';
 import '../../home/interactor/bloc/homepage_bloc.dart';
+import '../../manual/interactor/blocs/manual_bloc.dart';
 
 class CheckApiKeyScreen extends StatefulWidget {
   const CheckApiKeyScreen({super.key});
@@ -20,10 +19,12 @@ class _CheckApiKeyScreenState extends State<CheckApiKeyScreen>
     with LogoAppBar, SnackBarMixin {
   String? _apiKey;
   final _homeBloc = Modular.get<HomePageBloc>();
+  final _manualBloc = Modular.get<ManualBloc>();
 
   @override
   void initState() {
     _apiKey = _homeBloc.getApiKey();
+
     super.initState();
   }
 
@@ -63,8 +64,14 @@ class _CheckApiKeyScreenState extends State<CheckApiKeyScreen>
                           backgroundColor: AppColors.mainColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10))),
-                      onPressed: () =>
-                          Modular.to.pushReplacementNamed('/chat/'),
+                      onPressed: () async {
+                        _manualBloc.checkIfThereIsManuals().then((hasManuals) {
+                          hasManuals
+                              ? Modular.to.pushReplacementNamed('/chat')
+                              : Modular.to
+                                  .pushReplacementNamed('/manual-check/');
+                        });
+                      },
                       child: const Text('SIM')),
                   const SizedBox(
                     width: 20,
