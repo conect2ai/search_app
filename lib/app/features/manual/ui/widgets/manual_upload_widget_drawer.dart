@@ -35,7 +35,7 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer>
                 size: 20,
               ),
               const SizedBox(
-                width: 5,
+                width: 10,
               ),
               Expanded(
                 child: GestureDetector(

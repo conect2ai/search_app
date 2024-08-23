@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
+import '../../../../mixins/snackbar_mixin.dart';
 import '../../interactor/blocs/manual_bloc.dart';
 import '../../interactor/blocs/manual_state.dart';
 
@@ -14,7 +17,8 @@ class ManualUploadWidget extends StatefulWidget {
   State<ManualUploadWidget> createState() => _ManualUploadWidgetState();
 }
 
-class _ManualUploadWidgetState extends State<ManualUploadWidget> {
+class _ManualUploadWidgetState extends State<ManualUploadWidget>
+    with SnackBarMixin {
   final _manualBloc = Modular.get<ManualBloc>();
   @override
   Widget build(BuildContext context) {
@@ -57,11 +61,24 @@ class _ManualUploadWidgetState extends State<ManualUploadWidget> {
                                 ),
                               ),
                               IconButton(
-                                  onPressed: () => _manualBloc.removePdf(),
-                                  icon: const Icon(
-                                    Icons.delete_outline,
-                                    color: Colors.red,
-                                  ))
+                                onPressed: () {
+                                  try {
+                                    _manualBloc.removePdf();
+                                  } on HttpException catch (_) {
+                                    generateSnackBar(
+                                        'Não foi possível excluir o pdf. Tente novamente',
+                                        context);
+                                  } catch (e) {
+                                    generateSnackBar(
+                                        'Erro ao tentar excluir o pdf. Tente novamente',
+                                        context);
+                                  }
+                                },
+                                icon: const Icon(
+                                  Icons.delete_outline,
+                                  color: Colors.red,
+                                ),
+                              )
                             ],
                           );
                         } else {
@@ -95,9 +112,19 @@ class _ManualUploadWidgetState extends State<ManualUploadWidget> {
               ),
               onPressed: () {
                 if (state is PdfSelectedState) {
-                  _manualBloc
-                      .uploadPdf()
-                      .then((_) => Modular.to.pushReplacementNamed('/chat/'));
+                  try {
+                    _manualBloc
+                        .uploadPdf()
+                        .then((_) => Modular.to.pushReplacementNamed('/chat/'));
+                  } on HttpException catch (_) {
+                    generateSnackBar(
+                        'Não foi possível importar o pdf. Tente novamente',
+                        context);
+                  } catch (e) {
+                    generateSnackBar(
+                        'Erro ao tentar importar o pdf. Tente novamente',
+                        context);
+                  }
                 }
               },
               child: Text(
