@@ -7,10 +7,10 @@ import 'package:flutter_modular/flutter_modular.dart';
 import '../../../core/themes/app_colors.dart';
 import '../../../core/themes/app_text_styles.dart';
 import '../../../core/widgets/custom_appbar.dart';
+import '../../../mixins/snackbar_mixin.dart';
 import '../../home/interactor/bloc/homepage_bloc.dart';
 import '../interactor/bloc/auth_bloc.dart';
 import '../interactor/bloc/login_bloc.dart';
-import 'widgets/snackbar_mixin.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

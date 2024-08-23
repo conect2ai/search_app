@@ -32,7 +32,7 @@ class _ManualUploadWidgetState extends State<ManualUploadWidget> {
           child: Row(
             children: [
               const Icon(
-                Icons.file_upload_outlined,
+                Icons.file_download_outlined,
                 color: Colors.white,
               ),
               const SizedBox(
@@ -66,7 +66,7 @@ class _ManualUploadWidgetState extends State<ManualUploadWidget> {
                           );
                         } else {
                           return Text(
-                            'UPLOAD MANUAL',
+                            'Importar Manual',
                             style: AppTextStyles.uploadManualTextStyle,
                             softWrap: true,
                           );

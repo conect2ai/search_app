@@ -76,7 +76,6 @@ class ManualBloc extends Bloc<ManualEvent, ManualState> {
 
   Future<bool> checkIfThereIsManuals() async {
     try {
-      return false;
       return await _manualRepository.checkIfThereIsManual();
     } on HttpException catch (_) {
       rethrow;

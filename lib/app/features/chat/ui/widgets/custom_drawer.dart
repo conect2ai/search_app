@@ -4,6 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
 import '../../../auth/interactor/bloc/auth_bloc.dart';
+import '../../../manual/ui/widgets/manual_upload_widget_drawer.dart';
 import 'vehicle_selection_dropdown_menu.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -77,21 +78,25 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         style: AppTextStyles.drawerOptionsTextStyle,
                       ),
                     ),
-                    TextButton.icon(
-                      style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          alignment: Alignment.centerLeft),
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.file_download_outlined,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                      label: Text(
-                        'Importar Manual',
-                        style: AppTextStyles.drawerOptionsTextStyle,
-                      ),
+                    const SizedBox(
+                      height: 10,
                     ),
+                    const ManualUploadWidgetDrawer(),
+                    // TextButton.icon(
+                    //   style: TextButton.styleFrom(
+                    //       padding: EdgeInsets.zero,
+                    //       alignment: Alignment.centerLeft),
+                    //   onPressed: () {},
+                    //   icon: const Icon(
+                    //     Icons.file_download_outlined,
+                    //     color: Colors.white,
+                    //     size: 20,
+                    //   ),
+                    //   label: Text(
+                    //     'Importar Manual',
+                    //     style: AppTextStyles.drawerOptionsTextStyle,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
