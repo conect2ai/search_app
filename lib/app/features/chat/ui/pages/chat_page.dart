@@ -60,42 +60,43 @@ class _ChatPageState extends State<ChatPage>
       right: false,
       bottom: true,
       child: Scaffold(
-        appBar: generateLogoAppBar(context, [
-          PopupMenuButton(
-            icon: const Icon(
-              Icons.more_vert,
-              color: Colors.black,
-            ),
-            iconSize: 40,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            onSelected: (option) async {
-              if (option == 'Logout') {
-                _authBloc.logout();
-                // Modular.to.navigate('/');
-              } else if (option == 'Api Key') {
-                Modular.to.navigate('/home');
-              } else if (option == 'Manual Upload') {
-                dialog(context, ManualDialog());
-              } else {
-                dialog(context, const VehicleFormDialog());
-              }
-            },
-            itemBuilder: (BuildContext context) {
-              return {
-                'Vehicle Settings',
-                'Manual Upload',
-                'Api Key',
-                'Logout',
-              }.map((String choice) {
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice),
-                );
-              }).toList();
-            },
-          )
-        ]),
+        appBar: generateLogoAppBar(context)
+        // generateLogoAppBar(context, [
+        //   PopupMenuButton(
+        //     icon: const Icon(
+        //       Icons.more_vert,
+        //       color: Colors.black,
+        //     ),
+        //     iconSize: 40,
+        //     shape:
+        //         RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        //     onSelected: (option) async {
+        //       if (option == 'Logout') {
+        //         _authBloc.logout();
+        //         // Modular.to.navigate('/');
+        //       } else if (option == 'Api Key') {
+        //         Modular.to.navigate('/home');
+        //       } else if (option == 'Manual Upload') {
+        //         dialog(context, ManualDialog());
+        //       } else {
+        //         dialog(context, const VehicleFormDialog());
+        //       }
+        //     },
+        //     itemBuilder: (BuildContext context) {
+        //       return {
+        //         'Vehicle Settings',
+        //         'Manual Upload',
+        //         'Api Key',
+        //         'Logout',
+        //       }.map((String choice) {
+        //         return PopupMenuItem<String>(
+        //           value: choice,
+        //           child: Text(choice),
+        //         );
+        //       }).toList();
+        //     },
+        //   )
+        ,
         body: BlocListener<LoadingOverlayBloc, LoadingOverlayState>(
           bloc: _loadingOverlayBloc,
           listener: (context, state) async {

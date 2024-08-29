@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:app_search/app/features/manual/interactor/blocs/manual_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
 import '../../../../mixins/snackbar_mixin.dart';
 import '../../interactor/blocs/manual_bloc.dart';
@@ -17,9 +19,21 @@ class ManualUploadWidgetDrawer extends StatefulWidget {
       _ManualUploadWidgetDrawerState();
 }
 
-class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer>
-    with SnackBarMixin {
+class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer> {
   final _manualBloc = Modular.get<ManualBloc>();
+
+  @override
+  void initState() {
+    _manualBloc.initSubjects();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _manualBloc.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -74,57 +88,151 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer>
             builder: (context, state) {
               if (state is PdfSelectedState) {
                 return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            try {
-                              _manualBloc.removePdf();
-                            } on HttpException catch (_) {
-                              generateSnackBar(
-                                  'Não foi possível excluir o pdf. Tente novamente',
-                                  context);
-                            } catch (e) {
-                              generateSnackBar(
-                                  'Erro ao tentar excluir o pdf. Tente novamente',
-                                  context);
-                            }
-                          },
-                          child: const Icon(
-                            Icons.disabled_by_default_outlined,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 6,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            try {
-                              _manualBloc.uploadPdf();
-                            } on HttpException catch (_) {
-                              generateSnackBar(
-                                  'Não foi possível importar o pdf. Tente novamente',
-                                  context);
-                            } catch (e) {
-                              generateSnackBar(
-                                  'Erro ao tentar importar o pdf. Tente novamente',
-                                  context);
-                            }
-                          },
-                          child: const Icon(
-                            Icons.check_box_outlined,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
-                      ],
-                    ),
+                    StreamBuilder<bool>(
+                        stream: _manualBloc.isSendingManual,
+                        builder: (context, snapshot) {
+                          final isSendingManual = snapshot.data ?? false;
+                          if (isSendingManual) {
+                            return const Align(
+                              alignment: Alignment.centerLeft,
+                              child: LinearProgressIndicator(
+                                color: AppColors.mainColor,
+                              ),
+                            );
+                          }
+                          return Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  try {
+                                    _manualBloc.removePdf();
+                                  } on HttpException catch (_) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => const Dialog(
+                                        backgroundColor: Colors.grey,
+                                        child: SizedBox(
+                                          width: 80,
+                                          height: 50,
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                                'Não foi possível excluir o pdf. Tente novamente'),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => const Dialog(
+                                        backgroundColor: Colors.grey,
+                                        child: SizedBox(
+                                          width: 80,
+                                          height: 50,
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                                'Erro ao tentar excluir o pdf. Tente novamente'),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: const Icon(
+                                  Icons.disabled_by_default_outlined,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 6,
+                              ),
+                              GestureDetector(
+                                onTap: () async {
+                                  try {
+                                    await _manualBloc.uploadPdf().then((_) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => const Dialog(
+                                          backgroundColor: Colors.grey,
+                                          child: SizedBox(
+                                            width: 80,
+                                            height: 50,
+                                            child: Align(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                  'Pdf importado com sucesso!'),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                      _manualBloc.add(RemovePdfEvent());
+                                    });
+                                  } on HttpException catch (_) {
+                                    if (!mounted) {
+                                      return;
+                                    }
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => const Dialog(
+                                        backgroundColor: Colors.grey,
+                                        child: SizedBox(
+                                          width: 80,
+                                          height: 50,
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                                'Não foi possível importar o pdf. Tente novamente'),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    if (!mounted) {
+                                      return;
+                                    }
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => const Dialog(
+                                        backgroundColor: Colors.grey,
+                                        child: SizedBox(
+                                          width: 80,
+                                          height: 50,
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                                'Não foi possível importar o pdf. Tente novamente'),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: const Icon(
+                                  Icons.check_box_outlined,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                              StreamBuilder<bool>(
+                                stream: _manualBloc.isSendingManual,
+                                builder: (context, snapshot) {
+                                  final isVisible = snapshot.data ?? false;
+                                  return Visibility(
+                                      visible: isVisible,
+                                      child: CircularProgressIndicator());
+                                },
+                              )
+                            ],
+                          );
+                        })
                   ],
                 );
               } else {

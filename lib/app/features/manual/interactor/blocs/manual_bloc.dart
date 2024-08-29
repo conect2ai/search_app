@@ -63,15 +63,20 @@ class ManualBloc extends Bloc<ManualEvent, ManualState> {
   }
 
   Future<void> uploadPdf() async {
-    try {
-      if (_pdf != null) {
-        await _manualRepository.uploadManualPdf(pdf!.name, pdf!.path);
-      }
-    } on HttpException catch (_) {
-      rethrow;
-    } catch (error) {
-      rethrow;
-    }
+    _sendingManualSubject?.sink.add(true);
+    await Future.delayed(Duration(seconds: 3));
+    _sendingManualSubject?.sink.add(false);
+    // try {
+    //   if (_pdf != null) {
+    //     _sendingManualSubject?.sink.add(true);
+    //     await _manualRepository.uploadManualPdf(pdf!.name, pdf!.path);
+    //     _sendingManualSubject?.sink.add(false);
+    //   }
+    // } on HttpException catch (_) {
+    //   rethrow;
+    // } catch (error) {
+    //   rethrow;
+    // }
   }
 
   Future<bool> checkIfThereIsManuals() async {
