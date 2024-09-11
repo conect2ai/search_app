@@ -163,12 +163,14 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer> {
                                         builder: (context) => const Dialog(
                                           backgroundColor: Colors.grey,
                                           child: SizedBox(
-                                            width: 80,
-                                            height: 50,
+                                            width: 100,
+                                            height: 100,
                                             child: Align(
                                               alignment: Alignment.center,
                                               child: Text(
-                                                  'Pdf importado com sucesso!'),
+                                                'Pdf importado com sucesso!',
+                                                softWrap: true,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -184,12 +186,14 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer> {
                                       builder: (context) => const Dialog(
                                         backgroundColor: Colors.grey,
                                         child: SizedBox(
-                                          width: 80,
-                                          height: 50,
+                                          width: 100,
+                                          height: 100,
                                           child: Align(
                                             alignment: Alignment.center,
                                             child: Text(
-                                                'Não foi possível importar o pdf. Tente novamente'),
+                                              'Falha ao importar o pdf. Tente novamente',
+                                              softWrap: true,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -203,12 +207,14 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer> {
                                       builder: (context) => const Dialog(
                                         backgroundColor: Colors.grey,
                                         child: SizedBox(
-                                          width: 80,
-                                          height: 50,
+                                          width: 100,
+                                          height: 100,
                                           child: Align(
                                             alignment: Alignment.center,
                                             child: Text(
-                                                'Não foi possível importar o pdf. Tente novamente'),
+                                              'Falha ao importar o pdf. Tente novamente',
+                                              softWrap: true,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -221,15 +227,15 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer> {
                                   size: 20,
                                 ),
                               ),
-                              StreamBuilder<bool>(
-                                stream: _manualBloc.isSendingManual,
-                                builder: (context, snapshot) {
-                                  final isVisible = snapshot.data ?? false;
-                                  return Visibility(
-                                      visible: isVisible,
-                                      child: CircularProgressIndicator());
-                                },
-                              )
+                              // StreamBuilder<bool>(
+                              //   stream: _manualBloc.isSendingManual,
+                              //   builder: (context, snapshot) {
+                              //     final isVisible = snapshot.data ?? false;
+                              //     return Visibility(
+                              //         visible: isVisible,
+                              //         child: const CircularProgressIndicator());
+                              //   },
+                              // )
                             ],
                           );
                         })

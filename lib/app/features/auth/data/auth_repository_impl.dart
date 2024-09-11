@@ -5,10 +5,13 @@ import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../core/entities/auth_user.dart';
+import '../../../mixins/http_client_mixin.dart';
 import '../../../mixins/secure_storage.dart';
 import 'auth_repository.dart';
 
-class AuthRepositoryImpl with SecureStorage implements AuthRepository {
+class AuthRepositoryImpl
+    with SecureStorage, CustomHttpClientMixin
+    implements AuthRepository {
   final AuthUser _user;
   final _baseAuthUrl = FlutterConfig.get('API_AUTH_URL');
   final _baseValidateKeyUrl = FlutterConfig.get('API_SEARCH_URL');
@@ -31,15 +34,16 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
   @override
   Future<void> checkIfTokenIsValid() async {
     final token = _user.token;
+    final client = await configureHttpClient();
     final validateTokenUri =
-        Uri.http(_baseAuthUrl, _tokenValidationEndpoint, {'token': token});
+        Uri.https(_baseAuthUrl, _tokenValidationEndpoint, {'token': token});
 
     final Map<String, String> headers = {
       'accept': 'application/json',
       'Content-Type': 'application/json',
     };
 
-    final response = await http.get(
+    final response = await client.get(
       validateTokenUri,
       headers: headers,
     );
@@ -51,15 +55,17 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
 
   @override
   Future<String> checkIfUserHasKey() async {
+    final client = await configureHttpClient();
     final validateKeyUri =
-        Uri.http(_baseValidateKeyUrl, _verifyKeyValidEnpoint);
+        Uri.https(_baseValidateKeyUrl, _verifyKeyValidEnpoint);
 
     final Map<String, String> headers = {
       'accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${_user.token}',
     };
-    final response = await http.get(
+
+    final response = await client.get(
       validateKeyUri,
       headers: headers,
     );
@@ -74,8 +80,9 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
 
   @override
   Future<void> recoverPassword(String email) async {
+    final client = await configureHttpClient();
     final response =
-        await http.post(Uri.http(_baseAuthUrl, _recoverPasswordEndpoint),
+        await client.post(Uri.https(_baseAuthUrl, _recoverPasswordEndpoint),
             headers: {
               'accept': 'application/json',
               'Content-Type': 'application/json',
@@ -91,7 +98,8 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
 
   @override
   Future<void> validateKey(String apiKey) async {
-    final validateKeyUri = Uri.http(_baseValidateKeyUrl, _saveKeyEnpoint);
+    final client = await configureHttpClient();
+    final validateKeyUri = Uri.https(_baseValidateKeyUrl, _saveKeyEnpoint);
 
     // final apiKey = await getApiKey();
 
@@ -100,7 +108,7 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${_user.token}',
     };
-    final response = await http.post(
+    final response = await client.post(
       validateKeyUri,
       headers: headers,
       body: jsonEncode(
@@ -117,13 +125,14 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
 
   @override
   Future<void> login(Map<String, String> loginData) async {
-    final loginUrl = Uri.http(_baseAuthUrl, _loginEndpoint);
+    final client = await configureHttpClient();
+    final loginUrl = Uri.https(_baseAuthUrl, _loginEndpoint);
     final loginInfo = {
       'username': loginData['username'],
       'password': loginData['password'],
     };
 
-    final response = await http.post(loginUrl,
+    final response = await client.post(loginUrl,
         headers: {
           'accept': 'application/json',
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -144,8 +153,9 @@ class AuthRepositoryImpl with SecureStorage implements AuthRepository {
 
   @override
   Future<void> signUp(String signUpData) async {
-    final signUpUrl = Uri.http(_baseAuthUrl, _signUpEndpoint);
-    final response = await http.post(signUpUrl,
+    final client = await configureHttpClient();
+    final signUpUrl = Uri.https(_baseAuthUrl, _signUpEndpoint);
+    final response = await client.post(signUpUrl,
         headers: {
           'accept': 'application/json',
           'Content-Type': 'application/json',

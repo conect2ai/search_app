@@ -1,13 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_config/flutter_config.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../core/entities/auth_user.dart';
+import '../../../mixins/http_client_mixin.dart';
 import '../../../mixins/secure_storage.dart';
 import 'manual_repository.dart';
 
-class ManualRepositoryImpl with SecureStorage implements ManualRepository {
+class ManualRepositoryImpl
+    with SecureStorage, CustomHttpClientMixin
+    implements ManualRepository {
   final AuthUser _authUser;
 
   ManualRepositoryImpl(this._authUser);
@@ -18,35 +21,29 @@ class ManualRepositoryImpl with SecureStorage implements ManualRepository {
 
   @override
   Future<bool> uploadManualPdf(String pdfFileName, String pdfFilePath) async {
-    final apiUri = Uri.http(
+    final client = await configureHttpClient();
+    final apiUri = Uri.https(
       apiBaseUrl,
       processPdfEndpoint,
     );
 
-    final pdf = await http.MultipartFile.fromPath(
-      'pdfs',
-      pdfFilePath,
-      filename: pdfFileName,
-    );
+    final pdf = File(pdfFilePath);
+    final pdfBytes = await pdf.readAsBytes();
+    final pdfBase64 = base64Encode(pdfBytes);
 
     final Map<String, String> headers = {
-      'accept': 'multipart/form-data',
+      'Content-Type': 'application/json',
       'Authorization': 'Bearer ${_authUser.token}',
     };
 
-    final requestConversion = http.MultipartRequest('POST', apiUri)
-      ..headers.addAll(headers)
-      ..files.add(pdf);
+    final data = [
+      {'filename': pdfFileName, 'content': pdfBase64}
+    ];
 
-    final response = await requestConversion.send().timeout(
-      const Duration(seconds: 120),
-      onTimeout: () {
-        throw const HttpException("Failed to communicate with server. Timeout");
-      },
-    );
+    final response =
+        await client.post(apiUri, body: jsonEncode(data), headers: headers);
+
     if (response.statusCode == 200) {
-      // final data = await http.Response.fromStream(response);
-      // final responseData = jsonDecode(utf8.decode(data.bodyBytes));
       return true;
     } else if (response.statusCode == 422) {
       throw const HttpException('Falha no upload. Tente novamente');
@@ -57,7 +54,8 @@ class ManualRepositoryImpl with SecureStorage implements ManualRepository {
 
   @override
   Future<bool> checkIfThereIsManual() async {
-    final apiUri = Uri.http(
+    final client = await configureHttpClient();
+    final apiUri = Uri.https(
       apiBaseUrl,
       manualCheckEndpoint,
     );
@@ -67,7 +65,7 @@ class ManualRepositoryImpl with SecureStorage implements ManualRepository {
       'Authorization': 'Bearer ${_authUser.token}',
     };
 
-    final response = await http.get(apiUri, headers: headers);
+    final response = await client.get(apiUri, headers: headers);
 
     if (response.statusCode == 200) {
       final data = response.body;

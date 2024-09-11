@@ -53,10 +53,10 @@ class _LoginScreenState extends State<LoginScreen>
     try {
       _loginBloc.updateLoginButton(true);
       await _authBloc.login(userData).then((_) async {
-        // _loginBloc.updateLoginButton(false);
+        _loginBloc.updateLoginButton(false);
 
         _apiKey = await _homeBloc.checkIfUserHasKey();
-
+        // Modular.to.pushReplacementNamed('/chat/');
         _apiKey == null
             ? Modular.to.pushReplacementNamed('/home/')
             : Modular.to.pushReplacementNamed('/check-api-key/');

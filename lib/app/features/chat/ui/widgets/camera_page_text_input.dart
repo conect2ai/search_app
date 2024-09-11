@@ -59,6 +59,9 @@ class _CameraPageTextInputState extends State<CameraPageTextInput> {
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none),
               ),
+              onSubmitted: (value) => _chatPageBloc.add(SendTextEvent(
+                  question: _textInputController.text,
+                  picture: widget._picture)),
             ),
           ]),
         ),

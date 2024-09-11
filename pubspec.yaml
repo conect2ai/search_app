@@ -83,6 +83,11 @@ flutter:
     - assets/images/main_logo_white.png
     - assets/images/auth_screen_image.png
     - assets/images/recover_password_screen_logo.png
+    - assets/certs/dashboard.conect2ai.dca.ufrn.br.crt
+    - assets/certs/dashboard.conect2ai.dca.ufrn.br.key
+    - assets/certs/chatbot.conect2ai.dca.ufrn.br.crt
+    - assets/certs/chatbot.conect2ai.dca.ufrn.br.key
+    # - assets/certs/dashboard.conect2ai.dca.ufrn.br.key
     - .env
    
 

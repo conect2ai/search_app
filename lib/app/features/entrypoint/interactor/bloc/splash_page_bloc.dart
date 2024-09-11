@@ -21,8 +21,8 @@ class SplashPageBloc with SecureStorage {
     userInfo['password'] = await readSecureData('password');
     userInfo['access_token'] = await readSecureData('access_token');
     userInfo['token_type'] = await readSecureData('token_type');
-    _user.updatedUsernameAndPassword(userInfo);
-    _user.updateToken(userInfo);
+    // _user.updatedUsernameAndPassword(userInfo);
+    // _user.updateToken(userInfo);
 
     Future.delayed(const Duration(seconds: 3), () => _checkIfTokenIsValid());
   }
