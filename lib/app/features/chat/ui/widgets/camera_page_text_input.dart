@@ -42,8 +42,9 @@ class _CameraPageTextInputState extends State<CameraPageTextInput> {
               ],
               onEditingComplete: () {
                 if (_textInputController.text.isNotEmpty) {
-                  _chatPageBloc
-                      .add(SendTextEvent(question: _textInputController.text));
+                  _chatPageBloc.add(SendTextEvent(
+                      question: _textInputController.text,
+                      picture: widget._picture));
                   _textInputController.text = '';
                   FocusManager.instance.primaryFocus?.unfocus();
                   Modular.to.pop();
@@ -59,10 +60,7 @@ class _CameraPageTextInputState extends State<CameraPageTextInput> {
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none),
               ),
-              onSubmitted: (value) => _chatPageBloc.add(SendTextEvent(
-                  question: _textInputController.text,
-                  picture: widget._picture)),
-            ),
+            )
           ]),
         ),
         Container(

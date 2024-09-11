@@ -26,7 +26,7 @@ class VehicleInfoRepositoryImpl
     }).timeout(
       const Duration(seconds: 120),
       onTimeout: () {
-        throw Exception("Failed to communicate with server");
+        throw Exception("Falha ao se comunicar com o servidor");
       },
     );
 
@@ -34,7 +34,7 @@ class VehicleInfoRepositoryImpl
       final responseData = jsonDecode(response.body);
       return responseData['message'];
     } else {
-      throw const HttpException('Failed to retrieve cars data. Try again.');
+      throw const HttpException('Falha ao recuperar dados dos veiculos');
     }
   }
 }

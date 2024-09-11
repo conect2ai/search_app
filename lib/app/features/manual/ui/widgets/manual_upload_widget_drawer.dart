@@ -7,7 +7,6 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
-import '../../../../mixins/snackbar_mixin.dart';
 import '../../interactor/blocs/manual_bloc.dart';
 import '../../interactor/blocs/manual_state.dart';
 

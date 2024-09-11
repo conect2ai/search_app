@@ -8,7 +8,7 @@ class CarInfo {
         _model = model,
         _year = year;
 
-  void updateCarInfo(Map<String, String?> carInfoMap) {
+  void updateCarInfo(Map<String, dynamic> carInfoMap) {
     _brand = carInfoMap['brand'] ?? '';
     _model = carInfoMap['model'] ?? '';
     _year = carInfoMap['year'] ?? '';

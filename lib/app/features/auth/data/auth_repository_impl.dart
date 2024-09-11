@@ -74,7 +74,7 @@ class AuthRepositoryImpl
       final data = jsonDecode(response.body);
       return data['key'];
     } else {
-      throw const HttpException('Could not validate API key.');
+      throw const HttpException('Não foi possível validar chave da API');
     }
   }
 
@@ -119,7 +119,7 @@ class AuthRepositoryImpl
     );
 
     if (response.statusCode != 200) {
-      throw const HttpException('Could not validate API key.');
+      throw const HttpException('Não foi possível validar chave da API');
     }
   }
 

@@ -109,7 +109,7 @@ class _ChatPageState extends State<ChatPage>
                 context: context,
                 builder: (context) => CustomDialog(
                   message: state.message,
-                  buttonMessage: 'Close',
+                  buttonMessage: 'Fechar',
                 ),
               );
             }

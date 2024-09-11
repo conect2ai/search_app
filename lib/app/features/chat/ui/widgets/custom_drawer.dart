@@ -82,21 +82,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       height: 10,
                     ),
                     const ManualUploadWidgetDrawer(),
-                    // TextButton.icon(
-                    //   style: TextButton.styleFrom(
-                    //       padding: EdgeInsets.zero,
-                    //       alignment: Alignment.centerLeft),
-                    //   onPressed: () {},
-                    //   icon: const Icon(
-                    //     Icons.file_download_outlined,
-                    //     color: Colors.white,
-                    //     size: 20,
-                    //   ),
-                    //   label: Text(
-                    //     'Importar Manual',
-                    //     style: AppTextStyles.drawerOptionsTextStyle,
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
