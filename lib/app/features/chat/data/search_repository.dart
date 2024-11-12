@@ -1,10 +1,10 @@
 abstract interface class SearchRepository {
-  Future<String> sendQuestionByText(
+  Future<Map<dynamic, dynamic>> sendQuestionByText(
     String question,
   );
-  Future<String> sendQuestionByTextWithImage(
+  Future<Map<dynamic, dynamic>> sendQuestionByTextWithImage(
       String question, String imageFilePath);
-  Future<String> sendQuestionByAudio(
+  Future<Map<dynamic, dynamic>> sendQuestionByAudio(
     String audioFilePath,
   );
 }

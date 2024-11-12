@@ -31,29 +31,29 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
     super.initState();
   }
 
-  List<String> brands = [
-    'Volkswagen',
-    'Fiat',
-    'Ford',
-    'Jeep',
-    'Chevrolet',
-    'Nissan',
-    'Mitsubish'
-  ];
-  Map<String, List<String>> models = {
-    'Volkswagen': ['Polo', 'Golf'],
-    'Fiat': ['Toro'],
-    'Ford': [
-      'Focus',
-    ],
-  };
+  // List<String> brands = [
+  //   'Volkswagen',
+  //   'Fiat',
+  //   'Ford',
+  //   'Jeep',
+  //   'Chevrolet',
+  //   'Nissan',
+  //   'Mitsubish'
+  // ];
+  // Map<String, List<String>> models = {
+  //   'Volkswagen': ['Polo', 'Golf'],
+  //   'Fiat': ['Toro'],
+  //   'Ford': [
+  //     'Focus',
+  //   ],
+  // };
 
-  Map<String, List<String>> years = {
-    'Polo': ['2019', '2020', '2021'],
-    'Golf': ['2020', '2021', '2022'],
-    'Toro': ['2020', '2021', '2022'],
-    'Focus': ['2022', '2023', '2024'],
-  };
+  // Map<String, List<String>> years = {
+  //   'Polo': ['2019', '2020', '2021'],
+  //   'Golf': ['2020', '2021', '2022'],
+  //   'Toro': ['2020', '2021', '2022'],
+  //   'Focus': ['2022', '2023', '2024'],
+  // };
 
   void _updateModelItems(String? value) {
     _vehicleFormBloc.modelsSink.add([]);
@@ -89,11 +89,12 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
 
   @override
   Widget build(BuildContext context) {
-    return dialogWithButtons(
-        title: 'Select Vehicle',
-        content: _buildForm(),
-        actions: ['Cancel', 'Done'],
-        callBack: onTapActions);
+    // return dialogWithButtons(
+    //     title: 'Select Vehicle',
+    //     content: _buildForm(),
+    //     actions: ['Cancel', 'Done'],
+    //     callBack: onTapActions);
+    return _buildForm();
   }
 
   Widget _buildForm() {
@@ -164,16 +165,16 @@ class _VehicleFormDialogState extends State<VehicleFormDialog>
     );
   }
 
-  void onTapActions(int index) {
-    switch (index) {
-      case 0:
-        Modular.to.pop();
-        break;
-      case 1:
-        _vehicleFormBloc.saveVehicleData(_vehicleData);
-        Modular.to.pop();
-        break;
-      default:
-    }
-  }
+  // void onTapActions(int index) {
+  //   switch (index) {
+  //     case 0:
+  //       Modular.to.pop();
+  //       break;
+  //     case 1:
+  //       _vehicleFormBloc.saveVehicleData(_vehicleData);
+  //       Modular.to.pop();
+  //       break;
+  //     default:
+  //   }
+  // }
 }

@@ -21,8 +21,8 @@ class SplashPageBloc with SecureStorage {
     userInfo['password'] = await readSecureData('password');
     userInfo['access_token'] = await readSecureData('access_token');
     userInfo['token_type'] = await readSecureData('token_type');
-    _user.updatedUsernameAndPassword(userInfo);
-    _user.updateToken(userInfo);
+    // _user.updatedUsernameAndPassword(userInfo);
+    // _user.updateToken(userInfo);
 
     Future.delayed(const Duration(seconds: 3), () => _checkIfTokenIsValid());
   }
@@ -39,9 +39,18 @@ class SplashPageBloc with SecureStorage {
     }
   }
 
-  void selectInitialRoute() {
+  void selectInitialRoute() async {
     if (_user.token != null) {
-      Modular.to.navigate('/home/');
+      String? apiKey;
+      await _authRepository.checkIfUserHasKey().then((value) {
+        apiKey = value;
+        _user.updateApiKey(apiKey);
+      });
+      if (apiKey != null) {
+        Modular.to.navigate('/check-api-key/');
+      } else {
+        Modular.to.navigate('/home/');
+      }
     } else {
       Modular.to.navigate('/auth/');
     }

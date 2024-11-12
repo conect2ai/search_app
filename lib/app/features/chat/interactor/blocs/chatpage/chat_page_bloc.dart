@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../../../blocs/loading_overlay_bloc.dart';
 import '../../../../../blocs/loading_overlay_event.dart';
@@ -16,6 +17,10 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
   final List<ChatMessage> _results = [];
   final ImagePicker _imagePicker = ImagePicker();
   File? _selectedImage;
+
+  final _selectedImageSubject = BehaviorSubject<File?>.seeded(null);
+
+  Stream<File?> get isImageSelectedStream => _selectedImageSubject.stream;
 
   ChatPageBloc(this._searchRepository, this._loadingOverlayBloc)
       : super(InitialChatPageState()) {
@@ -35,14 +40,21 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
           try {
             final message = await _searchRepository.sendQuestionByTextWithImage(
                 event.question, _selectedImage?.path ?? event.picture!.path);
-
+            // final message = 'Resposta pergunta com imagem';
             _results.add(ChatMessage(
-              id: messageId,
-              message: message,
+              id: message['response_id'],
+              message: message['response_content'],
               isQuestion: false,
               isAudio: false,
             ));
+            // _results.add(ChatMessage(
+            //   id: message,
+            //   message: message,
+            //   isQuestion: false,
+            //   isAudio: false,
+            // ));
             _selectedImage = null;
+            _selectedImageSubject.sink.add(_selectedImage);
           } catch (_) {
             _loadingOverlayBloc.add(
                 ShowErrorEvent(message: 'Failed to communicate with server'));
@@ -51,11 +63,19 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
           try {
             final message =
                 await _searchRepository.sendQuestionByText(event.question);
+            // final message =
+            //     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse at arcu eros. Sed et tincidunt lectus. Nam lectus dolor, iaculis at tristique non, gravida a dolor. Ut in nisi dui. Sed tristique vestibulum dignissim. Etiam at ligula eget libero porta eleifend sed quis nisl. Sed metus erat, euismod et lorem.';
+
             _results.add(ChatMessage(
-                id: messageId,
-                message: message,
+                id: message['response_id'].toString(),
+                message: message['response_content'].toString(),
                 isQuestion: false,
                 isAudio: false));
+            // _results.add(ChatMessage(
+            //     id: message,
+            //     message: message,
+            //     isQuestion: false,
+            //     isAudio: false));
           } catch (_) {
             _loadingOverlayBloc.add(
                 ShowErrorEvent(message: 'Failed to communicate with server'));
@@ -78,15 +98,18 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
           emit(ReceiveResponseState(results: _results));
           _loadingOverlayBloc.add(ShowLoadingOverlayEvent());
           try {
-            final response = await _searchRepository.sendQuestionByAudio(
+            final message = await _searchRepository.sendQuestionByAudio(
               event.path,
             );
-
+            // final message = {
+            //   'response_id': '1',
+            //   'response_content': 'Isso ai bixão',
+            // };
             _results.add(ChatMessage(
-              id: messageId,
+              id: message['response_id'],
               isQuestion: false,
               isAudio: false,
-              message: response,
+              message: message['response_content'],
             ));
           } catch (_) {
             _loadingOverlayBloc.add(
@@ -106,6 +129,12 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
     final file = await _imagePicker.pickImage(source: source);
     if (file != null) {
       _selectedImage = File(file.path);
+      _selectedImageSubject.sink.add(_selectedImage);
     }
+  }
+
+  void removePicture() {
+    _selectedImage = null;
+    _selectedImageSubject.sink.add(_selectedImage);
   }
 }

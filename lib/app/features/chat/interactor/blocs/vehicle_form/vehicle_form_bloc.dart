@@ -48,8 +48,10 @@ class VehicleFormBloc with SecureStorage {
     } on HttpException catch (e) {
       _loadingOverlayBloc.add(ShowErrorEvent(message: e.message));
     } catch (error) {
-      _loadingOverlayBloc
-          .add(ShowErrorEvent(message: 'Could not retrieve vehicles data'));
+      _loadingOverlayBloc.add(ShowErrorEvent(
+          message: 'Não foi possível recuperar manuais dos veículos'));
+    } finally {
+      saveVehicleData(vehicles);
     }
 
     _loadingOverlayBloc.add(HideLoadingOverlayEvent());
@@ -90,10 +92,23 @@ class VehicleFormBloc with SecureStorage {
     yearsSink.add(_years);
   }
 
-  void saveVehicleData(Map<String, String> vehicleInfo) {
+  void saveVehicleData(Map<String, dynamic> vehicleInfo) {
     writeSecureData('brand', vehicleInfo['brand']);
     writeSecureData('model', vehicleInfo['model']);
     writeSecureData('year', vehicleInfo['year']);
+    updateCarInfo(vehicleInfo);
+  }
+
+  void updateCarInfo(Map<String, dynamic> vehicleInfo) {
     _carInfo.updateCarInfo(vehicleInfo);
+  }
+
+  Future<Map<String, String?>> readSecureVehicleData() async {
+    final Map<String, String?> vehicleData = {};
+    vehicleData['brand'] = await readSecureData('brand');
+    vehicleData['model'] = await readSecureData('model');
+    vehicleData['year'] = await readSecureData('year');
+    _carInfo.updateCarInfo(vehicleData);
+    return vehicleData;
   }
 }

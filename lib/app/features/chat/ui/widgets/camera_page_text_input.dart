@@ -42,8 +42,9 @@ class _CameraPageTextInputState extends State<CameraPageTextInput> {
               ],
               onEditingComplete: () {
                 if (_textInputController.text.isNotEmpty) {
-                  _chatPageBloc
-                      .add(SendTextEvent(question: _textInputController.text));
+                  _chatPageBloc.add(SendTextEvent(
+                      question: _textInputController.text,
+                      picture: widget._picture));
                   _textInputController.text = '';
                   FocusManager.instance.primaryFocus?.unfocus();
                   Modular.to.pop();
@@ -53,13 +54,13 @@ class _CameraPageTextInputState extends State<CameraPageTextInput> {
                 isDense: true,
                 fillColor: Colors.blueGrey.shade100,
                 filled: true,
-                hintText: 'Text here...',
+                hintText: 'Mensagem',
                 hintStyle: const TextStyle(color: Colors.grey),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none),
               ),
-            ),
+            )
           ]),
         ),
         Container(

@@ -21,11 +21,13 @@ class _CameraPageState extends State<CameraPage> {
   XFile? _picture;
   File? _pictureFile;
   bool _isCameraPaused = false;
+  bool _isFlashOn = false;
 
   @override
   void initState() {
     _controller = CameraController(widget._cameras[0], ResolutionPreset.max);
     _initializeController();
+    _controller.setFlashMode(FlashMode.off);
     super.initState();
   }
 
@@ -49,6 +51,50 @@ class _CameraPageState extends State<CameraPage> {
     });
   }
 
+  void _takePicture() async {
+    if (_isFlashOn) {
+      await _controller.setFlashMode(FlashMode.torch);
+    } else {
+      await _controller.setFlashMode(FlashMode.off);
+    }
+
+    _picture = await _controller.takePicture();
+
+    final dir = await getApplicationCacheDirectory();
+    final path = dir.path;
+    _pictureFile = File('$path/${_picture?.name}');
+    setState(() {
+      _isCameraPaused = true;
+    });
+    _controller.pausePreview();
+    final pdfData = await _picture!.readAsBytes();
+    await _pictureFile?.writeAsBytes(pdfData);
+  }
+
+  void _toggleFlashMode() {
+    setState(() {
+      _isFlashOn = !_isFlashOn;
+      _updateFlashMode();
+    });
+  }
+
+  void _updateFlashMode([bool isDisposing = false]) async {
+    if (isDisposing) {
+      _isCameraPaused ? await _controller.resumePreview() : null;
+
+      await _controller.setFlashMode(FlashMode.off);
+    } else {
+      await _controller
+          .setFlashMode(_isFlashOn ? FlashMode.torch : FlashMode.off);
+    }
+  }
+
+  @override
+  void dispose() {
+    _updateFlashMode(true);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,25 +106,52 @@ class _CameraPageState extends State<CameraPage> {
           ),
         ),
         Positioned(
-          top: 30,
-          child: IconButton(
-              onPressed: () {
-                if (_isCameraPaused) {
-                  setState(() {
-                    _isCameraPaused = false;
-                    _picture = null;
-                    _pictureFile = null;
-                  });
-                  _controller.resumePreview();
-                } else {
-                  Modular.to.pop();
-                }
-              },
-              icon: Icon(
-                _isCameraPaused ? Icons.close : Icons.arrow_back_ios_rounded,
-                color: Colors.red.shade300,
-                size: 40,
-              )),
+          top: 40,
+          left: 10,
+          child: CircleAvatar(
+            radius: 20,
+            backgroundColor: Colors.white,
+            child: IconButton(
+                iconSize: 20,
+                onPressed: () {
+                  if (_isCameraPaused) {
+                    setState(() {
+                      _isCameraPaused = false;
+                      _picture = null;
+                      _pictureFile = null;
+                    });
+                    _controller.resumePreview();
+                    _updateFlashMode();
+                  } else {
+                    Modular.to.pop();
+                  }
+                },
+                icon: Icon(
+                  _isCameraPaused ? Icons.close : Icons.arrow_back_ios_rounded,
+                  color: AppColors.backgroundColor,
+                )),
+          ),
+        ),
+        Positioned(
+          bottom: MediaQuery.of(context).size.height * 0.4,
+          right: 20,
+          child: CircleAvatar(
+            radius: 20,
+            backgroundColor: Colors.white,
+            child: IconButton(
+                iconSize: 20,
+                onPressed: () {
+                  if (!_isCameraPaused) {
+                    _toggleFlashMode();
+                  }
+                },
+                icon: Icon(
+                  !_isFlashOn
+                      ? Icons.flash_off_outlined
+                      : Icons.flash_on_outlined,
+                  color: AppColors.backgroundColor,
+                )),
+          ),
         ),
         Positioned(
           width: MediaQuery.of(context).size.width,
@@ -97,17 +170,8 @@ class _CameraPageState extends State<CameraPage> {
           ? null
           : FloatingActionButton(
               backgroundColor: AppColors.mainColor,
-              onPressed: () async {
-                _picture = await _controller.takePicture();
-                final dir = await getApplicationCacheDirectory();
-                final path = dir.path;
-                _pictureFile = File('$path/${_picture?.name}');
-                _controller.pausePreview();
-                setState(() {
-                  _isCameraPaused = true;
-                });
-                final pdfData = await _picture!.readAsBytes();
-                await _pictureFile?.writeAsBytes(pdfData);
+              onPressed: () {
+                _takePicture();
               },
               child: const Icon(
                 Icons.camera_alt,

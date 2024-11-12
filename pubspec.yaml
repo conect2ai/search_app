@@ -52,6 +52,8 @@ dependencies:
   file_picker: ^8.0.0+1
   camera: ^0.10.5+9
   flutter_config: ^2.0.2
+  google_fonts: 6.1.0
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +80,14 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/main_logo.png
+    - assets/images/main_logo_white.png
+    - assets/images/auth_screen_image.png
+    - assets/images/recover_password_screen_logo.png
+    - assets/certs/dashboard.conect2ai.dca.ufrn.br.crt
+    - assets/certs/dashboard.conect2ai.dca.ufrn.br.key
+    - assets/certs/chatbot.conect2ai.dca.ufrn.br.crt
+    - assets/certs/chatbot.conect2ai.dca.ufrn.br.key
+    # - assets/certs/dashboard.conect2ai.dca.ufrn.br.key
     - .env
    
 

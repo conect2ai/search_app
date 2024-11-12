@@ -3,6 +3,7 @@ class AuthUser {
   String? _tokenType;
   String? _username;
   String? _password;
+  String? _apiKey;
 
   static final AuthUser _authUser = AuthUser._internal();
 
@@ -16,6 +17,7 @@ class AuthUser {
   String? get tokenType => _tokenType;
   String? get username => _username;
   String? get password => _password;
+  String? get apiKey => _apiKey;
 
   void updatedUsernameAndPassword(Map<String, String?> userInfo) {
     _username = userInfo['username'];
@@ -25,5 +27,9 @@ class AuthUser {
   void updateToken(Map<String, dynamic> tokenInfo) {
     _token = tokenInfo['access_token'];
     _tokenType = tokenInfo['token_type'];
+  }
+
+  void updateApiKey(String? apiKeyInfo) {
+    _apiKey = apiKeyInfo;
   }
 }

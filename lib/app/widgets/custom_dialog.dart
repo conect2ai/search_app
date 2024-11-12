@@ -15,7 +15,7 @@ class CustomDialog extends StatelessWidget {
     return Center(
       child: Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30), color: Colors.white),
+            borderRadius: BorderRadius.circular(30), color: Colors.grey),
         height: 250,
         width: MediaQuery.of(context).size.width,
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
@@ -28,7 +28,7 @@ class CustomDialog extends StatelessWidget {
                 width: 200,
                 child: Text(
                   _message,
-                  style: AppTextStyles.dialogTextStyle,
+                  style: AppTextStyles.dialogtextStyle,
                   textAlign: TextAlign.center,
                   softWrap: true,
                 ),
@@ -41,7 +41,7 @@ class CustomDialog extends StatelessWidget {
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(
                   _buttonMessage,
-                  style: AppTextStyles.dialogTextButtonStyle,
+                  style: AppTextStyles.dialogSecondaryTextStyle,
                 ))
           ],
         ),

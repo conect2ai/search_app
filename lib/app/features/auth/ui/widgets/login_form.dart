@@ -13,7 +13,7 @@ import '../../interactor/events/auth_event.dart';
 class LoginForm extends StatefulWidget {
   final String? username;
   final String? password;
-  const LoginForm({this.username, this.password, super.key});
+  LoginForm({this.username, this.password, super.key});
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -77,7 +77,7 @@ class _LoginFormState extends State<LoginForm> with SnackBarMixin {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               'Login',
               style: AppTextStyles.authScreenTitleTextStyle,
             ),
@@ -170,11 +170,11 @@ class _LoginFormState extends State<LoginForm> with SnackBarMixin {
             // Align(
             //   alignment: Alignment.topRight,
             //   child: Padding(
-            //     padding: const EdgeInsets.only(right: 15),
+            //     padding:  EdgeInsets.only(right: 15),
             //     child: TextButton(
             //       onPressed: () =>
             //           Modular.to.pushReplacementNamed('/recover-password/'),
-            //       child: const Text(
+            //       child:  Text(
             //         'Esqueceu a senha?',
             //         style: TextStyle(
             //             fontWeight: FontWeight.w500,
