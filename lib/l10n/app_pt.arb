@@ -1,0 +1,162 @@
+{
+    "@@locale": "pt",
+    "appIntroText" : "Dúvidas em relação ao seu carro? Obtenha respostas de forma prática sem precisar consultar manuais complexos.",
+    "@appIntroText": {
+        "description": "Texto que mostra do que se trata o app"
+    },
+    "signUp": "Cadastrar",
+    "registration": "Cadastro",
+    "username": "Usuário",
+    "password": "Senha",
+    "forgotPassword": "Esqueceu a senha?",
+    "dontHaveAccountYet": "Não tem uma conta ainda? ",
+    "erroLogin": "Erro ao tentar logar. Tente novamente.",
+    "emailSentSuccess": "Email enviado com sucesso",
+    "emailSentFailed": "Erro ao enviar email. Tente novamente",
+    "signUpMainText": "Insira seu email e você será redirecionado para concluir seu cadastro.",
+    "returnTo": "Retornar ao ",
+    "createAccount": "Criar Conta",
+    "recoverPasswordTitle": "Recuperar Senha",
+    "recoverPasswordInfo": "Digite o seu email e nós enviaremos um link para excluir sua senha.",
+    "sendEmail": "Enviar Email",
+    "connectedDevice": "Dispositivo:",
+    "connectionFailed": "Falha de conexão",
+    "connecting": "Conectando",
+    "activatingBluetooth": "Ativando bluetooth",
+    "completeDate": "{date}",
+    "@completeDate": {
+        "placeholders": {
+            "date":{
+                "type": "DateTime",
+                "format": "yMMMd"
+            }
+        }
+    },
+    "connect": "Conectar",
+    "disconnect": "Desconectar",
+    "dataCollect": "Coletar Dados",
+    "tripsHistory": "Histórico das Viagens",
+    "tripDetails": "Detalhes de Viagem",
+    "settings": "Configurações",
+    "turnBluOn": "Por favor, ative o bluetooth",
+    "waiting":  "Aguardando",
+    "scanDevices": "Escanear",
+    "scanning": "Escaneando",
+    "noDevicesFound": "Nenhum dispositivo encontrado",
+    "sendDataToServer": "Enviar dados para o servidor",
+    "generateLog": "Gerar Log",
+    "generateDebugLog": "Gerar Debug Log",
+    "changeLanguage": "Idioma",
+    "english": "Inglês",
+    "portuguese": "Português",
+    "logout": "Sair",
+    "speed": "Velocidade",
+    "speedToolTip": "Velocidade do veículo",
+    "rpm": "RPM",
+    "rpmToolTip": "Rotações por minuto",
+    "engineLoad": "Carga Motor",
+    "engineLoadToolTip": "Carga do motor",
+    "coolantTemperature": "Temp. Arref.",
+    "coolantTemperatureToolTip": "Temperatura do líquido de arrefecimento",
+    "dataCollectMonitorTitle": "Coleta de dados em andamento",
+    "gasoline": "Gasolina",
+    "ethanol": "Etanol",
+    "fuelTypeGaugeTitle": "Classificação do tipo de combustível",
+    "localizationServiceWarning": "Para utilizar o serviço de localização em background é necessário configurar a permissão de localização para \"Permitir o tempo todo\"",
+    "close": "Fechar",
+    "start": "Iniciar",
+    "stop": "Parar",
+    "monitor": "Monitorar",
+    "bateryOptimizationWarning": "Desative a optimização de bateria para utilizar o aplicativo em segundo plano",
+    "openOptimizationSettings": "Abrir configurações de optimização",
+    "notificationConnectVehicleInfo": "Conecte seu veículo",
+    "dataLoggingNotification": "Lendo dados do veículo",
+    "dtcResultsWarningInfo": "Para uma análise precisa dos problemas do seu veículo, recomendamos consultar um especialista em manutenção",
+    "warning": "AVISO",
+    "result": "Resultado",
+    "vehicleDiagnostics": "Diagnóstico veicular",
+    "noDtcsFound": "0 dtcs encontrados",
+    
+    
+    "diagnose": "Diagnosticar",
+    "dtcInfoScreenMainText": "Realize diagnósticos e verifique os códigos de falha do seu veículo",
+    "sessionDate": "{date}",
+    "@sessionDate": {
+        "placeholders": {
+            "date":{
+                "type": "DateTime",
+                "format": "yMMMd"
+            }
+        }
+    },
+    "sessionTime": "{time}",
+    "@sessionTime": {
+        "placeholders": {
+            "time":{
+                "type": "DateTime",
+                "format": "Hm"
+            }
+        }
+    },
+    "noInformationLocation": "Sem informações de localização!",
+    "generalError": "Ocorreu um erro. Tente novamente!",
+    "noTripData": "Sem dados da viagem",
+    "noTripsFound": "Nenhuma viagem encontrada",
+    "searchinForTrips": "Procurando viagens",
+    "co2GeneratedContainer": "Co2 Gerado",
+    "veryLowCo2": "Muito Baixo",
+    "lowCo2": "Baixo",
+    "moderateCo2": "Moderado",
+    "highCo2": "Alto",
+    "veryHighCo2": "Muito Alto",
+    "tripDuration": "Duração da Viagem",
+    "averageSpeed" : "Velocidade Média",
+    "totalDistance": "Distância Total",
+    "co2Emission": "Emissão de Co2",
+    "treesQuantity": "Quantidade de Árvores",
+    "daysToCompesateCo2": "Dias para compensar Co2 gerado",
+    "averageFuel": "Combustível Médio",
+    "averageBattery": "Bateria Média",
+    "vehicleBrandRetrieveFailed": "Erro ao tentar buscar informações das marcas dos veículos. Tente novamente",
+    "vehicleModelRetrieveFailed": "Erro ao tentar buscar informações dos modelos dos veículos. Tente novamente",
+    "vehicleYearsRetrieveFailed": "Erro ao tentar buscar informações dos anos dos veículos. Tente novamente",
+    "vehicleVersionsRetrieveFailed": "Erro ao tentar buscar informações das versões dos veículos. Tente novamente",
+    "missingVehicleFormData": "Por favor, preencha todos os dados",
+    "registerVehicleError": "Erro durante registro de veículo. Tente novamente",
+    "registerVehicle": "Cadastrar Veículo",
+    "register": "Cadastrar",
+    "brand": "Marca",
+    "model": "Modelo",
+    "year": "Ano",
+    "version": "Versão",
+    "selectBrand": "Selecione a marca",
+    "selectModel": "Selecione o modelo",
+    "selectYear": "Selecione o ano",
+    "selectVersion": "Selecione a versão",
+    "dataLoggingError": "Um erro ocorreu durante a coleta dos dados. Tente novamente",
+    "begin": "Início",
+    "end": "Final",
+    "send": "Enviar",
+    "openAIKey": "Chave OpenAI",
+    "inputOpenAIKey": "Chave da API OpenAI",
+    "pleaseInsertApiKey": "Por favor insira uma chave",
+    "failedToInsertKey": "Falha ao tentar salvar chave da api",
+    "failedToLoadKey": "Erro ao tentar carregar chave da api",
+    "confirm": "Confirmar",
+    "changedYourMind": "Mudou de ideia? ",
+    "goBack": "Voltar",
+    "yes": "Sim",
+    "no": "Não",
+    "foundKey":"Encontramos a chave {apiKey}. Deseja continuar com a chave atual?",
+    "@foundKey": {
+        "placeholders": {
+            "apiKey":{
+                "type": "String"
+            }
+        }
+    },
+    "askQuestion": "Faça uma pergunta",
+    "message": "Mensagem",
+    "registerYourself": "Cadastre-se"
+    
+}

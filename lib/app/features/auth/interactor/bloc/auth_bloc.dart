@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/entities/auth_user.dart';
 import '../../data/auth_repository.dart';
@@ -9,6 +12,7 @@ import '../states/auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthUser userAuth = AuthUser();
   AuthRepository authRepository;
+  SharedPreferences? _prefs;
 
   AuthBloc({required this.authRepository}) : super(LoginState()) {
     on<SwitchToLoginEvent>((event, emit) =>
@@ -32,5 +36,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> recoverPassword(String email) async {
     await authRepository.recoverPassword(email);
+  }
+
+  Future<String?> getLanguage() async {
+    _prefs = await SharedPreferences.getInstance();
+    if (_prefs != null) {
+      if (_prefs!.containsKey('language')) {
+        final language = _prefs!.getString('language');
+        return language;
+      }
+    }
+    return null;
+  }
+
+  Future<void> setLanguage(Locale locale) async {
+    if (_prefs != null) {
+      await _prefs!.setString('language', locale.languageCode);
+    }
   }
 }

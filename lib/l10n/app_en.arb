@@ -1,0 +1,161 @@
+{
+    "@@locale": "en",
+    "appIntroText": "Questions about your car? Get answers easily without consulting complex manuals.",
+    "@appIntroText": {
+        "description": "Text that shows what the app is about"
+    },
+    "signUp": "Sign Up",
+    "registration": "Registration",
+    "username": "Username",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "dontHaveAccountYet": "Don't have an account yet? ",
+    "erroLogin": "Error trying to log in. Please try again.",
+    "emailSentSuccess": "Email sent successfully",
+    "emailSentFailed": "Error sending email. Please try again",
+    "signUpMainText": "Enter your email and you will be redirected to complete your registration.",
+    "returnTo": "Return to ",
+    "createAccount": "Create Account",
+    "recoverPasswordTitle": "Recover Password",
+    "recoverPasswordInfo": "Enter your email, and we will send a link to reset your password.",
+    "sendEmail": "Send Email",
+    "connectedDevice": "Device:",
+    "connectionFailed": "Connection failed",
+    "connecting": "Connecting",
+    "activatingBluetooth": "Activating Bluetooth",
+    "completeDate": "{date}",
+    "@completeDate": {
+        "placeholders": {
+            "date": {
+                "type": "DateTime",
+                "format": "yMMMd"
+            }
+        }
+    },
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "dataCollect": "Collect Data",
+    "tripsHistory": "Trip History",
+    "tripDetails": "Trip Details",
+    "settings": "Settings",
+    "turnBluOn": "Please turn on Bluetooth",
+    "waiting": "Waiting",
+    "scanDevices": "Scan",
+    "scanning": "Scanning",
+    "noDevicesFound": "No devices found",
+    "sendDataToServer": "Send data to server",
+    "generateLog": "Generate Log",
+    "generateDebugLog": "Generate Debug Log",
+    "changeLanguage": "Language",
+    "english": "English",
+    "portuguese": "Portuguese",
+    "logout": "Logout",
+    "speed": "Speed",
+    "speedToolTip": "Vehicle speed",
+    "rpm": "RPM",
+    "rpmToolTip": "Revolutions per minute",
+    "engineLoad": "Engine Load",
+    "engineLoadToolTip": "Engine load",
+    "coolantTemperature": "Coolant Temp.",
+    "coolantTemperatureToolTip": "Coolant temperature",
+    "dataCollectMonitorTitle": "Data collection in progress",
+    "gasoline": "Gasoline",
+    "ethanol": "Ethanol",
+    "fuelTypeGaugeTitle": "Fuel type rating",
+    "localizationServiceWarning": "To use the background location service, it is necessary to set the location permission to 'Allow all the time'",
+    "close": "Close",
+    "start": "Start",
+    "stop": "Stop",
+    "monitor": "Monitor",
+    "bateryOptimizationWarning": "Disable battery optimization to use the app in the background",
+    "openOptimizationSettings": "Open optimization settings",
+    "notificationConnectVehicleInfo": "Connect your vehicle",
+    "dataLoggingNotification": "Reading vehicle data",
+    "dtcResultsWarningInfo": "For an accurate analysis of your vehicle's issues, we recommend consulting a maintenance specialist",
+    "warning": "WARNING",
+    "result": "Result",
+    "vehicleDiagnostics": "Vehicle diagnostics",
+    "noDtcsFound": "0 DTCs found",
+    
+    
+    "diagnose": "Diagnose",
+    "dtcInfoScreenMainText": "Perform diagnostics and check your vehicle's fault codes",
+    "sessionDate": "{date}",
+    "@sessionDate": {
+        "placeholders": {
+            "date": {
+                "type": "DateTime",
+                "format": "yMMMd"
+            }
+        }
+    },
+    "sessionTime": "{time}",
+    "@sessionTime": {
+        "placeholders": {
+            "time": {
+                "type": "DateTime",
+                "format": "Hm"
+            }
+        }
+    },
+    "noInformationLocation": "No location information!",
+    "generalError": "An error occurred. Please try again!",
+    "noTripData": "No trip data",
+    "noTripsFound": "No trips found",
+    "searchinForTrips": "Searching for trips",
+    "co2GeneratedContainer": "CO2 Generated",
+    "veryLowCo2": "Very Low",
+    "lowCo2": "Low",
+    "moderateCo2": "Moderate",
+    "highCo2": "High",
+    "veryHighCo2": "Very High",
+    "tripDuration": "Trip Duration",
+    "averageSpeed": "Average Speed",
+    "totalDistance": "Total Distance",
+    "co2Emission": "CO2 Emission",
+    "treesQuantity": "Number of Trees",
+    "daysToCompesateCo2": "Days to offset generated CO2",
+    "averageFuel": "Average Fuel",
+    "averageBattery": "Average Battery",
+    "vehicleBrandRetrieveFailed": "Error retrieving vehicle brand information. Please try again",
+    "vehicleModelRetrieveFailed": "Error retrieving vehicle model information. Please try again",
+    "vehicleYearsRetrieveFailed": "Error retrieving vehicle year information. Please try again",
+    "vehicleVersionsRetrieveFailed": "Error retrieving vehicle version information. Please try again",
+    "missingVehicleFormData": "Please fill in all the data",
+    "registerVehicleError": "Error during vehicle registration. Please try again",
+    "registerVehicle": "Register Vehicle",
+    "register": "Register",
+    "brand": "Brand",
+    "model": "Model",
+    "year": "Year",
+    "version": "Version",
+    "selectBrand": "Select brand",
+    "selectModel": "Select model",
+    "selectYear": "Select year",
+    "selectVersion": "Select version",
+    "dataLoggingError": "An error occurred during data collection. Please try again",
+    "begin": "Begin",
+    "end": "End",
+    "send": "Send",
+    "openAIKey": "OpenAI Key",
+    "inputOpenAIKey": "OpenAI API key",
+    "pleaseInsertApiKey": "Por favor insira uma chave",
+    "failedToInsertKey": "Falha ao tentar salvar chave da api",
+    "failedToLoadKey": "Erro ao tentar carregar chave da api",
+    "confirm": "Confirm",
+    "changedYourMind": "Changed your mind? ",
+    "goBack": "Back",
+    "yes": "Yes",
+    "no": "No",
+    "foundKey":"We found the key {apiKey}. Do you wish to continue using this key?",
+    "@foundKey": {
+        "placeholders": {
+            "apiKey":{
+                "type": "String"
+            }
+        }
+    },
+    "askQuestion": "Ask a question",
+    "message": "Message",
+    "registerYourself": "Register"
+}
