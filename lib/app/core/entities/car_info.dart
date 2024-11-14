@@ -14,6 +14,8 @@ class CarInfo {
     _year = carInfoMap['year'] ?? '';
   }
 
+  Map<String, String?> get getCarInfo =>
+      {'brand': _brand, 'model': _model, 'year': _year};
   String get brand => _brand;
   String get model => _model;
   String get year => _year;

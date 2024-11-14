@@ -252,7 +252,7 @@ class _LoginScreenState extends State<LoginScreen>
                           color: Colors.white),
                       children: [
                         TextSpan(
-                            text: context.localizations.signUp,
+                            text: context.localizations.registerYourself,
                             style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,

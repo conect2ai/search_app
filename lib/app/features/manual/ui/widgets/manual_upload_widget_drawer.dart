@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app_search/app/features/manual/interactor/blocs/manual_event.dart';
+import 'package:app_search/extensions/context_extansion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -36,8 +37,7 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 160,
-      // height: 55,
+      width: MediaQuery.of(context).size.width * 0.5,
       child: Column(
         children: [
           Row(
@@ -72,7 +72,7 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer> {
                           );
                         } else {
                           return Text(
-                            'Importar Manual',
+                            context.localizations.importManual,
                             style: AppTextStyles.drawerOptionsTextStyle,
                             softWrap: true,
                           );
@@ -113,15 +113,15 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer> {
                                   } on HttpException catch (_) {
                                     showDialog(
                                       context: context,
-                                      builder: (context) => const Dialog(
+                                      builder: (context) => Dialog(
                                         backgroundColor: Colors.grey,
                                         child: SizedBox(
                                           width: 80,
                                           height: 50,
                                           child: Align(
                                             alignment: Alignment.center,
-                                            child: Text(
-                                                'Não foi possível excluir o pdf. Tente novamente'),
+                                            child: Text(context.localizations
+                                                .manualDeletionFailed),
                                           ),
                                         ),
                                       ),
@@ -129,15 +129,15 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer> {
                                   } catch (e) {
                                     showDialog(
                                       context: context,
-                                      builder: (context) => const Dialog(
+                                      builder: (context) => Dialog(
                                         backgroundColor: Colors.grey,
                                         child: SizedBox(
                                           width: 80,
                                           height: 50,
                                           child: Align(
                                             alignment: Alignment.center,
-                                            child: Text(
-                                                'Erro ao tentar excluir o pdf. Tente novamente'),
+                                            child: Text(context.localizations
+                                                .manualDeletionFailed),
                                           ),
                                         ),
                                       ),
@@ -159,7 +159,7 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer> {
                                     await _manualBloc.uploadPdf().then((_) {
                                       showDialog(
                                         context: context,
-                                        builder: (context) => const Dialog(
+                                        builder: (context) => Dialog(
                                           backgroundColor: Colors.grey,
                                           child: SizedBox(
                                             width: 100,
@@ -167,7 +167,8 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer> {
                                             child: Align(
                                               alignment: Alignment.center,
                                               child: Text(
-                                                'Pdf importado com sucesso!',
+                                                context.localizations
+                                                    .importManualSuccess,
                                                 softWrap: true,
                                               ),
                                             ),
@@ -182,7 +183,7 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer> {
                                     }
                                     showDialog(
                                       context: context,
-                                      builder: (context) => const Dialog(
+                                      builder: (context) => Dialog(
                                         backgroundColor: Colors.grey,
                                         child: SizedBox(
                                           width: 100,
@@ -190,7 +191,8 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer> {
                                           child: Align(
                                             alignment: Alignment.center,
                                             child: Text(
-                                              'Falha ao importar o pdf. Tente novamente',
+                                              context.localizations
+                                                  .importManualFail,
                                               softWrap: true,
                                             ),
                                           ),
@@ -203,7 +205,7 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer> {
                                     }
                                     showDialog(
                                       context: context,
-                                      builder: (context) => const Dialog(
+                                      builder: (context) => Dialog(
                                         backgroundColor: Colors.grey,
                                         child: SizedBox(
                                           width: 100,
@@ -211,7 +213,8 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer> {
                                           child: Align(
                                             alignment: Alignment.center,
                                             child: Text(
-                                              'Falha ao importar o pdf. Tente novamente',
+                                              context.localizations
+                                                  .importManualFail,
                                               softWrap: true,
                                             ),
                                           ),
@@ -226,15 +229,6 @@ class _ManualUploadWidgetDrawerState extends State<ManualUploadWidgetDrawer> {
                                   size: 20,
                                 ),
                               ),
-                              // StreamBuilder<bool>(
-                              //   stream: _manualBloc.isSendingManual,
-                              //   builder: (context, snapshot) {
-                              //     final isVisible = snapshot.data ?? false;
-                              //     return Visibility(
-                              //         visible: isVisible,
-                              //         child: const CircularProgressIndicator());
-                              //   },
-                              // )
                             ],
                           );
                         })

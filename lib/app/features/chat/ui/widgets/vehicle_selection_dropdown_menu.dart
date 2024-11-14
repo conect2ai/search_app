@@ -1,3 +1,4 @@
+import 'package:app_search/extensions/context_extansion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -81,7 +82,7 @@ class _VehicleSelectionDropdownMenuState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Marca',
+            context.localizations.brand,
             style: AppTextStyles.dropdownMenuTitleTextStyle,
           ),
           const SizedBox(
@@ -92,7 +93,7 @@ class _VehicleSelectionDropdownMenuState
               builder: (context, snapshot) {
                 final brands = snapshot.data ?? [];
                 return DropdownMenu(
-                  width: screenWidth * 0.62,
+                  width: screenWidth * 0.58,
                   enabled: brands.isNotEmpty,
                   onSelected: (value) {
                     FocusScope.of(context).unfocus();
@@ -109,7 +110,7 @@ class _VehicleSelectionDropdownMenuState
                     color: Colors.white,
                     size: 20,
                   ),
-                  hintText: 'Selecione a marca',
+                  hintText: context.localizations.selectBrand,
                   controller: _brandSelectionController,
                   requestFocusOnTap: true,
                   textStyle: AppTextStyles.textFieldTextStyle,
@@ -143,7 +144,7 @@ class _VehicleSelectionDropdownMenuState
             height: 8,
           ),
           Text(
-            'Modelo',
+            context.localizations.model,
             style: AppTextStyles.dropdownMenuTitleTextStyle,
           ),
           const SizedBox(
@@ -155,7 +156,7 @@ class _VehicleSelectionDropdownMenuState
                 final models = snapshot.data ?? [];
                 return DropdownMenu(
                   enabled: models.isNotEmpty,
-                  width: screenWidth * 0.62,
+                  width: screenWidth * 0.58,
                   menuHeight: 110,
                   trailingIcon: const Icon(
                     Icons.arrow_drop_down,
@@ -171,7 +172,7 @@ class _VehicleSelectionDropdownMenuState
                       });
                     }
                   },
-                  hintText: 'Selecione o modelo',
+                  hintText: context.localizations.selectModel,
                   controller: _modelSelectionController,
                   requestFocusOnTap: true,
                   textStyle: AppTextStyles.textFieldTextStyle,
@@ -205,7 +206,7 @@ class _VehicleSelectionDropdownMenuState
             height: 8,
           ),
           Text(
-            'Ano',
+            context.localizations.year,
             style: AppTextStyles.dropdownMenuTitleTextStyle,
           ),
           const SizedBox(
@@ -217,7 +218,7 @@ class _VehicleSelectionDropdownMenuState
                 final years = snapshot.data ?? [];
                 return DropdownMenu(
                   enabled: years.isNotEmpty,
-                  width: screenWidth * 0.62,
+                  width: screenWidth * 0.58,
                   menuHeight: 110,
                   trailingIcon: const Icon(
                     Icons.arrow_drop_down,
@@ -226,7 +227,7 @@ class _VehicleSelectionDropdownMenuState
                   ),
                   onSelected: (value) {
                     FocusScope.of(context).unfocus();
-                    if (value != null) {
+                    if (value != null && value.isNotEmpty) {
                       _updateYearInfo(value);
                       _vehicleFormBloc.saveVehicleData(_vehicleData);
                       setState(() {
@@ -234,7 +235,7 @@ class _VehicleSelectionDropdownMenuState
                       });
                     }
                   },
-                  hintText: 'Selecione o ano',
+                  hintText: context.localizations.selectYear,
                   controller: _yearSelectionController,
                   requestFocusOnTap: true,
                   textStyle: AppTextStyles.textFieldTextStyle,
