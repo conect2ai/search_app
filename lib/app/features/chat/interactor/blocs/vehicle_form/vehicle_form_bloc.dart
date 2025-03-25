@@ -50,8 +50,6 @@ class VehicleFormBloc with SecureStorage {
     } catch (error) {
       _loadingOverlayBloc.add(ShowErrorEvent(
           message: 'Não foi possível recuperar manuais dos veículos'));
-    } finally {
-      saveVehicleData(vehicles);
     }
 
     _loadingOverlayBloc.add(HideLoadingOverlayEvent());
@@ -109,6 +107,7 @@ class VehicleFormBloc with SecureStorage {
     vehicleData['model'] = await readSecureData('model');
     vehicleData['year'] = await readSecureData('year');
     _carInfo.updateCarInfo(vehicleData);
+
     return vehicleData;
   }
 }

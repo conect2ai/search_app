@@ -1,9 +1,14 @@
+import 'dart:io';
+
+import 'package:app_search/extensions/context_extansion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../../../streams/general_stream.dart';
 import '../../../core/themes/app_colors.dart';
 import '../../../core/themes/app_text_styles.dart';
 import '../../../core/widgets/custom_appbar.dart';
+import '../interactor/bloc/auth_bloc.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -13,9 +18,24 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> with CustomAppbar {
+  final _authBloc = Modular.get<AuthBloc>();
+  bool _locale = false;
   @override
   void initState() {
+    _getLanguage();
     super.initState();
+  }
+
+  Future<void> _getLanguage() async {
+    final language = await _authBloc.getLanguage();
+    if (language != null) {
+      _locale = language == 'pt';
+    } else {
+      _locale = Platform.localeName == 'pt_BR';
+    }
+    setState(() {
+      GeneralStream.languageStream.add(Locale(_locale == false ? 'en' : 'pt'));
+    });
   }
 
   @override
@@ -55,7 +75,7 @@ class _AuthScreenState extends State<AuthScreen> with CustomAppbar {
                 SizedBox(
                   width: 270,
                   child: Text(
-                    'Dúvidas em relação ao seu carro? Obtenha respostas de forma prática sem precisar consultar manuais complexos.',
+                    context.localizations.appIntroText,
                     style: AppTextStyles.authScreenSubtitleTextStyle,
                     textAlign: TextAlign.center,
                   ),
@@ -81,7 +101,7 @@ class _AuthScreenState extends State<AuthScreen> with CustomAppbar {
                     onPressed: () =>
                         Modular.to.pushReplacementNamed('/auth/sign-up'),
                     child: Text(
-                      'Cadastro',
+                      context.localizations.signUp,
                       style: AppTextStyles.authScreenButtonsTextStyle,
                     ),
                   ),
@@ -110,7 +130,34 @@ class _AuthScreenState extends State<AuthScreen> with CustomAppbar {
                 ),
               ],
             ),
-          )
+          ),
+          Positioned(
+              top: 0,
+              right: 10,
+              child: Row(
+                children: [
+                  const Text(
+                    'EN',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Switch(
+                      value: _locale,
+                      activeColor: AppColors.mainColor,
+                      inactiveTrackColor: Colors.grey,
+                      onChanged: (value) async {
+                        setState(() {
+                          _locale = value;
+                        });
+                        final locale = Locale(_locale == false ? 'en' : 'pt');
+                        await _authBloc.setLanguage(locale);
+                        GeneralStream.languageStream.add(locale);
+                      }),
+                  const Text(
+                    'PT-BR',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ))
         ],
       ),
     );

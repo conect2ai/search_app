@@ -1,9 +1,12 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../../../streams/general_stream.dart';
 import '../../../../../blocs/loading_overlay_bloc.dart';
 import '../../../../../blocs/loading_overlay_event.dart';
 import '../../../../../core/entities/chat_message.dart';
@@ -16,6 +19,7 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
   final LoadingOverlayBloc _loadingOverlayBloc;
   final List<ChatMessage> _results = [];
   final ImagePicker _imagePicker = ImagePicker();
+  SharedPreferences? _prefs;
   File? _selectedImage;
 
   final _selectedImageSubject = BehaviorSubject<File?>.seeded(null);

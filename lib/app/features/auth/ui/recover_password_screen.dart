@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:app_search/extensions/context_extansion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -25,7 +26,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen>
   void _sendRecoverPassword() async {
     try {
       await _authBloc.recoverPassword(_emailTextController.text).then((_) {
-        generateSnackBar('E-mail enviado com sucesso!', context);
+        generateSnackBar(context.localizations.emailSentSuccess, context);
       });
     } on HttpException catch (e) {
       if (!mounted) {
@@ -36,8 +37,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen>
       if (!mounted) {
         return;
       }
-      generateSnackBar(
-          'Erro ao tentar enviar e-mail. Tente novamente.', context);
+      generateSnackBar(context.localizations.emailSentFailed, context);
     }
   }
 
@@ -70,7 +70,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen>
                       height: 25,
                     ),
                     Text(
-                      'Esqueceu a Senha',
+                      context.localizations.recoverPasswordTitle,
                       style: AppTextStyles.authScreenTitleTextStyle,
                     ),
                     const SizedBox(
@@ -79,7 +79,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen>
                     SizedBox(
                       width: 300,
                       child: Text(
-                        'Digite o seu email e nós enviaremos um link para excluir sua senha.',
+                        context.localizations.recoverPasswordInfo,
                         textAlign: TextAlign.center,
                         style: AppTextStyles.authScreenSubtitleTextStyle,
                       ),
@@ -137,7 +137,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen>
                               backgroundColor: AppColors.mainColor),
                           onPressed: _sendRecoverPassword,
                           child: Text(
-                            'Enviar',
+                            context.localizations.send,
                             style: AppTextStyles.authScreenButtonsTextStyle,
                           )),
                     ),
@@ -155,13 +155,13 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen>
                           onPressed: () =>
                               Modular.to.pushReplacementNamed('/auth/login'),
                           child: RichText(
-                            text: const TextSpan(
-                                text: 'Retornar para o ',
-                                style: TextStyle(
+                            text: TextSpan(
+                                text: context.localizations.returnTo,
+                                style: const TextStyle(
                                     fontWeight: FontWeight.w300,
                                     fontSize: 15,
                                     color: Colors.white),
-                                children: [
+                                children: const [
                                   TextSpan(
                                       text: 'Login',
                                       style: TextStyle(

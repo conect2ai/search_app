@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:app_search/extensions/context_extansion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -26,7 +27,7 @@ class _SignUpScreenState extends State<SignUpScreen>
     FocusScope.of(context).unfocus();
     try {
       await _authBloc.signUp(_emailTextController.text).then((_) {
-        generateSnackBar('E-mail enviado com sucesso!', context);
+        generateSnackBar(context.localizations.emailSentSuccess, context);
       });
     } on HttpException catch (e) {
       if (!mounted) {
@@ -37,8 +38,7 @@ class _SignUpScreenState extends State<SignUpScreen>
       if (!mounted) {
         return;
       }
-      generateSnackBar(
-          'Erro ao tentar enviar e-mail. Tente novamente.', context);
+      generateSnackBar(context.localizations.emailSentFailed, context);
     }
   }
 
@@ -75,7 +75,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                       height: 25,
                     ),
                     Text(
-                      'Criar Conta',
+                      context.localizations.createAccount,
                       style: AppTextStyles.authScreenTitleTextStyle,
                     ),
                     const SizedBox(
@@ -84,7 +84,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                     SizedBox(
                       width: 300,
                       child: Text(
-                        'Digite seu email e você será redirecionado para completar o cadastro.',
+                        context.localizations.signUpMainText,
                         textAlign: TextAlign.center,
                         style: AppTextStyles.authScreenSubtitleTextStyle,
                       ),
@@ -142,7 +142,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                               backgroundColor: AppColors.mainColor),
                           onPressed: _sendSignUp,
                           child: Text(
-                            'Cadastro',
+                            context.localizations.signUp,
                             style: AppTextStyles.authScreenButtonsTextStyle,
                           )),
                     ),
@@ -160,13 +160,13 @@ class _SignUpScreenState extends State<SignUpScreen>
                           onPressed: () =>
                               Modular.to.pushReplacementNamed('/auth/login'),
                           child: RichText(
-                            text: const TextSpan(
-                                text: 'Retornar para o ',
-                                style: TextStyle(
+                            text: TextSpan(
+                                text: context.localizations.returnTo,
+                                style: const TextStyle(
                                     fontWeight: FontWeight.w300,
                                     fontSize: 15,
                                     color: Colors.white),
-                                children: [
+                                children: const [
                                   TextSpan(
                                       text: 'Login',
                                       style: TextStyle(

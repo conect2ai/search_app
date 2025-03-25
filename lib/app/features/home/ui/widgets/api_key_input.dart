@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:app_search/extensions/context_extansion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -41,7 +42,7 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'OpenAI Key',
+                context.localizations.openAIKey,
                 style: AppTextStyles.authScreenTitleTextStyle,
               ),
               const SizedBox(
@@ -58,7 +59,7 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                   cursorColor: AppColors.mainColor,
                   decoration: InputDecoration(
                     isDense: true,
-                    hintText: 'Chave da api Open Ai',
+                    hintText: context.localizations.inputOpenAIKey,
                     hintStyle: const TextStyle(
                         fontSize: 17,
                         color: Colors.white60,
@@ -100,11 +101,11 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                       setState(() {
                         _isLoadingChatPage = true;
                       });
-                      // Modular.to.navigate('/chat/');
                       _isValidApiKey = widget._homebloc
                           .checkIfApiKeyIsNotEmpty(_apiKeyInputController.text);
                       if (!_isValidApiKey) {
-                        generateSnackBar('Por favor insira uma chave', context);
+                        generateSnackBar(
+                            context.localizations.pleaseInsertApiKey, context);
                         setState(() {
                           _isLoadingChatPage = false;
                         });
@@ -130,13 +131,13 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                             _isLoadingChatPage = false;
                           });
                           generateSnackBar(
-                              'Falha ao tentar salvar chave da api', context);
+                              context.localizations.failedToInsertKey, context);
                         } catch (e) {
                           if (!mounted) {
                             return;
                           }
                           generateSnackBar(
-                              'Falha ao tentar salvar chave da api', context);
+                              context.localizations.failedToInsertKey, context);
                         }
                       }
                     },
@@ -145,7 +146,7 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                             color: Colors.white,
                           )
                         : Text(
-                            'Confirmar',
+                            context.localizations.confirm,
                             style: AppTextStyles.authScreenButtonsTextStyle,
                           )),
               ),
@@ -169,20 +170,20 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                       return;
                     }
                     generateSnackBar(
-                        'Erro ao tentar carregar chave da api', context);
+                        context.localizations.failedToLoadKey, context);
                   }
                 },
                 child: RichText(
-                  text: const TextSpan(
-                      text: 'Mudou de ideia? ',
-                      style: TextStyle(
+                  text: TextSpan(
+                      text: context.localizations.changedYourMind,
+                      style: const TextStyle(
                           fontWeight: FontWeight.w300,
                           fontSize: 15,
                           color: Colors.white),
                       children: [
                         TextSpan(
-                            text: 'Voltar',
-                            style: TextStyle(
+                            text: context.localizations.goBack,
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
                                 color: Colors.white))

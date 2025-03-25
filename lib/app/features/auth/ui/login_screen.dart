@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:app_search/extensions/context_extansion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+// import 'package:loader_overlay/loader_overlay.dart';
 
 import '../../../core/themes/app_colors.dart';
 import '../../../core/themes/app_text_styles.dart';
@@ -53,10 +55,8 @@ class _LoginScreenState extends State<LoginScreen>
     try {
       _loginBloc.updateLoginButton(true);
       await _authBloc.login(userData).then((_) async {
-        _loginBloc.updateLoginButton(false);
-
         _apiKey = await _homeBloc.checkIfUserHasKey();
-        // Modular.to.pushReplacementNamed('/chat/');
+        _loginBloc.updateLoginButton(false);
         _apiKey == null
             ? Modular.to.pushReplacementNamed('/home/')
             : Modular.to.pushReplacementNamed('/check-api-key/');
@@ -72,8 +72,7 @@ class _LoginScreenState extends State<LoginScreen>
         return;
       }
       _loginBloc.updateLoginButton(false);
-      generateSnackBar(
-          'Erro ao tentar realizar login. Tente novamente.', context);
+      generateSnackBar(context.localizations.erroLogin, context);
     }
   }
 
@@ -105,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen>
                   textAlignVertical: TextAlignVertical.center,
                   cursorColor: AppColors.mainColor,
                   decoration: InputDecoration(
-                    hintText: 'Usuário',
+                    hintText: context.localizations.username,
                     hintStyle: const TextStyle(
                         fontSize: 17,
                         color: Colors.white,
@@ -156,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen>
                               : Icons.visibility_outlined,
                           color: Colors.white,
                         )),
-                    hintText: 'Senha',
+                    hintText: context.localizations.password,
                     hintStyle: const TextStyle(
                         fontSize: 17,
                         color: Colors.white,
@@ -191,9 +190,9 @@ class _LoginScreenState extends State<LoginScreen>
                   child: TextButton(
                     onPressed: () => Modular.to
                         .pushReplacementNamed('/auth/recover-password'),
-                    child: const Text(
-                      'Esqueceu a senha?',
-                      style: TextStyle(
+                    child: Text(
+                      context.localizations.forgotPassword,
+                      style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
                           color: Colors.white),
@@ -224,13 +223,13 @@ class _LoginScreenState extends State<LoginScreen>
                               color: Colors.white);
                         } else {
                           return Text(
-                            'Entrar',
+                            'Login',
                             style: AppTextStyles.authScreenButtonsTextStyle,
                           );
                         }
                       } else {
                         return Text(
-                          'Entrar',
+                          'Login',
                           style: AppTextStyles.authScreenButtonsTextStyle,
                         );
                       }
@@ -245,16 +244,16 @@ class _LoginScreenState extends State<LoginScreen>
                 onPressed: () =>
                     Modular.to.pushReplacementNamed('/auth/sign-up'),
                 child: RichText(
-                  text: const TextSpan(
-                      text: 'Não tem uma conta? ',
-                      style: TextStyle(
+                  text: TextSpan(
+                      text: context.localizations.dontHaveAccountYet,
+                      style: const TextStyle(
                           fontWeight: FontWeight.w300,
                           fontSize: 15,
                           color: Colors.white),
                       children: [
                         TextSpan(
-                            text: 'Cadastre-se',
-                            style: TextStyle(
+                            text: context.localizations.registerYourself,
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
                                 color: Colors.white))

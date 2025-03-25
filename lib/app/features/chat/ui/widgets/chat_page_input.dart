@@ -1,3 +1,4 @@
+import 'package:app_search/extensions/context_extansion.dart';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -141,7 +142,7 @@ class _ChatPageInputState extends State<ChatPageInput> {
                             horizontal: 20, vertical: 0),
                         fillColor: Colors.grey.shade600,
                         filled: true,
-                        hintText: 'Mensagem',
+                        hintText: context.localizations.message,
                         hintStyle: AppTextStyles.chatInputHintTextStyle,
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),

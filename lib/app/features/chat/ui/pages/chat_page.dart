@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app_search/app/features/chat/interactor/blocs/chatpage_inputs/chat_page_input_events.dart';
+import 'package:app_search/extensions/context_extansion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -33,7 +34,6 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage>
     with LoadingOverlay, LogoAppBar, CustomDialogs {
   final _bloc = Modular.get<ChatPageBloc>();
-  final _authBloc = Modular.get<AuthBloc>();
   final _vehicleInfoBloc = Modular.get<VehicleFormBloc>();
   final _chatInputBloc = Modular.get<ChatPageInputBloc>();
   final _loadingOverlayBloc = Modular.get<LoadingOverlayBloc>();
@@ -58,43 +58,7 @@ class _ChatPageState extends State<ChatPage>
       right: false,
       bottom: true,
       child: Scaffold(
-        appBar: generateLogoAppBar(context)
-        // generateLogoAppBar(context, [
-        //   PopupMenuButton(
-        //     icon: const Icon(
-        //       Icons.more_vert,
-        //       color: Colors.black,
-        //     ),
-        //     iconSize: 40,
-        //     shape:
-        //         RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        //     onSelected: (option) async {
-        //       if (option == 'Logout') {
-        //         _authBloc.logout();
-        //         // Modular.to.navigate('/');
-        //       } else if (option == 'Api Key') {
-        //         Modular.to.navigate('/home');
-        //       } else if (option == 'Manual Upload') {
-        //         dialog(context, ManualDialog());
-        //       } else {
-        //         dialog(context, const VehicleFormDialog());
-        //       }
-        //     },
-        //     itemBuilder: (BuildContext context) {
-        //       return {
-        //         'Vehicle Settings',
-        //         'Manual Upload',
-        //         'Api Key',
-        //         'Logout',
-        //       }.map((String choice) {
-        //         return PopupMenuItem<String>(
-        //           value: choice,
-        //           child: Text(choice),
-        //         );
-        //       }).toList();
-        //     },
-        //   )
-        ,
+        appBar: generateLogoAppBar(context),
         body: BlocListener<LoadingOverlayBloc, LoadingOverlayState>(
           bloc: _loadingOverlayBloc,
           listener: (context, state) async {
@@ -109,7 +73,7 @@ class _ChatPageState extends State<ChatPage>
                 context: context,
                 builder: (context) => CustomDialog(
                   message: state.message,
-                  buttonMessage: 'Fechar',
+                  buttonMessage: context.localizations.close,
                 ),
               );
             }
@@ -125,7 +89,7 @@ class _ChatPageState extends State<ChatPage>
                       builder: (context, state) {
                         if (state is InitialChatPageState) {
                           return Text(
-                            'Faça uma pergunta',
+                            context.localizations.askQuestion,
                             style: AppTextStyles.mainTextStyle,
                           );
                         } else if (state is ReceiveResponseState) {

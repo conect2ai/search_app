@@ -1,3 +1,4 @@
+import 'package:app_search/extensions/context_extansion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -122,12 +123,12 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
                         controller: _commentaryTextController,
                         textAlignVertical: TextAlignVertical.center,
                         cursorHeight: 18,
-                        style: TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 12),
                         cursorColor: _isGoodAnswer ? Colors.green : Colors.red,
                         decoration: InputDecoration(
                             contentPadding:
                                 const EdgeInsets.only(left: 7, top: 0),
-                            hintText: 'Comentário',
+                            hintText: context.localizations.commentary,
                             focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                               color: _isGoodAnswer ? Colors.green : Colors.red,
@@ -160,7 +161,7 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
                         _sendMessageRate();
                       },
                       child: Text(
-                        'SUBMIT',
+                        context.localizations.submit,
                         style: AppTextStyles.commentarySubmitButtonTextStyle
                             .copyWith(
                                 color:

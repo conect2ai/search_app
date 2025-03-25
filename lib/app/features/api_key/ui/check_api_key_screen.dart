@@ -1,3 +1,4 @@
+import 'package:app_search/extensions/context_extansion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -46,7 +47,7 @@ class _CheckApiKeyScreenState extends State<CheckApiKeyScreen>
             children: [
               SizedBox(
                 child: Text(
-                  'Encontramos a chave $_apiKey. Deseja continuar com a chave atual?',
+                  context.localizations.foundKey(_apiKey ?? ''),
                   style: AppTextStyles.authScreenSubtitleTextStyle,
                   textAlign: TextAlign.center,
                   softWrap: true,
@@ -72,7 +73,7 @@ class _CheckApiKeyScreenState extends State<CheckApiKeyScreen>
                                   .pushReplacementNamed('/manual-check/');
                         });
                       },
-                      child: const Text('SIM')),
+                      child: Text(context.localizations.yes.toUpperCase())),
                   const SizedBox(
                     width: 20,
                   ),
@@ -84,7 +85,7 @@ class _CheckApiKeyScreenState extends State<CheckApiKeyScreen>
                               borderRadius: BorderRadius.circular(10))),
                       onPressed: () =>
                           Modular.to.pushReplacementNamed('/home/'),
-                      child: const Text('NÃO')),
+                      child: Text(context.localizations.no.toUpperCase())),
                 ],
               )
             ],

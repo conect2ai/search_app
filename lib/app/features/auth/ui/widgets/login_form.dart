@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:app_search/extensions/context_extansion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -93,7 +94,7 @@ class _LoginFormState extends State<LoginForm> with SnackBarMixin {
                 textAlignVertical: TextAlignVertical.center,
                 cursorColor: AppColors.mainColor,
                 decoration: InputDecoration(
-                  hintText: 'Usuário',
+                  hintText: context.localizations.username,
                   hintStyle: const TextStyle(
                       fontSize: 17,
                       color: AppColors.mainColor,
@@ -141,7 +142,7 @@ class _LoginFormState extends State<LoginForm> with SnackBarMixin {
                             : Icons.visibility_outlined,
                         color: AppColors.mainColor,
                       )),
-                  hintText: 'Senha',
+                  hintText: context.localizations.password,
                   hintStyle: const TextStyle(
                       fontSize: 17,
                       color: AppColors.mainColor,
@@ -167,23 +168,6 @@ class _LoginFormState extends State<LoginForm> with SnackBarMixin {
                 ),
               ),
             ),
-            // Align(
-            //   alignment: Alignment.topRight,
-            //   child: Padding(
-            //     padding:  EdgeInsets.only(right: 15),
-            //     child: TextButton(
-            //       onPressed: () =>
-            //           Modular.to.pushReplacementNamed('/recover-password/'),
-            //       child:  Text(
-            //         'Esqueceu a senha?',
-            //         style: TextStyle(
-            //             fontWeight: FontWeight.w500,
-            //             fontSize: 15,
-            //             color: Colors.white),
-            //       ),
-            //     ),
-            //   ),
-            // ),
             const SizedBox(
               height: 10,
             ),
@@ -198,7 +182,7 @@ class _LoginFormState extends State<LoginForm> with SnackBarMixin {
                     backgroundColor: AppColors.mainColor),
                 onPressed: _saveFormData,
                 child: const Text(
-                  'Entrar',
+                  'Login',
                 ),
               ),
             ),
@@ -211,16 +195,16 @@ class _LoginFormState extends State<LoginForm> with SnackBarMixin {
                 _authBloc.add(SwitchToSignUpEvent());
               },
               child: RichText(
-                text: const TextSpan(
-                    text: 'Não tem uma conta? ',
-                    style: TextStyle(
+                text: TextSpan(
+                    text: context.localizations.dontHaveAccountYet,
+                    style: const TextStyle(
                         fontWeight: FontWeight.w300,
                         fontSize: 15,
                         color: AppColors.mainColor),
                     children: [
                       TextSpan(
-                          text: 'Cadastre-se',
-                          style: TextStyle(
+                          text: context.localizations.registerYourself,
+                          style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 15,
                               color: AppColors.mainColor))
