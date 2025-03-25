@@ -161,6 +161,9 @@ class _ChatPageState extends State<ChatPage>
                         ),
                       );
                     }),
+                ElevatedButton(
+                    onPressed: () => _bloc.generateCheckListCSV(),
+                    child: Text('Generate CSV')),
               ]),
             ),
           ]),

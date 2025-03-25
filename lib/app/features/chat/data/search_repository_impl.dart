@@ -23,6 +23,9 @@ class SearchRepositoryImpl
   final apiQuestionEndpoint = FlutterConfig.get('API_SEARCH_ENDPOINT_QUESTION');
   final apiQuestionWithImageEndpoint =
       FlutterConfig.get('API_SEARCH_ENDPOINT_QUESTION_IMAGE');
+  final _apiBaseUrl = FlutterConfig.get('API_SEARCH_URL');
+  final _audioTranscriptionEndpoint =
+      FlutterConfig.get('AUDIO_TRANSCRIPTION_ENDPOINT');
 
   @override
   Future<Map<dynamic, dynamic>> sendQuestionByAudio(
@@ -125,6 +128,34 @@ class SearchRepositoryImpl
     } else {
       throw const HttpException(
           'Falha ao processar resposta. Tente novamente.');
+    }
+  }
+
+  @override
+  Future<Map> sendAudioForTranscription(String audioFilePath) async {
+    final client = await configureHttpClient();
+    final audioFile = File(audioFilePath);
+    final audioBytes = await audioFile.readAsBytes();
+    final audioBase64 = base64Encode(audioBytes);
+
+    final data = {'audio_file': audioBase64};
+
+    final apiUri = Uri.https(_apiBaseUrl, _audioTranscriptionEndpoint);
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${_authUser.token}',
+    };
+
+    final response =
+        await client.post(apiUri, body: jsonEncode(data), headers: headers);
+
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(utf8.decode(response.bodyBytes));
+      return responseData;
+    } else {
+      throw const HttpException(
+          'Failed to communicate with server. Try again.');
     }
   }
 }

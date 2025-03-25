@@ -6,6 +6,7 @@ import 'package:flutter_config/flutter_config.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../streams/general_stream.dart';
 import 'app_module.dart';
@@ -15,11 +16,18 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterConfig.loadEnvVariables();
   await initializeDateFormatting('en-us');
+  await _requestPermissions();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
 
   runApp(ModularApp(module: AppModule(), child: const MyApp()));
+}
+
+Future<void> _requestPermissions() async {
+  await [
+    Permission.storage,
+  ].request();
 }
 
 class MyApp extends StatefulWidget {
