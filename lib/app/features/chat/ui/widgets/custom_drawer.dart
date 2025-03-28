@@ -184,7 +184,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             width: 10,
                           ),
                           Text(
-                            'Back to menu',
+                            context.localizations.backToMenu,
                             style: AppTextStyles.drawerOptionsTextStyle,
                           ),
                         ],

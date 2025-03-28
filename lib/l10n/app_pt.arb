@@ -78,6 +78,7 @@
     "csvSavedSuccess": "CSV salvo com sucesso.",
     "csvSavedError": "Erro ao salvar CSV. Tente novamente.",
     "failedCredentials": "Credenciais inválidas. Tente novamente.",
-    "invalidApiKey": "Chave da API inválida. Por favor, Tente novamente."
+    "invalidApiKey": "Chave da API inválida. Por favor, Tente novamente.",
+    "backToMenu": "Voltar ao menu"
     
 }

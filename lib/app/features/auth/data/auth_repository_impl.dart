@@ -119,9 +119,11 @@ class AuthRepositoryImpl
     );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      _user.updateApiKey(data['key']);
-      writeSecureData(_user.username!, data['key']);
-      return data['key'] != null;
+      if (data['valid']) {
+        _user.updateApiKey(data['openai_key']);
+        writeSecureData(_user.username!, data['openai_key']);
+      }
+      return data['valid'];
     } else {
       throw const HttpException('Não foi possível validar chave da API');
     }
