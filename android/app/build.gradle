@@ -60,6 +60,12 @@ android {
             shrinkResources false
         }
     }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "CarQAI.apk"
+        }
+    }
 }
 
 flutter {

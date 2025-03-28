@@ -7,7 +7,4 @@ abstract interface class SearchRepository {
   Future<Map<dynamic, dynamic>> sendQuestionByAudio(
     String audioFilePath,
   );
-  Future<Map<dynamic, dynamic>> sendAudioForTranscription(
-    String audioFilePath,
-  );
 }

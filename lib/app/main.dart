@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     _locale = Platform.localeName;
 
-    if (_locale != 'en_US' && _locale != 'pt-BR') {
+    if (_locale != 'en_US' && _locale != 'pt_BR') {
       _locale = 'en_US';
     }
     GeneralStream.languageStream.add(Locale(_locale));

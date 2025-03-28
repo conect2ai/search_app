@@ -19,6 +19,10 @@ class TranscriptionResponse {
     };
   }
 
+  void clearData() {
+    _transcriptionData.clear();
+  }
+
   List<List<String>> getChecklistInformation() {
     List<List<String>> resultCsv = [];
     final header = <String>[];
@@ -36,12 +40,12 @@ class TranscriptionResponse {
     resultCsv.add(header);
     _transcriptionData.forEach((key, value) {
       List<String> stepInformation = [];
-      stepInformation.add('${value['transcription']}');
+      stepInformation.add(value['transcription'].toString());
       final defectAnalysis = value['problemAnalysis'] as Map<String, dynamic>;
       final analysis = defectAnalysis['analysis'] as Map<String, dynamic>;
       stepInformation.add('${analysis['identificador']}');
       stepInformation.add('${analysis['problema']}');
-      stepInformation.add('${analysis['relato']}');
+      stepInformation.add(analysis['relato'].toString());
       final usage = defectAnalysis['usage'] as Map<String, dynamic>;
       stepInformation.add('${usage['prompt_tokens']}');
       stepInformation.add('${usage['completion_tokens']}');

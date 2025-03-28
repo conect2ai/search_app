@@ -51,12 +51,12 @@ class _LoginFormState extends State<LoginForm> with SnackBarMixin {
       if (!mounted) {
         return;
       }
-      generateSnackBar('Login failed. Try again.', context);
+      generateSnackBar(context.localizations.failedCredentials, context);
     } catch (_) {
       if (!mounted) {
         return;
       }
-      generateSnackBar('Login failed. Try again.', context);
+      generateSnackBar(context.localizations.erroLogin, context);
     }
   }
 

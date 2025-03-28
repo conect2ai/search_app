@@ -68,7 +68,7 @@ class _CheckApiKeyScreenState extends State<CheckApiKeyScreen>
                       onPressed: () async {
                         _manualBloc.checkIfThereIsManuals().then((hasManuals) {
                           hasManuals
-                              ? Modular.to.pushReplacementNamed('/chat')
+                              ? Modular.to.pushReplacementNamed('/menu-page/')
                               : Modular.to
                                   .pushReplacementNamed('/manual-check/');
                         });

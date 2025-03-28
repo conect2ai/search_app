@@ -1,6 +1,7 @@
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../../app_module.dart';
+import '../../../menu/interactor/modules/menu_page_module.dart';
 import '../../ui/check_api_key_screen.dart';
 
 class CheckApiKeyModule extends Module {
@@ -18,5 +19,6 @@ class CheckApiKeyModule extends Module {
       '/',
       child: (context) => const CheckApiKeyScreen(),
     );
+    r.module('/menu-page', module: MenuPageModule());
   }
 }

@@ -166,6 +166,29 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           ),
                         ],
                       ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    GestureDetector(
+                      onTap: () =>
+                          Modular.to.pushReplacementNamed('/menu-page/'),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.arrow_back_ios_rounded,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            'Back to menu',
+                            style: AppTextStyles.drawerOptionsTextStyle,
+                          ),
+                        ],
+                      ),
                     )
                   ],
                 ),

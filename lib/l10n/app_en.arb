@@ -73,5 +73,10 @@
     "importManualFail":"Failed to import pdf. Please try again.",
     "manualDeletionFailed": "Unable to delete pdf. Please try again.",
     "submit": "Submit",
-    "commentary": "Commentary"
+    "commentary": "Commentary",
+    "recordReportAudioMessage": "Record your report about the problem",
+    "csvSavedSuccess": "CSV saved successfully.",
+    "csvSavedError": "Error saving CSV. Please try again.",
+    "failedCredentials": "Invalid credentials. Please try again.",
+    "invalidApiKey": "Invalid API key. Please try again."
 }

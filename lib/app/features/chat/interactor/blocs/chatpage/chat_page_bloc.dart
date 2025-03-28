@@ -27,8 +27,6 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
   SharedPreferences? _prefs;
   File? _selectedImage;
 
-  final _transcriptionResponse = TranscriptionResponse();
-
   final _selectedImageSubject = BehaviorSubject<File?>.seeded(null);
 
   Stream<File?> get isImageSelectedStream => _selectedImageSubject.stream;
@@ -109,32 +107,20 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
           emit(ReceiveResponseState(results: _results));
           _loadingOverlayBloc.add(ShowLoadingOverlayEvent());
           try {
-            // final message = await _searchRepository.sendQuestionByAudio(
-            //   event.path,
-            // );
-            // // final message = {
-            // //   'response_id': '1',
-            // //   'response_content': 'Isso ai bixão',
-            // // };
-            // _results.add(ChatMessage(
-            //   id: message['response_id'],
-            //   isQuestion: false,
-            //   isAudio: false,
-            //   message: message['response_content'],
-            // ));
-            final message = await _searchRepository.sendAudioForTranscription(
+            final message = await _searchRepository.sendQuestionByAudio(
               event.path,
             );
-
-            _transcriptionResponse.updateTranscriptionResponse(
-                messageId, message);
-
+            // final message = {
+            //   'response_id': '1',
+            //   'response_content': 'Isso ai bixão',
+            // };
             _results.add(
               ChatMessage(
-                  id: messageId,
-                  isQuestion: false,
-                  isAudio: false,
-                  message: message['transcribed_text']),
+                id: message['response_id'],
+                isQuestion: false,
+                isAudio: false,
+                message: message['response_content'],
+              ),
             );
           } catch (_) {
             _loadingOverlayBloc.add(
@@ -161,27 +147,5 @@ class ChatPageBloc extends Bloc<ChatPageEvent, ChatPageState> {
   void removePicture() {
     _selectedImage = null;
     _selectedImageSubject.sink.add(_selectedImage);
-  }
-
-  Future<void> generateCheckListCSV() async {
-    try {
-      final fileDir = await getTemporaryDirectory();
-      final date = DateTime.now().toString();
-      final formattedTime =
-          DateFormat("yyyy-MM-dd HH:mm:ss").parse(date).toString().split('.');
-      String csvData = const ListToCsvConverter()
-          .convert(_transcriptionResponse.getChecklistInformation());
-      final fileName = 'transcription_report-${formattedTime[0]}.csv';
-      final path = '${fileDir.path}/$fileName';
-      var file = File(path);
-      file = await file.writeAsString(csvData);
-      final granted = await CRFileSaver.requestWriteExternalStoragePermission();
-
-      if (granted) {
-        await CRFileSaver.saveFile(path, destinationFileName: fileName);
-      }
-    } catch (e) {
-      throw Exception('Error generating CSV file');
-    }
   }
 }

@@ -61,12 +61,12 @@ class _LoginScreenState extends State<LoginScreen>
             ? Modular.to.pushReplacementNamed('/home/')
             : Modular.to.pushReplacementNamed('/check-api-key/');
       });
-    } on HttpException catch (e) {
+    } on HttpException catch (_) {
       if (!mounted) {
         return;
       }
       _loginBloc.updateLoginButton(false);
-      generateSnackBar(e.message, context);
+      generateSnackBar(context.localizations.failedCredentials, context);
     } catch (e) {
       if (!mounted) {
         return;

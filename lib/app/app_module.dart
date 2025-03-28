@@ -15,6 +15,8 @@ import 'features/manual/data/manual_repository.dart';
 import 'features/manual/data/manual_repository_impl.dart';
 import 'features/manual/interactor/blocs/manual_bloc.dart';
 import 'features/manual/interactor/modules/manual_module.dart';
+import 'features/menu/interactor/modules/menu_page_module.dart';
+import 'features/report_problem/interactor/modules/report_problem_module.dart';
 
 class AppModule extends Module {
   @override
@@ -42,5 +44,9 @@ class AppModule extends Module {
         module: ManualCheckModule(), transition: TransitionType.rightToLeft);
     r.module('/chat',
         module: ChatPageModule(), transition: TransitionType.rightToLeft);
+    r.module('/menu-page',
+        module: MenuPageModule(), transition: TransitionType.rightToLeft);
+    r.module('/report-problem',
+        module: ReportProblemModule(), transition: TransitionType.rightToLeft);
   }
 }

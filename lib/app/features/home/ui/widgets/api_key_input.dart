@@ -111,18 +111,28 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                         });
                       } else {
                         try {
-                          await widget._homebloc
-                              .saveApiKey(_apiKeyInputController.text)
-                              .then((_) {
+                          final bool isKeySaved = await widget._homebloc
+                              .saveApiKey(_apiKeyInputController.text);
+                          if (isKeySaved) {
                             _manualBloc
                                 .checkIfThereIsManuals()
                                 .then((hasManuals) {
                               hasManuals
-                                  ? Modular.to.pushReplacementNamed('/chat')
+                                  ? Modular.to
+                                      .pushReplacementNamed('/menu-page/')
                                   : Modular.to
                                       .pushReplacementNamed('/manual-check/');
                             });
-                          });
+                          } else {
+                            if (!mounted) {
+                              return;
+                            }
+                            setState(() {
+                              _isLoadingChatPage = false;
+                            });
+                            generateSnackBar(
+                                context.localizations.invalidApiKey, context);
+                          }
                         } on HttpException catch (_) {
                           if (!mounted) {
                             return;
@@ -158,13 +168,19 @@ class _ApiKeyInputState extends State<ApiKeyInput> with SnackBarMixin {
                   ScaffoldMessenger.of(context).clearSnackBars();
                   try {
                     await _homeBloc.checkIfUserHasKey().then((key) {
-                      Modular.to.pushReplacementNamed('/check-api-key/');
+                      if (key == null) {
+                        _homeBloc.logout();
+                        Modular.to.pushReplacementNamed('/auth/login');
+                      } else {
+                        Modular.to.pushReplacementNamed('/check-api-key/');
+                      }
                     });
-                  } on HttpException catch (e) {
+                  } on HttpException catch (_) {
                     if (!mounted) {
                       return;
                     }
-                    generateSnackBar(e.message, context);
+                    generateSnackBar(
+                        context.localizations.failedToLoadKey, context);
                   } catch (e) {
                     if (!mounted) {
                       return;

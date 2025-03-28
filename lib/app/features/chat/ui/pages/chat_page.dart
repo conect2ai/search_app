@@ -15,7 +15,6 @@ import '../../../../mixins/custom_dialogs.dart';
 import '../../../../widgets/custom_dialog.dart';
 import '../../../../mixins/loading_overlay.dart';
 import '../../../../mixins/logo_appbar.dart';
-import '../../../auth/interactor/bloc/auth_bloc.dart';
 import '../../interactor/blocs/chatpage/chat_page_bloc.dart';
 import '../../interactor/blocs/chatpage/chat_page_states.dart';
 import '../../interactor/blocs/chatpage_inputs/chat_page_input_bloc.dart';
@@ -161,9 +160,6 @@ class _ChatPageState extends State<ChatPage>
                         ),
                       );
                     }),
-                ElevatedButton(
-                    onPressed: () => _bloc.generateCheckListCSV(),
-                    child: Text('Generate CSV')),
               ]),
             ),
           ]),

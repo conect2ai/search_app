@@ -7,6 +7,7 @@ import '../../auth/interactor/bloc/auth_bloc.dart';
 import '../../manual/data/manual_repository.dart';
 import '../../manual/data/manual_repository_impl.dart';
 import '../../manual/interactor/blocs/manual_bloc.dart';
+import '../../menu/interactor/modules/menu_page_module.dart';
 import '../data/message_rate_repository.dart';
 import '../data/message_rate_repository_impl.dart';
 import '../data/search_repository.dart';
@@ -47,5 +48,6 @@ class ChatPageModule extends Module {
       '/',
       child: (context) => const ChatPage(),
     );
+    r.module('/menu-page', module: MenuPageModule());
   }
 }

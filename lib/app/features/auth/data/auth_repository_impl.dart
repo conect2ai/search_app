@@ -54,7 +54,7 @@ class AuthRepositoryImpl
   }
 
   @override
-  Future<String> checkIfUserHasKey() async {
+  Future<String?> checkIfUserHasKey() async {
     final client = await configureHttpClient();
     final validateKeyUri =
         Uri.https(_baseValidateKeyUrl, _verifyKeyValidEnpoint);
@@ -97,7 +97,7 @@ class AuthRepositoryImpl
   }
 
   @override
-  Future<void> validateKey(String apiKey) async {
+  Future<bool> validateKey(String apiKey) async {
     final client = await configureHttpClient();
     final validateKeyUri = Uri.https(_baseValidateKeyUrl, _saveKeyEnpoint);
 
@@ -117,8 +117,12 @@ class AuthRepositoryImpl
         },
       ),
     );
-
-    if (response.statusCode != 200) {
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      _user.updateApiKey(data['key']);
+      writeSecureData(_user.username!, data['key']);
+      return data['key'] != null;
+    } else {
       throw const HttpException('Não foi possível validar chave da API');
     }
   }

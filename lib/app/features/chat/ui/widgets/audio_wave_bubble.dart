@@ -93,7 +93,7 @@ class _WaveBubbleState extends State<WaveBubble> {
               size: Size(MediaQuery.of(context).size.width * 0.5, 40),
               playerController: _playerController,
               backgroundColor: AppColors.mainColor,
-              waveformType: WaveformType.long,
+              waveformType: WaveformType.fitWidth,
               playerWaveStyle: const PlayerWaveStyle(
                 showSeekLine: true,
                 spacing: 6,
