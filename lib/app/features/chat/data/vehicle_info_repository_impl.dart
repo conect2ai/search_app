@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:flutter_config/flutter_config.dart';
 
-import '../../../core/entities/auth_user.dart';
 import '../../../mixins/http_client_mixin.dart';
+import '../../auth/domain/entities/auth_user.dart';
 import 'vehicle_info_repository.dart';
 
 class VehicleInfoRepositoryImpl

@@ -4,6 +4,7 @@
     "@appIntroText": {
         "description": "Text that shows what the app is about"
     },
+    "login": "Login",
     "signUp": "Sign Up",
     "registration": "Registration",
     "username": "Username",
@@ -79,5 +80,12 @@
     "csvSavedError": "Error saving CSV. Please try again.",
     "failedCredentials": "Invalid credentials. Please try again.",
     "invalidApiKey": "Invalid API key. Please try again.",
-    "backToMenu": "Back to menu"
+    "backToMenu": "Back to menu",
+     "noPdfFound": "No PDF found. Please import a manual.",
+    "deletePdfError": "Error trying to delete the PDF. Please try again.",
+    "uploadManual": "Upload Manual",
+    "errorSavingLanguage": "Error saving language preference. Please try again.",
+    "serverException": "Server error. Please try again later.",
+    "usernameRequired": "Username is required.",
+    "passwordRequired": "Password is required."
 }

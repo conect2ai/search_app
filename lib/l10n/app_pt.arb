@@ -4,6 +4,7 @@
     "@appIntroText": {
         "description": "Texto que mostra do que se trata o app"
     },
+    "login": "Entrar",
     "signUp": "Cadastrar",
     "registration": "Cadastro",
     "username": "Usuário",
@@ -79,6 +80,12 @@
     "csvSavedError": "Erro ao salvar CSV. Tente novamente.",
     "failedCredentials": "Credenciais inválidas. Tente novamente.",
     "invalidApiKey": "Chave da API inválida. Por favor, Tente novamente.",
-    "backToMenu": "Voltar ao menu"
-    
+    "backToMenu": "Voltar ao menu",
+    "noPdfFound": "Nenhum PDF encontrado. Por favor, importe um manual.",
+    "deletePdfError": "Erro ao tentar excluir o PDF. Tente novamente.",
+    "uploadManual": "Importar Manual",
+    "errorSavingLanguage": "Erro ao salvar preferência de idioma. Tente novamente.",
+    "serverException": "Erro no servidor. Por favor, tente novamente mais tarde.",
+    "usernameRequired": "Nome de usuário é obrigatório.",
+    "passwordRequired": "Senha é obrigatória."
 }

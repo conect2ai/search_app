@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app_search/extensions/context_extansion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -66,11 +67,11 @@ class _ManualUploadWidgetState extends State<ManualUploadWidget>
                                     _manualBloc.removePdf();
                                   } on HttpException catch (_) {
                                     generateSnackBar(
-                                        'Não foi possível excluir o pdf. Tente novamente',
+                                        context.localizations.deletePdfError,
                                         context);
                                   } catch (e) {
                                     generateSnackBar(
-                                        'Erro ao tentar excluir o pdf. Tente novamente',
+                                        context.localizations.deletePdfError,
                                         context);
                                   }
                                 },
@@ -83,7 +84,7 @@ class _ManualUploadWidgetState extends State<ManualUploadWidget>
                           );
                         } else {
                           return Text(
-                            'Importar Manual',
+                            context.localizations.uploadManual,
                             style: AppTextStyles.uploadManualTextStyle,
                             softWrap: true,
                           );
@@ -118,17 +119,15 @@ class _ManualUploadWidgetState extends State<ManualUploadWidget>
                         .then((_) => Modular.to.pushReplacementNamed('/chat/'));
                   } on HttpException catch (_) {
                     generateSnackBar(
-                        'Não foi possível importar o pdf. Tente novamente',
-                        context);
+                        context.localizations.importManualFail, context);
                   } catch (e) {
                     generateSnackBar(
-                        'Erro ao tentar importar o pdf. Tente novamente',
-                        context);
+                        context.localizations.importManualFail, context);
                   }
                 }
               },
               child: Text(
-                'Confirmar',
+                context.localizations.confirm,
                 style: AppTextStyles.authScreenButtonsTextStyle,
               ),
             ),

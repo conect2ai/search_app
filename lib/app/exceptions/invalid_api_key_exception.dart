@@ -1,0 +1,1 @@
+class InvalidApiKeyException implements Exception {}

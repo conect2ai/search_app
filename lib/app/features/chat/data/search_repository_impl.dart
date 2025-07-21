@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:flutter_config/flutter_config.dart';
 
-import '../../../core/entities/auth_user.dart';
 import '../../../core/entities/car_info.dart';
 import '../../../mixins/http_client_mixin.dart';
 import '../../../mixins/secure_storage.dart';
+import '../../auth/domain/entities/auth_user.dart';
 import 'search_repository.dart';
 
 class SearchRepositoryImpl

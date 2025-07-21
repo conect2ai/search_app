@@ -1,0 +1,1 @@
+class ServerCommunicationException implements Exception {}

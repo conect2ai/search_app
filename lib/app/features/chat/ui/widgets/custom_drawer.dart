@@ -1,3 +1,4 @@
+import 'package:app_search/app/features/auth/presentation/ui/widgets/logout_button.dart';
 import 'package:app_search/extensions/context_extansion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -5,7 +6,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import '../../../../../streams/general_stream.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
-import '../../../auth/interactor/bloc/auth_bloc.dart';
+import '../../../auth/presentation/view_models/auth_viewmodel.dart';
 import '../../../manual/ui/widgets/manual_upload_widget_drawer.dart';
 import 'vehicle_selection_dropdown_menu.dart';
 
@@ -17,7 +18,7 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
-  final _authBloc = Modular.get<AuthBloc>();
+  final _viewModel = Modular.get<AuthViewModel>();
 
   @override
   void initState() {
@@ -26,11 +27,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   }
 
   Future<void> _getLanguage() async {
-    final language = await _authBloc.getLanguage();
-
-    setState(() {
-      GeneralStream.languageStream.add(Locale(language ?? 'en'));
-    });
+    await _viewModel.getLanguage();
   }
 
   @override
@@ -146,7 +143,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                     borderRadius: BorderRadius.circular(10),
                                     onChanged: (value) {
                                       if (value != null) {
-                                        _authBloc.setLanguage(Locale(value));
+                                        _viewModel.setLanguage(Locale(value));
                                         GeneralStream.languageStream
                                             .add(Locale(value.toString()));
                                       }
@@ -193,19 +190,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   ],
                 ),
               ),
-              Positioned(
-                bottom: 10,
-                left: 0,
-                child: TextButton(
-                    style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        alignment: Alignment.centerLeft),
-                    onPressed: () => _authBloc.logout(),
-                    child: Text(
-                      context.localizations.logout,
-                      style: AppTextStyles.logoutButtonTextStyle,
-                    )),
-              )
+              Positioned(bottom: 10, left: 0, child: LogoutButton())
             ],
           ),
         ),

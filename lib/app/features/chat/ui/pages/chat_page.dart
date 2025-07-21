@@ -46,7 +46,13 @@ class _ChatPageState extends State<ChatPage>
   }
 
   void _readVehicleData() async {
-    await _vehicleInfoBloc.readSecureVehicleData();
+    if (_vehicleInfoBloc.vehicles.isEmpty) {
+      _vehicleInfoBloc.deleteSecureData('brand');
+      _vehicleInfoBloc.deleteSecureData('model');
+      _vehicleInfoBloc.deleteSecureData('year');
+    } else {
+      await _vehicleInfoBloc.readSecureVehicleData();
+    }
   }
 
   @override
@@ -71,7 +77,7 @@ class _ChatPageState extends State<ChatPage>
               await showDialog(
                 context: context,
                 builder: (context) => CustomDialog(
-                  message: state.message,
+                  message: context.localizations.noPdfFound,
                   buttonMessage: context.localizations.close,
                 ),
               );

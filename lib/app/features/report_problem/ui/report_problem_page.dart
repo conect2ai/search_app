@@ -103,10 +103,13 @@ class _ReportProblemPageState extends State<ReportProblemPage>
               bloc: _reportProblemBloc,
               builder: (context, state) {
                 if (state is InitialReportProblemPageState) {
-                  return Center(
-                    child: Text(
-                      context.localizations.recordReportAudioMessage,
-                      style: AppTextStyles.mainTextStyle,
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Center(
+                      child: Text(
+                        context.localizations.recordReportAudioMessage,
+                        style: AppTextStyles.mainTextStyle,
+                      ),
                     ),
                   );
                 }

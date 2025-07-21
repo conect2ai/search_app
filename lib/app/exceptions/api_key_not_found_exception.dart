@@ -1,0 +1,1 @@
+class ApiKeyNotFoundException implements Exception {}
