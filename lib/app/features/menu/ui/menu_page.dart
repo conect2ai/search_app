@@ -40,7 +40,7 @@ class MenuPage extends StatelessWidget with LogoAppBar {
               ),
             ),
             GestureDetector(
-              onTap: () => Modular.to.pushNamed('/report-problem/'),
+              onTap: () => Modular.to.pushNamed('/api-key/?provider=google'),
               child: Card(
                 elevation: 10,
                 shape: RoundedRectangleBorder(

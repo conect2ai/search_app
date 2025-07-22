@@ -87,5 +87,7 @@
     "errorSavingLanguage": "Erro ao salvar preferência de idioma. Tente novamente.",
     "serverException": "Erro no servidor. Por favor, tente novamente mais tarde.",
     "usernameRequired": "Nome de usuário é obrigatório.",
-    "passwordRequired": "Senha é obrigatória."
+    "passwordRequired": "Senha é obrigatória.",
+    "googleAPIKey": "Chave da API do Google",
+    "inputGoogleAPIKey": "Chave da API do Google"
 }

@@ -70,14 +70,25 @@ class _ReportProblemPageState extends State<ReportProblemPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: generateLogoAppBar(context, [
-        IconButton(
+      appBar: generateLogoAppBar(
+        context,
+        [
+          IconButton(
             onPressed: () => _generateCsv(context),
             icon: const Icon(
               Icons.download,
               color: Colors.white,
-            ))
-      ]),
+            ),
+          ),
+        ],
+        IconButton(
+          onPressed: () => Modular.to.navigate('/menu-page/'),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
+      ),
       body: BlocListener<LoadingOverlayBloc, LoadingOverlayState>(
         bloc: _loadingOverlayBloc,
         listener: (context, state) async {

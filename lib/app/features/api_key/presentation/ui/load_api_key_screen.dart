@@ -26,15 +26,29 @@ class _LoadApiKeyScreenState extends State<LoadApiKeyScreen> {
 
   void _checkApiKey() async {
     try {
-      await _apiKeyViewModel.checkApiKey(widget._provider).then((_) => Modular
-          .to
-          .navigate('/api-key/confirm_api_key?provider=${widget._provider}'));
+      await _apiKeyViewModel.checkApiKey(widget._provider).then((_) {
+        widget._provider == 'openai'
+            ? Modular.to.navigate(
+                '/api-key/confirm_api_key?provider=${widget._provider}')
+            : Modular.to
+                .pushNamed(
+                    '/api-key/confirm_api_key?provider=${widget._provider}')
+                .then((_) => Modular.to.navigate('/menu-page/'));
+      });
     } on ApiKeyNotFoundException catch (_) {
-      Modular.to
-          .navigate('/api-key/input_api_key?provider=${widget._provider}');
+      widget._provider == 'openai'
+          ? Modular.to
+              .navigate('/api-key/input_api_key?provider=${widget._provider}')
+          : Modular.to
+              .pushNamed('/api-key/input_api_key?provider=${widget._provider}')
+              .then((_) => Modular.to.navigate('/menu-page/'));
     } catch (e) {
-      Modular.to
-          .navigate('/api-key/input_api_key?provider=${widget._provider}');
+      widget._provider == 'openai'
+          ? Modular.to
+              .navigate('/api-key/input_api_key?provider=${widget._provider}')
+          : Modular.to
+              .pushNamed('/api-key/input_api_key?provider=${widget._provider}')
+              .then((_) => Modular.to.navigate('/menu-page/'));
     }
   }
 

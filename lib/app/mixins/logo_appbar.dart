@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 mixin LogoAppBar {
-  AppBar generateLogoAppBar(BuildContext context, [List<Widget>? actions]) {
+  AppBar generateLogoAppBar(BuildContext context,
+      [List<Widget>? actions, Widget? leading]) {
     return AppBar(
         centerTitle: true,
         backgroundColor: Colors.transparent,
@@ -13,6 +14,7 @@ mixin LogoAppBar {
           fit: BoxFit.fill,
           width: MediaQuery.of(context).size.width * 0.4,
         ),
+        leading: leading,
         actions: actions);
   }
 }

@@ -28,7 +28,9 @@ class ApiKeyViewModel extends ChangeNotifier {
       if (apiKey == null || apiKey.isEmpty) {
         throw ApiKeyNotFoundException();
       }
-      _user.updateApiKey(apiKey);
+      provider == 'openai'
+          ? _user.updateOpenaiApiKey(apiKey)
+          : _user.updateGoogleApiKey(apiKey);
     } on ApiKeyNotFoundException catch (_) {
       rethrow;
     } catch (e) {
@@ -36,16 +38,20 @@ class ApiKeyViewModel extends ChangeNotifier {
     }
   }
 
-  String? getApiKey() {
-    return _user.apiKey;
+  String? getOpenaiApiKey() {
+    return _user.openaiApiKey;
   }
 
-  Future<void> validateApiKey(String apiKey) async {
+  String? getGoogleApiKey() {
+    return _user.googleApiKey;
+  }
+
+  Future<void> validateApiKey(String apiKey, String provider) async {
     final key = _user.username;
     if (key != null) {
       if (_user.token != null) {
         try {
-          return await _apiKeyRepository.validateKey(apiKey);
+          return await _apiKeyRepository.validateKey(apiKey, provider);
         } on InvalidApiKeyException catch (_) {
           rethrow;
         } on ServerCommunicationException catch (_) {

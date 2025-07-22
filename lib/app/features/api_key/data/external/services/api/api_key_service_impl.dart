@@ -49,7 +49,7 @@ class ApiKeyServiceImpl
   }
 
   @override
-  Future<void> validateKey(String apiKey) async {
+  Future<void> validateKey(String apiKey, String provider) async {
     final client = await configureHttpClient();
     final validateKeyUri = Uri.https(_baseValidateKeyUrl, _saveKeyEnpoint);
 
@@ -63,7 +63,7 @@ class ApiKeyServiceImpl
       headers: headers,
       body: jsonEncode(
         {
-          'provider': 'openai',
+          'provider': provider.toLowerCase(),
           'key': apiKey,
         },
       ),
@@ -71,7 +71,11 @@ class ApiKeyServiceImpl
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data['valid']) {
-        _user.updateApiKey(data['key']);
+        if (provider.toLowerCase() == 'openai') {
+          _user.updateOpenaiApiKey(data['key']);
+        } else {
+          _user.updateGoogleApiKey(data['key']);
+        }
         writeSecureData(_user.username!, data['key']);
       }
       if (!data['valid']) {

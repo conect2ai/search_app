@@ -19,19 +19,27 @@ class ConfirmApiKeyScreen extends StatefulWidget {
 
 class _ConfirmApiKeyScreenState extends State<ConfirmApiKeyScreen>
     with LogoAppBar, SnackBarMixin {
-  String? _apiKey;
+  String? _key;
   final _viewModel = Modular.get<ApiKeyViewModel>();
 
   @override
   void initState() {
-    _apiKey = _viewModel.getApiKey();
+    widget._provider == 'openai'
+        ? _key = _viewModel.getOpenaiApiKey()
+        : _key = _viewModel.getGoogleApiKey();
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
-    _apiKey ??= _viewModel.getApiKey();
+    _key ??= _viewModel.getOpenaiApiKey();
     super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _key = null;
+    super.dispose();
   }
 
   @override
@@ -45,7 +53,9 @@ class _ConfirmApiKeyScreenState extends State<ConfirmApiKeyScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                context.localizations.openAIKey,
+                widget._provider == 'openai'
+                    ? context.localizations.openAIKey
+                    : context.localizations.googleAPIKey,
                 style: AppTextStyles.authScreenTitleTextStyle,
               ),
               const SizedBox(
@@ -53,7 +63,7 @@ class _ConfirmApiKeyScreenState extends State<ConfirmApiKeyScreen>
               ),
               SizedBox(
                 child: Text(
-                  context.localizations.foundKey(_apiKey ?? ''),
+                  context.localizations.foundKey(_key ?? ''),
                   style: AppTextStyles.authScreenSubtitleTextStyle,
                   textAlign: TextAlign.center,
                   softWrap: true,
@@ -72,7 +82,9 @@ class _ConfirmApiKeyScreenState extends State<ConfirmApiKeyScreen>
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10))),
                       onPressed: () async {
-                        Modular.to.pushReplacementNamed('/menu-page/');
+                        widget._provider == 'openai'
+                            ? Modular.to.navigate('/menu-page/')
+                            : Modular.to.pushNamed('/report-problem/');
                       },
                       child: Text(context.localizations.yes.toUpperCase())),
                   const SizedBox(

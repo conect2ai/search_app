@@ -50,7 +50,9 @@ class _ApiKeyInputState extends State<ApiKeyInput>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  context.localizations.openAIKey,
+                  widget._provider == 'openai'
+                      ? context.localizations.openAIKey
+                      : context.localizations.googleAPIKey,
                   style: AppTextStyles.authScreenTitleTextStyle,
                 ),
                 const SizedBox(
@@ -67,7 +69,9 @@ class _ApiKeyInputState extends State<ApiKeyInput>
                     cursorColor: AppColors.mainColor,
                     decoration: InputDecoration(
                       isDense: true,
-                      hintText: context.localizations.inputOpenAIKey,
+                      hintText: widget._provider == 'openai'
+                          ? context.localizations.inputOpenAIKey
+                          : context.localizations.inputGoogleAPIKey,
                       hintStyle: const TextStyle(
                           fontSize: 17,
                           color: Colors.white60,
@@ -122,9 +126,15 @@ class _ApiKeyInputState extends State<ApiKeyInput>
                         } else {
                           try {
                             await _viewModel
-                                .validateApiKey(_apiKeyInputController.text)
-                                .then((_) => Modular.to
-                                    .pushReplacementNamed('/menu-page/'));
+                                .validateApiKey(_apiKeyInputController.text,
+                                    widget._provider ?? 'openai')
+                                .then((_) {
+                              widget._provider == 'openai'
+                                  ? Modular.to
+                                      .pushReplacementNamed('/menu-page/')
+                                  : Modular.to
+                                      .pushReplacementNamed('/report-problem/');
+                            });
                           } on InvalidApiKeyException catch (_) {
                             if (!mounted) {
                               return;
@@ -167,13 +177,23 @@ class _ApiKeyInputState extends State<ApiKeyInput>
                   onPressed: () async {
                     ScaffoldMessenger.of(context).clearSnackBars();
                     try {
-                      final key = _viewModel.getApiKey();
-                      if (key == null) {
-                        _viewModel.logout();
-                        Modular.to.pushReplacementNamed('/auth/login');
+                      if (widget._provider == 'openai') {
+                        final openaiKey = _viewModel.getOpenaiApiKey();
+                        if (openaiKey == null) {
+                          _viewModel.logout();
+                          Modular.to.pushReplacementNamed('/auth/login');
+                        } else {
+                          Modular.to.pushReplacementNamed(
+                              '/api-key/confirm_api_key?provider=${widget._provider}');
+                        }
                       } else {
-                        Modular.to.pushReplacementNamed(
-                            '/api-key/confirm_api_key?provider=${widget._provider}');
+                        final googleApiKey = _viewModel.getGoogleApiKey();
+                        if (googleApiKey == null) {
+                          Modular.to.navigate('/menu-page/');
+                        } else {
+                          Modular.to.pushReplacementNamed(
+                              '/api-key/confirm_api_key?provider=${widget._provider}');
+                        }
                       }
                     } on ApiKeyNotFoundException catch (_) {
                       if (!mounted) {

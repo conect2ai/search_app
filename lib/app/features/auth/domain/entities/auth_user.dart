@@ -2,7 +2,8 @@ class AuthUser {
   String? _token;
   String? _tokenType;
   String? _username;
-  String? _apiKey;
+  String? _openaiApiKey;
+  String? _googleApiKey;
 
   static final AuthUser _authUser = AuthUser._internal();
 
@@ -15,7 +16,8 @@ class AuthUser {
   String? get token => _token;
   String? get tokenType => _tokenType;
   String? get username => _username;
-  String? get apiKey => _apiKey;
+  String? get openaiApiKey => _openaiApiKey;
+  String? get googleApiKey => _googleApiKey;
 
   void updatedUsernameAndPassword(Map<String, String?> userInfo) {
     _username = userInfo['username'];
@@ -26,7 +28,11 @@ class AuthUser {
     _tokenType = tokenInfo['token_type'];
   }
 
-  void updateApiKey(String? apiKeyInfo) {
-    _apiKey = apiKeyInfo;
+  void updateOpenaiApiKey(String? apiKeyInfo) {
+    _openaiApiKey = apiKeyInfo;
+  }
+
+  void updateGoogleApiKey(String? apiKeyInfo) {
+    _googleApiKey = apiKeyInfo;
   }
 }

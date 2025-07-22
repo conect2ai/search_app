@@ -24,7 +24,9 @@ class ReportProblemRepositoryImpl
     final audioBytes = await audioFile.readAsBytes();
     final audioBase64 = base64Encode(audioBytes);
 
-    final data = {'audio_file': audioBase64};
+    final data = {
+      'audio_file': audioBase64,
+    };
 
     final apiUri = Uri.https(_apiBaseUrl, _audioTranscriptionEndpoint);
 

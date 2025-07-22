@@ -87,5 +87,7 @@
     "errorSavingLanguage": "Error saving language preference. Please try again.",
     "serverException": "Server error. Please try again later.",
     "usernameRequired": "Username is required.",
-    "passwordRequired": "Password is required."
+    "passwordRequired": "Password is required.",
+    "googleAPIKey": "Google API Key",
+    "inputGoogleAPIKey": "Google API key"
 }

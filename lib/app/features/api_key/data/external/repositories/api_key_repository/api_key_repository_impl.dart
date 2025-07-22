@@ -11,7 +11,7 @@ class ApiKeyRepositoryImpl implements ApiKeyRepository {
   }
 
   @override
-  Future<void> validateKey(String apiKey) async {
-    await _apiKeyService.validateKey(apiKey);
+  Future<void> validateKey(String apiKey, String provider) async {
+    await _apiKeyService.validateKey(apiKey, provider);
   }
 }

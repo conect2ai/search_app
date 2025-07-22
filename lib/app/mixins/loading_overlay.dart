@@ -6,8 +6,6 @@ import '../core/themes/app_colors.dart';
 mixin LoadingOverlay {
   OverlayEntry? _overlay;
 
-  // LoadingOverlay();
-
   void showOverlay(BuildContext context) {
     if (_overlay == null) {
       _overlay = OverlayEntry(

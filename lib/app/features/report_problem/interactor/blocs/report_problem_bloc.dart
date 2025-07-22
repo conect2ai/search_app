@@ -69,8 +69,9 @@ class ReportProblemBloc
 
             _hasResultsSubject.sink.add(true);
           } catch (_) {
-            _loadingOverlayBloc.add(
-                ShowErrorEvent(message: 'Failed to communicate with server'));
+            // _loadingOverlayBloc.add(
+            //     ShowErrorEvent(message: 'Failed to communicate with server'));
+            rethrow;
           }
 
           _loadingOverlayBloc.add(HideLoadingOverlayEvent());
