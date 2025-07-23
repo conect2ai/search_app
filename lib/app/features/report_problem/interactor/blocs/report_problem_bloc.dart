@@ -40,7 +40,7 @@ class ReportProblemBloc
     on<RecordingAudioEvent>((event, emit) => emit(RecordingAudioState()));
     on<SendAudioEvent>(
       (event, emit) async {
-        final messageId = DateTime.timestamp().toIso8601String();
+        String messageId = DateTime.timestamp().toIso8601String();
         if (event.path.isNotEmpty) {
           _results.add(ChatMessage(
             id: messageId,
@@ -55,7 +55,7 @@ class ReportProblemBloc
                 await _reportProblemRepository.sendAudioReportForTranscription(
               event.path,
             );
-
+            messageId = DateTime.timestamp().toIso8601String();
             _transcriptionResponse.updateTranscriptionResponse(
                 messageId, message);
 
@@ -69,9 +69,8 @@ class ReportProblemBloc
 
             _hasResultsSubject.sink.add(true);
           } catch (_) {
-            // _loadingOverlayBloc.add(
-            //     ShowErrorEvent(message: 'Failed to communicate with server'));
-            rethrow;
+            _loadingOverlayBloc.add(
+                ShowErrorEvent(message: 'Failed to communicate with server'));
           }
 
           _loadingOverlayBloc.add(HideLoadingOverlayEvent());

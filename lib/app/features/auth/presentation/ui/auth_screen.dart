@@ -60,7 +60,7 @@ class _AuthScreenState extends State<AuthScreen>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'ChatBot',
+                  'ManualGuru',
                   style: AppTextStyles.authScreenTitleTextStyle,
                 ),
                 const SizedBox(

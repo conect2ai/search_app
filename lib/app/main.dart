@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
                 selectionHandleColor: AppColors.mainColor,
               ),
             ),
-            title: "ChatBot App",
+            title: "ManualGuru",
             routerConfig: Modular.routerConfig,
             debugShowCheckedModeBanner: false,
             localizationsDelegates: AppLocalizations.localizationsDelegates,

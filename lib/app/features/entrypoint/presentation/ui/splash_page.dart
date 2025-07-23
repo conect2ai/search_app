@@ -39,7 +39,7 @@ class _SplashPageState extends State<SplashPage> {
               height: 10,
             ),
             Text(
-              'Chatbot',
+              'ManualGuru',
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,

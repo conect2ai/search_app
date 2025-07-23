@@ -14,7 +14,7 @@ class TranscriptionResponse {
       String messageId, Map<dynamic, dynamic> transcriptionInfo) {
     _transcriptionData[messageId] = {
       'transcription': transcriptionInfo['transcribed_text'],
-      'problemAnalysis': transcriptionInfo['problemAnalysis'],
+      'problemAnalysis': transcriptionInfo['defectAnalysis'],
       'timings': transcriptionInfo['timings']
     };
   }
